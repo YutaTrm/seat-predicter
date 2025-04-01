@@ -3,6 +3,15 @@
 import { useState, useEffect } from 'react'
 import { createSupabaseClient } from '@/lib/supabase/client'
 
+type Ticket = {
+  id: number
+  artist_id: number
+  tour_id: number
+  block: string
+  column: number
+  number: number
+}
+
 type Artist = {
   id: number
   name: string
@@ -17,6 +26,7 @@ type Tour = {
 export default function Home() {
   const [artists, setArtists] = useState<Artist[]>([])
   const [tours, setTours] = useState<Tour[]>([])
+  const [tickets, setTickets] = useState<Ticket[]>([])
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
   const [selectedTour, setSelectedTour] = useState<number | null>(null)
   const [block, setBlock] = useState<string>('')
@@ -84,12 +94,23 @@ export default function Home() {
       alert('チケットの登録に失敗しました')
     } else {
       alert('チケットを登録しました')
+      // チケット登録後に一覧を更新
+      const { data: updatedTickets } = await supabase
+        .from('tickets')
+        .select('*')
+        .eq('artist_id', selectedArtist)
+        .eq('tour_id', selectedTour)
+        .order('block')
+        .order('column')
+        .order('number')
+
+      setTickets(updatedTickets || [])
     }
   }
 
   return (
     <main className="min-h-screen p-4">
-      <div className="container mx-auto">
+      <div className="container mx-auto h-screen relative">
         <h1 className="text-2xl font-bold mb-4">座席予想アプリ-seat-predicter-</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -156,6 +177,34 @@ export default function Home() {
             チケット情報を登録
           </button>
         </form>
+
+        <div className="mt-8">
+          {tickets.length === 0 ? (
+            <p className="text-center text-gray-600">アーティストとツアーを選んでください</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white border">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="px-6 py-3 border-b text-left">ブロック</th>
+                    <th className="px-6 py-3 border-b text-left">列</th>
+                    <th className="px-6 py-3 border-b text-left">席番号</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tickets.map((ticket) => (
+                    <tr key={ticket.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 border-b">{ticket.block}</td>
+                      <td className="px-6 py-4 border-b">{ticket.column}</td>
+                      <td className="px-6 py-4 border-b">{ticket.number}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
 
         <footer className="mt-8 text-center">
           <a href="/about" className="mr-4 text-blue-500">アプリについて</a>
