@@ -12,6 +12,7 @@ type Ticket = {
   block: string
   column: number
   number: number
+  created_at: string
 }
 
 type Artist = {
@@ -200,7 +201,7 @@ export default function Home() {
   return (
     <main className="min-h-screen px-4 py-8">
       <section className="container mx-auto h-screen relative">
-        <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">ライブ座席予想</h1>
+        <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">ライブ座席予想(β版)</h1>
 
         <section>
           <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
@@ -308,15 +309,16 @@ export default function Home() {
           {!showTickets ? (
             <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">「一覧」を押すかチケット登録をすると一覧が表示されます</p>
           ) : tickets.length === 0 ? (
-            <p className="text-center text-gray-600">登録されているチケットはありません</p>
+            <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">登録されているチケットはありません</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border">
+              <table className="min-w-full bg-white border text-sm">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="px-6 py- border-b text-left">ブロック</th>
-                    <th className="px-6 py-3 border-b text-left">列</th>
-                    <th className="px-6 py-3 border-b text-left">席番号</th>
+                    <th className="px-6 py- border-b text-center">ブロック</th>
+                    <th className="px-6 py-3 border-b text-center">列</th>
+                    <th className="px-6 py-3 border-b text-center">席番号</th>
+                    <th className="px-6 py-3 border-b text-center">投稿日時</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -333,9 +335,10 @@ export default function Home() {
                         className="hover:bg-gray-50"
                         style={{ backgroundColor }}
                       >
-                        <td className="px-6 py-1 border-b">{ticket.block}</td>
-                        <td className="px-6 py-1 border-b">{ticket.column}</td>
-                        <td className="px-6 py-1 border-b">{ticket.number}</td>
+                        <td className="px-6 py-1 border-b text-right">{ticket.block}</td>
+                        <td className="px-6 py-1 border-b text-right">{ticket.column}</td>
+                        <td className="px-6 py-1 border-b text-right">{ticket.number}</td>
+                        <td className="px-6 py-1 border-b text-right">{ticket.created_at}</td>
                       </tr>
                     )
                   })}
