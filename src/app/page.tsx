@@ -1,6 +1,7 @@
 import HomePage from './components/HomePage'
 import { createTicket, fetchArtists, fetchTickets, fetchToursByArtist } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { Suspense } from 'react'
 
 // チケット登録のServer Action
 async function handleTicketSubmit(formData: FormData) {
@@ -22,7 +23,8 @@ async function handleTicketSubmit(formData: FormData) {
     })
     revalidatePath('/')
     return { success: true }
-  } catch (error) {
+  } catch (err) {
+    console.error('チケット登録エラー:', err)
     return { success: false, error: 'チケットの登録に失敗しました' }
   }
 }
@@ -57,11 +59,19 @@ export default async function Page() {
   }
 
   return (
-    <HomePage
-      artists={artists}
-      handleTicketSubmit={handleTicketSubmit}
-      fetchTourTickets={fetchTourTickets}
-      fetchTours={fetchTours}
-    />
+    <Suspense fallback={
+      <div className="min-h-screen px-4 py-8">
+        <div className="container mx-auto">
+          <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">読み込み中...</h1>
+        </div>
+      </div>
+    }>
+      <HomePage
+        artists={artists}
+        handleTicketSubmit={handleTicketSubmit}
+        fetchTourTickets={fetchTourTickets}
+        fetchTours={fetchTours}
+      />
+    </Suspense>
   )
 }

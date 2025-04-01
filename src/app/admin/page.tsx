@@ -1,4 +1,5 @@
 import AdminPage from '@/app/components/AdminPage'
+import { Suspense } from 'react'
 import {
   fetchArtists,
   fetchToursByArtist,
@@ -91,17 +92,25 @@ export default async function Page() {
   const tickets = tours.length > 0 ? await fetchTickets(artists[0].id, tours[0].id) : []
 
   return (
-    <AdminPage
-      initialArtists={artists}
-      initialTours={tours}
-      initialTickets={tickets}
-      handleAddArtist={handleAddArtist}
-      handleEditArtist={handleEditArtist}
-      handleDeleteArtist={handleDeleteArtist}
-      handleAddTour={handleAddTour}
-      handleEditTour={handleEditTour}
-      handleDeleteTour={handleDeleteTour}
-      handleFetchTours={handleFetchTours}
-    />
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-100 p-8">
+        <div className="p-6">
+          <h1 className="text-2xl font-bold mb-6">読み込み中...</h1>
+        </div>
+      </div>
+    }>
+      <AdminPage
+        initialArtists={artists}
+        initialTours={tours}
+        initialTickets={tickets}
+        handleAddArtist={handleAddArtist}
+        handleEditArtist={handleEditArtist}
+        handleDeleteArtist={handleDeleteArtist}
+        handleAddTour={handleAddTour}
+        handleEditTour={handleEditTour}
+        handleDeleteTour={handleDeleteTour}
+        handleFetchTours={handleFetchTours}
+      />
+    </Suspense>
   )
 }
