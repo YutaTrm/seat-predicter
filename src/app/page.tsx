@@ -3,6 +3,9 @@ import { createTicket, fetchArtists, fetchTickets, fetchToursByArtist } from '@/
 import { revalidatePath } from 'next/cache'
 import { Suspense } from 'react'
 
+// ダイナミックレンダリングを強制
+export const dynamic = 'force-dynamic'
+
 // チケット登録のServer Action
 async function handleTicketSubmit(formData: FormData) {
   'use server'

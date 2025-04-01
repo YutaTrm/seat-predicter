@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import AdminPage from '@/app/components/AdminPage'
 import { Suspense } from 'react'
 import {
