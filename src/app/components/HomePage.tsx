@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, useEffect } from 'react'
-import { createSupabaseClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 type Ticket = {
@@ -28,13 +27,21 @@ type Tour = {
 
 type HomePageProps = {
   artists: Artist[]
+  handleTicketSubmit: (formData: FormData) => Promise<{ success: boolean; error?: string }>
+  fetchTourTickets: (formData: FormData) => Promise<{ tickets: Ticket[] }>
+  fetchTours: (formData: FormData) => Promise<{ tours: Tour[] }>
 }
 
-export default function HomePage({ artists: initialArtists }: HomePageProps) {
+export default function HomePage({
+  artists: initialArtists,
+  handleTicketSubmit,
+  fetchTourTickets,
+  fetchTours
+}: HomePageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const [artists, setArtists] = useState<Artist[]>(initialArtists)
+  const [artists] = useState<Artist[]>(initialArtists)
   const [tours, setTours] = useState<Tour[]>([])
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
@@ -67,45 +74,15 @@ export default function HomePage({ artists: initialArtists }: HomePageProps) {
   // チケット一覧を表示する関数
   const handleShowTickets = async () => {
     if (selectedArtist && selectedTour) {
-      const supabase = createSupabaseClient()
-      const { data, error } = await supabase
-        .from('tickets')
-        .select('*')
-        .eq('artist_id', selectedArtist)
-        .eq('tour_id', selectedTour)
-        .order('block')
-        .order('column')
-        .order('number')
+      const formData = new FormData()
+      formData.append('artist_id', selectedArtist.toString())
+      formData.append('tour_id', selectedTour.toString())
 
-      if (error) {
-        console.error('チケット取得エラー:', error)
-        setTickets([])
-      } else {
-        setTickets(data || [])
-        setShowTickets(true)
-      }
+      const { tickets: newTickets } = await fetchTourTickets(formData)
+      setTickets(newTickets)
+      setShowTickets(true)
     }
   }
-
-  // アーティストの更新が必要な場合のみ実行する
-  useEffect(() => {
-    if (artists.length === 0) {
-      async function fetchArtists() {
-        const supabase = createSupabaseClient()
-        const { data, error } = await supabase
-          .from('artists')
-          .select('*')
-          .order('name')
-
-        if (error) {
-          console.error('アーティスト取得エラー:', error)
-        } else {
-          setArtists(data || [])
-        }
-      }
-      fetchArtists()
-    }
-  }, [artists.length])
 
   // URLパラメータから初期値を設定
   useEffect(() => {
@@ -114,57 +91,45 @@ export default function HomePage({ artists: initialArtists }: HomePageProps) {
       const tourId = searchParams.get('tour')
 
       if (artistId) {
-        const supabase = createSupabaseClient()
-        const { data: artistData } = await supabase
-          .from('artists')
-          .select('*')
-          .eq('id', parseInt(artistId))
-          .single()
+        const parsedArtistId = parseInt(artistId)
+        const artist = artists.find(a => a.id === parsedArtistId)
 
-        if (artistData) {
-          setSelectedArtist(artistData.id)
+        if (artist) {
+          setSelectedArtist(artist.id)
 
           if (tourId) {
-            const { data: tourData } = await supabase
-              .from('tours')
-              .select('*')
-              .eq('id', parseInt(tourId))
-              .eq('artist_id', artistData.id)
-              .single()
+            const formData = new FormData()
+            formData.append('artist_id', artist.id.toString())
+            const { tours: artistTours } = await fetchTours(formData)
 
-            if (tourData) {
-              setSelectedTour(tourData.id)
+            const parsedTourId = parseInt(tourId)
+            const tour = artistTours.find(t => t.id === parsedTourId)
+
+            if (tour) {
+              setSelectedTour(tour.id)
+              setTours(artistTours)
             }
           }
         }
       }
     }
     initializeFromUrl()
-  }, [searchParams])
+  }, [searchParams, artists, fetchTours])
 
   // 選択されたアーティストに基づいてツアーを取得
   useEffect(() => {
-    async function fetchTours() {
+    async function loadTours() {
       if (selectedArtist) {
-        const supabase = createSupabaseClient()
-        const { data, error } = await supabase
-          .from('tours')
-          .select('*')
-          .eq('artist_id', selectedArtist)
-          .order('name')
-
-        if (error) {
-          console.error('ツアー取得エラー:', error)
-          setTours([])
-        } else {
-          setTours(data || [])
-        }
+        const formData = new FormData()
+        formData.append('artist_id', selectedArtist.toString())
+        const { tours: newTours } = await fetchTours(formData)
+        setTours(newTours)
       } else {
         setTours([])
       }
     }
-    fetchTours()
-  }, [selectedArtist])
+    loadTours()
+  }, [selectedArtist, fetchTours])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -173,34 +138,26 @@ export default function HomePage({ artists: initialArtists }: HomePageProps) {
       return
     }
 
-    const supabase = createSupabaseClient()
-    const { error } = await supabase
-      .from('tickets')
-      .insert({
-        artist_id: selectedArtist,
-        tour_id: selectedTour,
-        block,
-        column,
-        number: seatNumber
-      })
+    const formData = new FormData()
+    formData.append('artist_id', selectedArtist.toString())
+    formData.append('tour_id', selectedTour.toString())
+    formData.append('block', block)
+    formData.append('column', column.toString())
+    formData.append('number', seatNumber.toString())
 
-    if (error) {
-      console.error('チケット登録エラー:', error)
-      alert('チケットの登録に失敗しました')
-    } else {
+    const result = await handleTicketSubmit(formData)
+
+    if (result.success) {
       alert('チケットを登録しました')
       // チケット登録後に一覧を更新
-      const { data: updatedTickets } = await supabase
-        .from('tickets')
-        .select('*')
-        .eq('artist_id', selectedArtist)
-        .eq('tour_id', selectedTour)
-        .order('block')
-        .order('column')
-        .order('number')
-
-      setTickets(updatedTickets || [])
+      const ticketsFormData = new FormData()
+      ticketsFormData.append('artist_id', selectedArtist.toString())
+      ticketsFormData.append('tour_id', selectedTour.toString())
+      const { tickets: updatedTickets } = await fetchTourTickets(ticketsFormData)
+      setTickets(updatedTickets)
       setShowTickets(true)
+    } else {
+      alert(result.error || 'チケットの登録に失敗しました')
     }
   }
 
