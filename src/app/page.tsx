@@ -203,6 +203,7 @@ export default function Home() {
       <section className="container mx-auto h-screen relative">
         <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">ライブ座席予想(β版)</h1>
 
+        {/* チケット情報入力 */}
         <section>
           <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -287,7 +288,7 @@ export default function Home() {
                 disabled={!selectedTour}
                 className={`w-1/3 p-2 text-white rounded ${
                   selectedTour
-                    ? 'bg-yellow-500 hover:bg-yellow-600'
+                    ? 'bg-amber-500 hover:bg-amber-600'
                     : 'bg-gray-300 cursor-not-allowed'
                 }`}
               >
@@ -304,6 +305,7 @@ export default function Home() {
           </form>
         </section>
 
+        {/* チケット一覧結果 */}
         <section className="mt-8">
         <h2 className="text-xl text-gray-600 font-bold mb-2">ツアーチケット一覧</h2>
           {!showTickets ? (
@@ -312,13 +314,13 @@ export default function Home() {
             <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">登録されているチケットはありません</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border text-sm">
+              <table className="min-w-full bg-white border text-sm mb-3">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-6 py- border-b text-center">ブロック</th>
-                    <th className="px-6 py-3 border-b text-center">列</th>
-                    <th className="px-6 py-3 border-b text-center">席番号</th>
-                    <th className="px-6 py-3 border-b text-center">投稿日時</th>
+                  <tr className="bg-gray-600 text-gray-100">
+                    <th className="px-3 py-1 border-b text-center font-semibold">ブロック</th>
+                    <th className="px-3 py-1 border-b text-center font-semibold">列</th>
+                    <th className="px-3 py-1 border-b text-center font-semibold">席番号</th>
+                    <th className="px-3 py-1 border-b text-center font-semibold">投稿日時</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -327,28 +329,51 @@ export default function Home() {
                     const blockIndex = ticket.block.charCodeAt(0) - 65
                     // 黄金角（137.5度）を使用して、隣接するブロックの色が離れるようにする
                     const hue = (blockIndex * 137.5) % 360
-                    const backgroundColor = `hsl(${hue}, 70%, 77%)`//（色相・彩度・輝度）
-
+                    const backgroundColor = `hsl(${hue}, 80%, 80%)`//（色相・彩度・輝度）
                     return (
                       <tr
                         key={ticket.id}
                         className="hover:bg-gray-50"
                         style={{ backgroundColor }}
                       >
-                        <td className="px-6 py-1 border-b text-right">{ticket.block}</td>
-                        <td className="px-6 py-1 border-b text-right">{ticket.column}</td>
-                        <td className="px-6 py-1 border-b text-right">{ticket.number}</td>
-                        <td className="px-6 py-1 border-b text-right">{ticket.created_at}</td>
+                        <td className="px-3 py-1 border-b text-right">{ticket.block}</td>
+                        <td className="px-3 py-1 border-b text-right">{ticket.column}</td>
+                        <td className="px-3 py-1 border-b text-right">{ticket.number}</td>
+                        <td className="px-3 py-1 border-b text-right">
+                          {new Date(ticket.created_at).toLocaleString('ja-JP', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </td>
                       </tr>
                     )
                   })}
+                </tbody>
+              </table>
+              {/* ブロックごとのレコード数を表示 */}
+              <h3 className="text-gray-600 font-bold mb-2">ブロックごとの集計数</h3>
+              <table className="mb-4">
+                <tbody>
+                  {Object.entries(
+                    tickets.reduce((acc, ticket) => {
+                      acc[ticket.block] = (acc[ticket.block] || 0) + 1;
+                      return acc;
+                    }, {} as Record<string, number>)
+                  ).map(([block, count]) => (
+                    <tr key={block} className="text-sm p-2 rounded">
+                      <td className="font-bold">{block}ブロック:{count}件</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           )}
         </section>
 
-        <footer className="text-sm text-gray-700 w-full mt-4">
+        <footer className="text-sm text-gray-700 w-full mt-8">
           <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center space-x-6">
             <Link href="/about" className="text-gray-700 hover:text-gray-900 transition-colors">
               アプリについて
