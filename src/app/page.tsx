@@ -1,7 +1,9 @@
 'use client'
 
+import Link from "next/link";
 import { useState, useEffect } from 'react'
 import { createSupabaseClient } from '@/lib/supabase/client'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 type Ticket = {
   id: number
@@ -24,6 +26,9 @@ type Tour = {
 }
 
 export default function Home() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const [artists, setArtists] = useState<Artist[]>([])
   const [tours, setTours] = useState<Tour[]>([])
   const [tickets, setTickets] = useState<Ticket[]>([])
@@ -34,6 +39,14 @@ export default function Home() {
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
   const [showTickets, setShowTickets] = useState<boolean>(false)
 
+  // URLパラメータを更新する関数
+  const updateUrlParams = (artistId: number | null, tourId: number | null) => {
+    const params = new URLSearchParams()
+    if (artistId) params.set('artist', artistId.toString())
+    if (tourId) params.set('tour', tourId.toString())
+    router.push(`?${params.toString()}`)
+  }
+
   // フォームをリセットする関数
   const handleReset = () => {
     setSelectedArtist(null)
@@ -43,6 +56,7 @@ export default function Home() {
     setSeatNumber(null)
     setTickets([])
     setShowTickets(false)
+    updateUrlParams(null, null)
   }
 
   // チケット一覧を表示する関数
@@ -68,6 +82,7 @@ export default function Home() {
     }
   }
 
+  // アーティスト一覧を取得
   useEffect(() => {
     async function fetchArtists() {
       const supabase = createSupabaseClient()
@@ -85,6 +100,42 @@ export default function Home() {
     fetchArtists()
   }, [])
 
+  // URLパラメータから初期値を設定
+  useEffect(() => {
+    async function initializeFromUrl() {
+      const artistId = searchParams.get('artist')
+      const tourId = searchParams.get('tour')
+
+      if (artistId) {
+        const supabase = createSupabaseClient()
+        const { data: artistData } = await supabase
+          .from('artists')
+          .select('*')
+          .eq('id', parseInt(artistId))
+          .single()
+
+        if (artistData) {
+          setSelectedArtist(artistData.id)
+
+          if (tourId) {
+            const { data: tourData } = await supabase
+              .from('tours')
+              .select('*')
+              .eq('id', parseInt(tourId))
+              .eq('artist_id', artistData.id)
+              .single()
+
+            if (tourData) {
+              setSelectedTour(tourData.id)
+            }
+          }
+        }
+      }
+    }
+    initializeFromUrl()
+  }, [searchParams])
+
+  // 選択されたアーティストに基づいてツアーを取得
   useEffect(() => {
     async function fetchTours() {
       if (selectedArtist) {
@@ -101,6 +152,8 @@ export default function Home() {
         } else {
           setTours(data || [])
         }
+      } else {
+        setTours([])
       }
     }
     fetchTours()
@@ -140,107 +193,120 @@ export default function Home() {
         .order('number')
 
       setTickets(updatedTickets || [])
+      setShowTickets(true)
     }
   }
 
   return (
     <main className="min-h-screen px-4 py-8">
-      <div className="container mx-auto h-screen relative">
-        <h1 className="text-2xl mb-4 text-center">
-          <b className="leading-none">ライブ座席予想</b><br/>
-          <small className="leading-none">seat-predicter</small>
-        </h1>
+      <section className="container mx-auto h-screen relative">
+        <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">ライブ座席予想</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <select
-            value={selectedArtist || ''}
-            onChange={(e) => setSelectedArtist(Number(e.target.value))}
-            className="w-full p-2 border rounded"
-          >
-            <option value="">アーティストを選択</option>
-            {artists.map(artist => (
-              <option key={artist.id} value={artist.id}>
-                {artist.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={selectedTour || ''}
-            onChange={(e) => setSelectedTour(Number(e.target.value))}
-            disabled={!selectedArtist}
-            className="w-full p-2 border rounded"
-          >
-            <option value="">ツアーを選択</option>
-            {tours.map(tour => (
-              <option key={tour.id} value={tour.id}>
-                {tour.name}
-              </option>
-            ))}
-          </select>
-
-          <div className="flex space-x-2">
+        <section>
+          <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <select
-              value={block}
-              onChange={(e) => setBlock(e.target.value)}
-              className="w-1/3 p-2 border rounded"
+              value={selectedArtist || ''}
+              onChange={(e) => {
+                const value = Number(e.target.value)
+                setSelectedArtist(value || null)
+                setSelectedTour(null)
+                updateUrlParams(value || null, null)
+              }}
+              className="w-full p-2 border rounded"
             >
-              <option value="">ブロック</option>
-              {['A', 'B', 'C', 'D', 'E', 'F'].map(b => (
-                <option key={b} value={b}>{b}</option>
+              <option value="">アーティストを選択</option>
+              {artists.map(artist => (
+                <option key={artist.id} value={artist.id}>
+                  {artist.name}
+                </option>
               ))}
             </select>
 
-            <input
-              type="number"
-              value={column || ''}
-              onChange={(e) => setColumn(Number(e.target.value))}
-              placeholder="列番号"
-              className="w-1/3 p-2 border rounded"
-            />
-
-            <input
-              type="number"
-              value={seatNumber || ''}
-              onChange={(e) => setSeatNumber(Number(e.target.value))}
-              placeholder="席番号"
-              className="w-1/3 p-2 border rounded"
-            />
-          </div>
-          <div className="flex space-x-2 text-sm">
-            <button
-              type="button"
-              onClick={handleReset}
-              className="w-1/3 p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            <select
+              value={selectedTour || ''}
+              onChange={(e) => {
+                const value = Number(e.target.value)
+                setSelectedTour(value || null)
+                updateUrlParams(selectedArtist, value || null)
+              }}
+              disabled={!selectedArtist}
+              className="w-full p-2 border rounded"
             >
-              リセット
-            </button>
+              <option value="">ツアーを選択</option>
+              {tours.map(tour => (
+                <option key={tour.id} value={tour.id}>
+                  {tour.name}
+                </option>
+              ))}
+            </select>
 
-            <button
-              type="button"
-              onClick={handleShowTickets}
-              disabled={!selectedTour}
-              className={`w-1/3 p-2 text-white rounded ${
-                selectedTour
-                  ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-gray-300 cursor-not-allowed'
-              }`}
-            >
-              一覧を見る
-            </button>
+            <div className="flex space-x-2">
+              <select
+                value={block}
+                onChange={(e) => setBlock(e.target.value)}
+                className="w-1/3 p-2 border rounded"
+              >
+                <option value="">ブロック</option>
+                {Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)).map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
 
-            <button
-              type="submit"
-              className="w-1/3 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              チケットを登録
-            </button>
-          </div>
-        </form>
+              <input
+                type="number"
+                value={column || ''}
+                onChange={(e) => setColumn(Number(e.target.value))}
+                placeholder="列番号"
+                className="w-1/3 p-2 border rounded"
+              />
 
-        <div className="mt-8">
+              <input
+                type="number"
+                value={seatNumber || ''}
+                onChange={(e) => setSeatNumber(Number(e.target.value))}
+                placeholder="席番号"
+                className="w-1/3 p-2 border rounded"
+              />
+            </div>
+
+            <div className="flex space-x-2 text-sm">
+
+              <button
+                type="button"
+                onClick={handleReset}
+                className="w-1/3 p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              >
+                リセット
+              </button>
+
+              <button
+                type="button"
+                onClick={handleShowTickets}
+                disabled={!selectedTour}
+                className={`w-1/3 p-2 text-white rounded ${
+                  selectedTour
+                    ? 'bg-yellow-500 hover:bg-yellow-600'
+                    : 'bg-gray-300 cursor-not-allowed'
+                }`}
+              >
+                一覧
+              </button>
+
+              <button
+                type="submit"
+                className="w-1/3 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                登録
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section className="mt-8">
+        <h2 className="text-xl text-gray-600 font-bold mb-2">ツアーチケット一覧</h2>
           {!showTickets ? (
-            <p className="text-center text-red-600">ツアーを選択してください</p>
+            <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">「一覧」を押すかチケット登録をすると一覧が表示されます</p>
           ) : tickets.length === 0 ? (
             <p className="text-center text-gray-600">登録されているチケットはありません</p>
           ) : (
@@ -248,31 +314,48 @@ export default function Home() {
               <table className="min-w-full bg-white border">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="px-6 py-3 border-b text-left">ブロック</th>
+                    <th className="px-6 py- border-b text-left">ブロック</th>
                     <th className="px-6 py-3 border-b text-left">列</th>
                     <th className="px-6 py-3 border-b text-left">席番号</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {tickets.map((ticket) => (
-                    <tr key={ticket.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 border-b">{ticket.block}</td>
-                      <td className="px-6 py-4 border-b">{ticket.column}</td>
-                      <td className="px-6 py-4 border-b">{ticket.number}</td>
-                    </tr>
-                  ))}
+                  {tickets.map((ticket) => {
+                    // ブロックごとに背景色を変える（A-Zの26色）
+                    const blockIndex = ticket.block.charCodeAt(0) - 65
+                    // 黄金角（137.5度）を使用して、隣接するブロックの色が離れるようにする
+                    const hue = (blockIndex * 137.5) % 360
+                    const backgroundColor = `hsl(${hue}, 70%, 77%)`//（色相・彩度・輝度）
+
+                    return (
+                      <tr
+                        key={ticket.id}
+                        className="hover:bg-gray-50"
+                        style={{ backgroundColor }}
+                      >
+                        <td className="px-6 py-1 border-b">{ticket.block}</td>
+                        <td className="px-6 py-1 border-b">{ticket.column}</td>
+                        <td className="px-6 py-1 border-b">{ticket.number}</td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
           )}
-        </div>
+        </section>
 
-
-        <footer className="mt-8 text-center">
-          <a href="/about" className="mr-4 text-blue-500">アプリについて</a>
-          <a href="/request" className="text-blue-500">要望</a>
+        <footer className="text-sm text-gray-700 w-full mt-4">
+          <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center space-x-6">
+            <Link href="/about" className="text-gray-700 hover:text-gray-900 transition-colors">
+              アプリについて
+            </Link>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhaKuEJxG7hJBMRp1O5g2I4tzngi9gN2LqQfMEDjBUDaelIg/viewform?usp=header" className="text-gray-700 hover:text-gray-900 transition-colors" target="_blank">
+              問い合わせ
+            </a>
+          </div>
         </footer>
-      </div>
+      </section>
     </main>
   )
 }
