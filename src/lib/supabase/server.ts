@@ -1,7 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
 import type { Database } from '../../types/database.types'
 
-export function createServerSupabaseClient(cookieStore: any) {
+// 必要な機能のみを持つインターフェースを定義
+interface CookieStore {
+  get(name: string): { value: string } | undefined
+}
+
+export function createServerSupabaseClient(cookieStore: CookieStore) {
   return createServerClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
@@ -10,26 +15,14 @@ export function createServerSupabaseClient(cookieStore: any) {
         get(name: string) {
           return cookieStore.get(name)?.value
         },
-        set(name: string, value: string, options: any) {
-          try {
-            cookieStore.set({ name, value, ...options })
-          } catch (error) {
-            // Handle server-side cookie setting error
-          }
-        },
-        remove(name: string, options: any) {
-          try {
-            cookieStore.set({ name, value: '', ...options, expires: new Date(0) })
-          } catch (error) {
-            // Handle server-side cookie deletion error
-          }
-        },
+        set() {},
+        remove() {},
       },
     }
   )
 }
 
-export async function fetchArtists(cookieStore: any) {
+export async function fetchArtists(cookieStore: CookieStore) {
   const supabase = createServerSupabaseClient(cookieStore)
   const { data, error } = await supabase
     .from('artists')
@@ -44,7 +37,7 @@ export async function fetchArtists(cookieStore: any) {
   return data
 }
 
-export async function fetchToursByArtist(cookieStore: any, artistId: number) {
+export async function fetchToursByArtist(cookieStore: CookieStore, artistId: number) {
   const supabase = createServerSupabaseClient(cookieStore)
   const { data, error } = await supabase
     .from('tours')
