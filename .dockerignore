@@ -1,0 +1,22 @@
+# バージョン管理システム
+.git
+.gitignore
+
+# 依存関係
+node_modules
+npm-debug.log
+
+# 開発環境の設定ファイル
+.env
+.env.local
+.env.development
+.env.test
+
+# ビルド出力
+.next
+out
+
+# その他
+README.md
+*.log
+.DS_Store
