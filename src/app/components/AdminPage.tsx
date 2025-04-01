@@ -15,6 +15,7 @@ type AdminPageProps = {
   handleEditArtist: (formData: FormData) => Promise<{ success: boolean }>
   handleDeleteArtist: (formData: FormData) => Promise<{ success: boolean }>
   handleAddTour: (formData: FormData) => Promise<{ tour: Tour }>
+  handleFetchTours: (formData: FormData) => Promise<{ tours: Tour[] }>
   handleEditTour: (formData: FormData) => Promise<{ success: boolean }>
   handleDeleteTour: (formData: FormData) => Promise<{ success: boolean }>
 }
@@ -28,11 +29,12 @@ export default function AdminPage({
   handleDeleteArtist,
   handleAddTour,
   handleEditTour,
-  handleDeleteTour
+  handleDeleteTour,
+  handleFetchTours
 }: AdminPageProps) {
   const [artists, setArtists] = useState<Artist[]>(initialArtists)
   const [tours, setTours] = useState<Tour[]>(initialTours)
-  const [tickets, setTickets] = useState<Ticket[]>(initialTickets)
+  const [tickets] = useState<Ticket[]>(initialTickets)
   const [artistName, setArtistName] = useState('')
   const [selectedArtistId, setSelectedArtistId] = useState('')
   const [tourName, setTourName] = useState('')
@@ -41,9 +43,18 @@ export default function AdminPage({
   const [selectedTourId, setSelectedTourId] = useState('')
 
   // アーティスト選択時のハンドラー
-  const handleArtistSelect = (artistId: string) => {
+  const handleArtistSelect = async (artistId: string) => {
     setSelectedArtistId(artistId)
     setSelectedTourId('') // アーティストが変更されたらツアー選択をリセット
+
+    if (artistId) {
+      const formData = new FormData()
+      formData.append('artistId', artistId)
+      const { tours: newTours } = await handleFetchTours(formData)
+      setTours(newTours)
+    } else {
+      setTours([])
+    }
   }
 
   // アーティスト追加フォームのサブミット
@@ -59,7 +70,8 @@ export default function AdminPage({
       setArtists([...artists, artist])
       setArtistName('')
       alert('アーティストを追加しました')
-    } catch (error) {
+    } catch (err) {
+      console.error('アーティスト追加エラー:', err)
       alert('アーティストの追加に失敗しました')
     }
   }
@@ -77,7 +89,8 @@ export default function AdminPage({
       ))
       setEditingArtist(null)
       alert('アーティストを編集しました')
-    } catch (error) {
+    } catch (err) {
+      console.error('アーティスト編集エラー:', err)
       alert('アーティストの編集に失敗しました')
     }
   }
@@ -97,7 +110,8 @@ export default function AdminPage({
         setSelectedTourId('')
       }
       alert('アーティストを削除しました')
-    } catch (error) {
+    } catch (err) {
+      console.error('アーティスト削除エラー:', err)
       alert('アーティストの削除に失敗しました')
     }
   }
@@ -116,7 +130,8 @@ export default function AdminPage({
       setTours([...tours, tour])
       setTourName('')
       alert('ツアーを追加しました')
-    } catch (error) {
+    } catch (err) {
+      console.error('ツアー追加エラー:', err)
       alert('ツアーの追加に失敗しました')
     }
   }
@@ -134,7 +149,8 @@ export default function AdminPage({
       ))
       setEditingTour(null)
       alert('ツアーを編集しました')
-    } catch (error) {
+    } catch (err) {
+      console.error('ツアー編集エラー:', err)
       alert('ツアーの編集に失敗しました')
     }
   }
@@ -153,7 +169,8 @@ export default function AdminPage({
         setSelectedTourId('')
       }
       alert('ツアーを削除しました')
-    } catch (error) {
+    } catch (err) {
+      console.error('ツアー削除エラー:', err)
       alert('ツアーの削除に失敗しました')
     }
   }

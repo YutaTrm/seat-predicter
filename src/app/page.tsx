@@ -51,7 +51,8 @@ async function fetchTours(formData: FormData) {
 export default async function Page() {
   const artists = await fetchArtists()
 
-  if (!artists.length) {
+  if (!artists || artists.length === 0) {
+    console.error('アーティスト情報の取得に失敗しました')
     return <div>アーティスト情報の読み込みに失敗しました</div>
   }
 

@@ -75,6 +75,15 @@ async function handleDeleteTour(formData: FormData) {
   return { success: true }
 }
 
+// ツアー一覧を取得するServer Action
+async function handleFetchTours(formData: FormData) {
+  'use server'
+
+  const artistId = Number(formData.get('artistId'))
+  const tours = await fetchToursByArtist(artistId)
+  return { tours }
+}
+
 export default async function Page() {
   // 初期データの取得
   const artists = await fetchArtists()
@@ -92,6 +101,7 @@ export default async function Page() {
       handleAddTour={handleAddTour}
       handleEditTour={handleEditTour}
       handleDeleteTour={handleDeleteTour}
+      handleFetchTours={handleFetchTours}
     />
   )
 }
