@@ -227,9 +227,11 @@ export default function AdminPage() {
                 </button>
               </div>
             </form>
-
+            <hr/>
             <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">アーティスト一覧</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                アーティスト一覧 <span className="text-gray-500 text-sm">({artistList.length}件)</span>
+              </h3>
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="bg-gray-50">
@@ -292,7 +294,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-3/6">
+          <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-2/6">
             <h2 className="text-xl font-semibold mb-4">ツアー追加</h2>
             <form onSubmit={handleAddTour} className="mb-4">
               <select
@@ -323,9 +325,18 @@ export default function AdminPage() {
                 </button>
               </div>
             </form>
-
+            <hr/>
             <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">ツアー一覧</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                {selectedArtistId ? (
+                  <>
+                    {artistList.find(a => a.id === Number(selectedArtistId))?.name}のツアー一覧{' '}
+                    <span className="text-gray-500 text-sm">({filteredTours.length}件)</span>
+                  </>
+                ) : (
+                  'ツアー一覧'
+                )}
+              </h3>
               {selectedArtistId ? (
                 filteredTours.length > 0 ? (
                   <table className="w-full border-collapse">
@@ -396,8 +407,17 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-1/6">
-            <h2 className="text-xl font-semibold mb-4">チケット一覧</h2>
+          <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-2/6">
+            <h2 className="text-xl font-semibold mb-4">
+              {selectedTourId ? (
+                <>
+                  {tourList.find(t => t.id === Number(selectedTourId))?.name}のチケット一覧{' '}
+                  <span className="text-gray-500 text-sm">({filteredTickets.length}件)</span>
+                </>
+              ) : (
+                'チケット一覧'
+              )}
+            </h2>
             {selectedArtistId ? (
               <>
                 <select
