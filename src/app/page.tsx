@@ -32,6 +32,41 @@ export default function Home() {
   const [block, setBlock] = useState<string>('')
   const [column, setColumn] = useState<number | null>(null)
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
+  const [showTickets, setShowTickets] = useState<boolean>(false)
+
+  // フォームをリセットする関数
+  const handleReset = () => {
+    setSelectedArtist(null)
+    setSelectedTour(null)
+    setBlock('')
+    setColumn(null)
+    setSeatNumber(null)
+    setTickets([])
+    setShowTickets(false)
+  }
+
+  // チケット一覧を表示する関数
+  const handleShowTickets = async () => {
+    if (selectedArtist && selectedTour) {
+      const supabase = createSupabaseClient()
+      const { data, error } = await supabase
+        .from('tickets')
+        .select('*')
+        .eq('artist_id', selectedArtist)
+        .eq('tour_id', selectedTour)
+        .order('block')
+        .order('column')
+        .order('number')
+
+      if (error) {
+        console.error('チケット取得エラー:', error)
+        setTickets([])
+      } else {
+        setTickets(data || [])
+        setShowTickets(true)
+      }
+    }
+  }
 
   useEffect(() => {
     async function fetchArtists() {
@@ -109,9 +144,12 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen p-4">
+    <main className="min-h-screen px-4 py-8">
       <div className="container mx-auto h-screen relative">
-        <h1 className="text-2xl font-bold mb-4">座席予想アプリ-seat-predicter-</h1>
+        <h1 className="text-2xl mb-4 text-center">
+          <b className="leading-none">ライブ座席予想</b><br/>
+          <small className="leading-none">seat-predicter</small>
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <select
@@ -169,18 +207,42 @@ export default function Home() {
               className="w-1/3 p-2 border rounded"
             />
           </div>
+          <div className="flex space-x-2 text-sm">
+            <button
+              type="button"
+              onClick={handleReset}
+              className="w-1/3 p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              リセット
+            </button>
 
-          <button
-            type="submit"
-            className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            チケット情報を登録
-          </button>
+            <button
+              type="button"
+              onClick={handleShowTickets}
+              disabled={!selectedTour}
+              className={`w-1/3 p-2 text-white rounded ${
+                selectedTour
+                  ? 'bg-green-500 hover:bg-green-600'
+                  : 'bg-gray-300 cursor-not-allowed'
+              }`}
+            >
+              一覧を見る
+            </button>
+
+            <button
+              type="submit"
+              className="w-1/3 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              チケットを登録
+            </button>
+          </div>
         </form>
 
         <div className="mt-8">
-          {tickets.length === 0 ? (
-            <p className="text-center text-gray-600">アーティストとツアーを選んでください</p>
+          {!showTickets ? (
+            <p className="text-center text-red-600">ツアーを選択してください</p>
+          ) : tickets.length === 0 ? (
+            <p className="text-center text-gray-600">登録されているチケットはありません</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white border">

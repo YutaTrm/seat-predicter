@@ -69,58 +69,64 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">管理画面</h1>
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">管理画面</h1>
 
-        <form onSubmit={handleAddArtist} className="mb-6">
-          <h2 className="text-xl font-semibold mb-4">アーティスト追加</h2>
-          <div className="flex">
-            <input
-              type="text"
-              value={artists}
-              onChange={(e) => setArtists(e.target.value)}
-              placeholder="アーティスト名"
-              className="flex-grow p-2 border rounded-l"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded-r"
-            >
-              追加
-            </button>
-          </div>
-        </form>
+        <div className="flex gap-4">
+          <form onSubmit={handleAddArtist} className="mb-6 bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">アーティスト追加</h2>
+            <div className="flex">
+              <input
+                type="text"
+                value={artists}
+                onChange={(e) => setArtists(e.target.value)}
+                placeholder="アーティスト名"
+                className="flex-grow p-2 border rounded-l"
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded-r"
+              >
+                追加
+              </button>
+            </div>
+          </form>
 
-        <form onSubmit={handleAddTour} className="mb-6">
-          <h2 className="text-xl font-semibold mb-4">ツアー追加</h2>
-          <select
-            value={tours.artist}
-            onChange={(e) => setTours({...tours, artist: e.target.value})}
-            className="w-full p-2 border rounded mb-2"
-          >
-            <option value="">アーティストを選択</option>
-            {artistList.map(artist => (
-              <option key={artist.id} value={artist.id}>
-                {artist.name}
-              </option>
-            ))}
-          </select>
-          <div className="flex">
-            <input
-              type="text"
-              value={tours.name}
-              onChange={(e) => setTours({...tours, name: e.target.value})}
-              placeholder="ツアー名"
-              className="flex-grow p-2 border rounded-l"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded-r"
+          <form onSubmit={handleAddTour} className="mb-6 bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">ツアー追加</h2>
+            <select
+              value={tours.artist}
+              onChange={(e) => setTours({...tours, artist: e.target.value})}
+              className="w-full p-2 border rounded mb-2"
             >
-              追加
-            </button>
+              <option value="">アーティストを選択</option>
+              {artistList.map(artist => (
+                <option key={artist.id} value={artist.id}>
+                  {artist.name}
+                </option>
+              ))}
+            </select>
+            <div className="flex">
+              <input
+                type="text"
+                value={tours.name}
+                onChange={(e) => setTours({...tours, name: e.target.value})}
+                placeholder="ツアー名"
+                className="flex-grow p-2 border rounded-l"
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded-r"
+              >
+                追加
+              </button>
+            </div>
+          </form>
+
+          <div className="mb-6 bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">チケット一覧</h2>
           </div>
-        </form>
+          </div>
       </div>
     </div>
   )
