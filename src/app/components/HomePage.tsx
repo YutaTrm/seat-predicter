@@ -1,37 +1,16 @@
 'use client'
 
-import Link from "next/link";
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Artist, Tour, Ticket, HomePageProps } from '../../types/ticket'
+import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
+import TicketForm from './home/TicketForm'
+import TicketTable from './home/TicketTable'
+import Footer from './common/Footer'
 
-type Ticket = {
-  id: number
-  artist_id: number
-  tour_id: number
-  block: string
-  column: number
-  number: number
-  created_at: string
-}
-
-type Artist = {
-  id: number
-  name: string
-}
-
-type Tour = {
-  id: number
-  artist_id: number
-  name: string
-}
-
-type HomePageProps = {
-  artists: Artist[]
-  handleTicketSubmit: (formData: FormData) => Promise<{ success: boolean; error?: string }>
-  fetchTourTickets: (formData: FormData) => Promise<{ tickets: Ticket[] }>
-  fetchTours: (formData: FormData) => Promise<{ tours: Tour[] }>
-}
-
+/**
+ * ホームページコンポーネント
+ */
 export default function HomePage({
   artists: initialArtists,
   handleTicketSubmit,
@@ -46,41 +25,52 @@ export default function HomePage({
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
   const [selectedTour, setSelectedTour] = useState<number | null>(null)
-  const [block, setBlock] = useState<string>('')
-  const [column, setColumn] = useState<number | null>(null)
-  const [seatNumber, setSeatNumber] = useState<number | null>(null)
   const [showTickets, setShowTickets] = useState<boolean>(false)
 
-  // URLパラメータを更新する関数
-  const updateUrlParams = (artistId: number | null, tourId: number | null) => {
-    const params = new URLSearchParams()
-    if (artistId) params.set('artist', artistId.toString())
-    if (tourId) params.set('tour', tourId.toString())
-    router.push(`?${params.toString()}`)
-  }
-
-  // フォームをリセットする関数
+  /**
+   * フォームをリセットする関数
+   */
   const handleReset = () => {
     setSelectedArtist(null)
     setSelectedTour(null)
-    setBlock('')
-    setColumn(null)
-    setSeatNumber(null)
     setTickets([])
     setShowTickets(false)
-    updateUrlParams(null, null)
   }
 
-  // チケット一覧を表示する関数
+  /**
+   * チケット一覧を表示する関数
+   */
   const handleShowTickets = async () => {
     if (selectedArtist && selectedTour) {
-      const formData = new FormData()
-      formData.append('artist_id', selectedArtist.toString())
-      formData.append('tour_id', selectedTour.toString())
-
-      const { tickets: newTickets } = await fetchTourTickets(formData)
+      const newTickets = await fetchTickets(selectedArtist, selectedTour, fetchTourTickets)
       setTickets(newTickets)
       setShowTickets(true)
+    }
+  }
+
+  /**
+   * チケットを登録する関数
+   */
+  const handleSubmitTicket = async (block: string, column: number, seatNumber: number) => {
+    if (!selectedArtist || !selectedTour) return
+
+    const result = await submitTicket(
+      selectedArtist,
+      selectedTour,
+      block,
+      column,
+      seatNumber,
+      handleTicketSubmit
+    )
+
+    if (result.success) {
+      alert('チケットを登録しました')
+      // チケット登録後に一覧を更新
+      const updatedTickets = await fetchTickets(selectedArtist, selectedTour, fetchTourTickets)
+      setTickets(updatedTickets)
+      setShowTickets(true)
+    } else {
+      alert(result.error || 'チケットの登録に失敗しました')
     }
   }
 
@@ -131,220 +121,32 @@ export default function HomePage({
     loadTours()
   }, [selectedArtist, fetchTours])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!selectedArtist || !selectedTour || !block || !column || !seatNumber) {
-      alert('すべての情報を入力してください')
-      return
-    }
-
-    const formData = new FormData()
-    formData.append('artist_id', selectedArtist.toString())
-    formData.append('tour_id', selectedTour.toString())
-    formData.append('block', block)
-    formData.append('column', column.toString())
-    formData.append('number', seatNumber.toString())
-
-    const result = await handleTicketSubmit(formData)
-
-    if (result.success) {
-      alert('チケットを登録しました')
-      // チケット登録後に一覧を更新
-      const ticketsFormData = new FormData()
-      ticketsFormData.append('artist_id', selectedArtist.toString())
-      ticketsFormData.append('tour_id', selectedTour.toString())
-      const { tickets: updatedTickets } = await fetchTourTickets(ticketsFormData)
-      setTickets(updatedTickets)
-      setShowTickets(true)
-    } else {
-      alert(result.error || 'チケットの登録に失敗しました')
-    }
-  }
-
   return (
     <main className="min-h-screen px-4 py-8">
       <section className="container mx-auto h-screen relative">
         <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">ライブ座席予想(β版)</h1>
 
-        {/* チケット情報入力 */}
-        <section>
-          <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <select
-              value={selectedArtist || ''}
-              onChange={(e) => {
-                const value = Number(e.target.value)
-                setSelectedArtist(value || null)
-                setSelectedTour(null)
-                updateUrlParams(value || null, null)
-              }}
-              className="w-full p-2 border rounded"
-            >
-              <option value="">アーティストを選択</option>
-              {artists.map(artist => (
-                <option key={artist.id} value={artist.id}>
-                  {artist.name}
-                </option>
-              ))}
-            </select>
+        <TicketForm
+          artists={artists}
+          tours={tours}
+          selectedArtist={selectedArtist}
+          selectedTour={selectedTour}
+          onArtistChange={setSelectedArtist}
+          onTourChange={setSelectedTour}
+          onSubmit={handleSubmitTicket}
+          onReset={handleReset}
+          onShowTickets={handleShowTickets}
+        />
 
-            <select
-              value={selectedTour || ''}
-              onChange={(e) => {
-                const value = Number(e.target.value)
-                setSelectedTour(value || null)
-                updateUrlParams(selectedArtist, value || null)
-              }}
-              disabled={!selectedArtist}
-              className="w-full p-2 border rounded"
-            >
-              <option value="">ツアーを選択</option>
-              {tours.map(tour => (
-                <option key={tour.id} value={tour.id}>
-                  {tour.name}
-                </option>
-              ))}
-            </select>
-
-            <div className="flex space-x-2">
-              <select
-                value={block}
-                onChange={(e) => setBlock(e.target.value)}
-                className="w-1/3 p-2 border rounded"
-              >
-                <option value="">ブロック</option>
-                {Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)).map(b => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
-
-              <input
-                type="number"
-                value={column || ''}
-                onChange={(e) => setColumn(Number(e.target.value))}
-                placeholder="列番号"
-                className="w-1/3 p-2 border rounded"
-              />
-
-              <input
-                type="number"
-                value={seatNumber || ''}
-                onChange={(e) => setSeatNumber(Number(e.target.value))}
-                placeholder="席番号"
-                className="w-1/3 p-2 border rounded"
-              />
-            </div>
-
-            <div className="flex space-x-2 text-sm">
-              <button
-                type="button"
-                onClick={handleReset}
-                className="w-1/3 p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-              >
-                リセット
-              </button>
-
-              <button
-                type="button"
-                onClick={handleShowTickets}
-                disabled={!selectedTour}
-                className={`w-1/3 p-2 text-white rounded ${
-                  selectedTour
-                    ? 'bg-amber-500 hover:bg-amber-600'
-                    : 'bg-gray-300 cursor-not-allowed'
-                }`}
-              >
-                一覧
-              </button>
-
-              <button
-                type="submit"
-                className="w-1/3 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                登録
-              </button>
-            </div>
-          </form>
-        </section>
-
-        {/* チケット一覧結果 */}
         <section className="mt-8">
-        <h2 className="text-xl text-gray-600 font-bold mb-2">ツアーチケット一覧</h2>
-          {!showTickets ? (
-            <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">「一覧」を押すかチケット登録をすると一覧が表示されます</p>
-          ) : tickets.length === 0 ? (
-            <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">登録されているチケットはありません</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border text-sm mb-3">
-                <thead>
-                  <tr className="bg-gray-600 text-gray-100">
-                    <th className="px-3 py-1 border-b text-center font-semibold">ブロック</th>
-                    <th className="px-3 py-1 border-b text-center font-semibold">列</th>
-                    <th className="px-3 py-1 border-b text-center font-semibold">席番号</th>
-                    <th className="px-3 py-1 border-b text-center font-semibold">投稿日時</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tickets.map((ticket) => {
-                    // ブロックごとに背景色を変える（A-Zの26色）
-                    const blockIndex = ticket.block.charCodeAt(0) - 65
-                    // 黄金角（137.5度）を使用して、隣接するブロックの色が離れるようにする
-                    const hue = (blockIndex * 137.5) % 360
-                    const backgroundColor = `hsl(${hue}, 80%, 80%)`//（色相・彩度・輝度）
-                    return (
-                      <tr
-                        key={ticket.id}
-                        className="hover:bg-gray-50"
-                        style={{ backgroundColor }}
-                      >
-                        <td className="px-3 py-1 border-b text-right">{ticket.block}</td>
-                        <td className="px-3 py-1 border-b text-right">{ticket.column}</td>
-                        <td className="px-3 py-1 border-b text-right">{ticket.number}</td>
-                        <td className="px-3 py-1 border-b text-right">
-                          {new Date(ticket.created_at).toLocaleString('ja-JP', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-              {/* ブロックごとのレコード数を表示 */}
-              <h3 className="text-gray-600 font-bold mb-2">ブロックごとの集計数</h3>
-              <table className="mb-4">
-                <tbody>
-                  {Object.entries(
-                    tickets.reduce((acc, ticket) => {
-                      acc[ticket.block] = (acc[ticket.block] || 0) + 1;
-                      return acc;
-                    }, {} as Record<string, number>)
-                  ).map(([block, count]) => (
-                    <tr key={block} className="text-sm p-2 rounded">
-                      <td className="font-bold">{block}ブロック:{count}件</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <h2 className="text-xl text-gray-600 font-bold mb-2">ツアーチケット一覧</h2>
+          <TicketTable
+            tickets={tickets}
+            showTickets={showTickets}
+          />
         </section>
 
-        <footer className="text-sm text-gray-700 w-full mt-8">
-          <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center space-x-6">
-            <Link href="/about" className="text-gray-700 hover:text-gray-900 transition-colors">
-              アプリについて
-            </Link>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhaKuEJxG7hJBMRp1O5g2I4tzngi9gN2LqQfMEDjBUDaelIg/viewform?usp=header" className="text-gray-700 hover:text-gray-900 transition-colors" target="_blank">
-              問い合わせ
-            </a>
-          </div>
-        </footer>
+        <Footer />
       </section>
     </main>
   )
