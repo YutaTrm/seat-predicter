@@ -98,7 +98,7 @@ export default function TicketForm({
             className="w-1/3 p-2 border rounded"
           >
             <option value="">ブロック</option>
-            {Array.from({ length: 26 }, (_, i) => {
+            {Array.from({ length: 16 }, (_, i) => { //全アルファベットじゃなくて途中まで
               const char = String.fromCharCode(65 + i);
               if (char === 'P') {
                 // P1からP20までのオプションを生成
