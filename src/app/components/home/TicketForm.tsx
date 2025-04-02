@@ -52,6 +52,7 @@ export default function TicketForm({
   }
 
   const handleReset = () => {
+    router.replace("/");
     setBlock('')
     setColumn(null)
     setSeatNumber(null)
