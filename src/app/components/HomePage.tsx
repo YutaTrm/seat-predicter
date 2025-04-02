@@ -53,7 +53,7 @@ export default function HomePage({
   const postToX = () => {
     const text = generatePostText()
     const encodedText = encodeURIComponent(text)
-    window.open(`https://twitter.com/intent/tweet?text=${encodedText}`, '_blank')
+    window.open(`https://twitter.com/intent/tweet?text=${encodedText}&hashtags=座席予想`, '_blank')
   }
 
   /**
