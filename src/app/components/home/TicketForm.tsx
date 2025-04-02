@@ -55,7 +55,7 @@ export default function TicketForm({
   return (
     <section>
       <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 text-sm">
         <select
           value={selectedArtist || ''}
           onChange={(e) => {
@@ -98,9 +98,16 @@ export default function TicketForm({
             className="w-1/3 p-2 border rounded"
           >
             <option value="">ブロック</option>
-            {Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)).map(b => (
-              <option key={b} value={b}>{b}</option>
-            ))}
+            {Array.from({ length: 26 }, (_, i) => {
+              const char = String.fromCharCode(65 + i);
+              if (char === 'P') {
+                // P1からP20までのオプションを生成
+                return Array.from({ length: 20 }, (_, j) => (
+                  <option key={`P${j + 1}`} value={`P${j + 1}`}>P{j + 1}</option>
+                ));
+              }
+              return <option key={char} value={char}>{char}</option>;
+            }).flat()}
           </select>
 
           <input
