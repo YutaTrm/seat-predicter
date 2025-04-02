@@ -1,18 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { Artist, Tour } from '../../../types/ticket'
+import { Artist, Tour, LotterySlot } from '../../../types/ticket'
 import { updateUrlParams } from '../../../utils/ticketUtils'
 import { useRouter } from 'next/navigation'
 
 type TicketFormProps = {
   artists: Artist[]
   tours: Tour[]
+  lotterySlots: LotterySlot[]
   selectedArtist: number | null
   selectedTour: number | null
+  selectedLotterySlot: number | null
   onArtistChange: (artistId: number | null) => void
   onTourChange: (tourId: number | null) => void
-  onSubmit: (block: string, column: number, seatNumber: number) => void
+  onLotterySlotChange: (lotterySlotId: number | null) => void
+  onSubmit: (block: string, column: number, seatNumber: number, lotterySlotId: number) => void
   onReset: () => void
   onShowTickets: () => void
 }
@@ -23,10 +26,13 @@ type TicketFormProps = {
 export default function TicketForm({
   artists,
   tours,
+  lotterySlots,
   selectedArtist,
   selectedTour,
+  selectedLotterySlot,
   onArtistChange,
   onTourChange,
+  onLotterySlotChange,
   onSubmit,
   onReset,
   onShowTickets
@@ -38,11 +44,11 @@ export default function TicketForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!block || !column || !seatNumber) {
+    if (!block || !column || !seatNumber || !selectedLotterySlot) {
       alert('すべての情報を入力してください')
       return
     }
-    onSubmit(block, column, seatNumber)
+    onSubmit(block, column, seatNumber, selectedLotterySlot)
   }
 
   const handleReset = () => {
@@ -95,7 +101,7 @@ export default function TicketForm({
           <select
             value={block}
             onChange={(e) => setBlock(e.target.value)}
-            className="w-1/3 p-2 border rounded"
+            className="w-2/6 p-2 border rounded"
           >
             <option value="">ブロック</option>
             {Array.from({ length: 16 }, (_, i) => { //全アルファベットじゃなくて途中まで
@@ -114,17 +120,34 @@ export default function TicketForm({
             type="number"
             value={column || ''}
             onChange={(e) => setColumn(Number(e.target.value))}
-            placeholder="列番号"
-            className="w-1/3 p-2 border rounded"
+            placeholder="列番"
+            className="w-1/6 p-2 border rounded"
           />
 
           <input
             type="number"
             value={seatNumber || ''}
             onChange={(e) => setSeatNumber(Number(e.target.value))}
-            placeholder="席番号"
-            className="w-1/3 p-2 border rounded"
+            placeholder="席番"
+            className="w-1/6 p-2 border rounded"
           />
+
+          <select
+            value={selectedLotterySlot || ''}
+            onChange={(e) => {
+              const value = Number(e.target.value)
+              onLotterySlotChange(value || null)
+            }}
+            disabled={!selectedArtist}
+            className="w-2/6 p-2 border rounded"
+          >
+            <option value="">抽選枠</option>
+            {lotterySlots.map(slot => (
+              <option key={slot.id} value={slot.id}>
+                {slot.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="flex space-x-2 text-sm">

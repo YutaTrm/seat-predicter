@@ -40,6 +40,22 @@ export async function fetchToursByArtist(artistId: number) {
   return data
 }
 
+export async function fetchLotterySlots(artistId: number) {
+  const supabase = createServerSupabaseClient()
+  const { data, error } = await supabase
+    .from('lottery_slots')
+    .select('*')
+    .eq('artist_id', artistId)
+    .order('name')
+
+  if (error) {
+    console.error('抽選枠取得エラー:', error)
+    return []
+  }
+
+  return data
+}
+
 export async function fetchArtistById(artistId: number) {
   const supabase = createServerSupabaseClient()
   const { data, error } = await supabase
@@ -77,7 +93,12 @@ export async function fetchTickets(artistId: number, tourId: number) {
   const supabase = createServerSupabaseClient()
   const { data, error } = await supabase
     .from('tickets')
-    .select('*')
+    .select(`
+      *,
+      lottery_slots (
+        name
+      )
+    `)
     .eq('artist_id', artistId)
     .eq('tour_id', tourId)
     .order('block')
@@ -89,12 +110,16 @@ export async function fetchTickets(artistId: number, tourId: number) {
     return []
   }
 
-  return data
+  return data.map(ticket => ({
+    ...ticket,
+    lottery_slots_name: ticket.lottery_slots?.name
+  }))
 }
 
 export async function createTicket(ticket: {
   artist_id: number
   tour_id: number
+  lottery_slots_id: number
   block: string
   column: number
   number: number
@@ -199,6 +224,54 @@ export async function deleteTour(id: number) {
   if (error) {
     console.error('ツアー削除エラー:', error)
     throw new Error('ツアーの削除に失敗しました')
+  }
+
+  return true
+}
+
+export async function addLotterySlot(artistId: number, name: string) {
+  const supabase = createServerSupabaseClient()
+  const { data, error } = await supabase
+    .from('lottery_slots')
+    .insert({
+      artist_id: artistId,
+      name
+    })
+    .select()
+
+  if (error) {
+    console.error('抽選枠追加エラー:', error)
+    throw new Error('抽選枠の追加に失敗しました')
+  }
+
+  return data[0]
+}
+
+export async function updateLotterySlot(id: number, name: string) {
+  const supabase = createServerSupabaseClient()
+  const { error } = await supabase
+    .from('lottery_slots')
+    .update({ name })
+    .eq('id', id)
+
+  if (error) {
+    console.error('抽選枠編集エラー:', error)
+    throw new Error('抽選枠の編集に失敗しました')
+  }
+
+  return true
+}
+
+export async function deleteLotterySlot(id: number) {
+  const supabase = createServerSupabaseClient()
+  const { error } = await supabase
+    .from('lottery_slots')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('抽選枠削除エラー:', error)
+    throw new Error('抽選枠の削除に失敗しました')
   }
 
   return true

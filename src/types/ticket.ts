@@ -2,6 +2,8 @@ export type Ticket = {
   id: number
   artist_id: number
   tour_id: number
+  lottery_slots_id: number
+  lottery_slots_name?: string
   block: string
   column: number
   number: number
@@ -19,9 +21,16 @@ export type Tour = {
   name: string
 }
 
+export type LotterySlot = {
+  id: number
+  artist_id: number
+  name: string
+}
+
 export type HomePageProps = {
   artists: Artist[]
   handleTicketSubmit: (formData: FormData) => Promise<{ success: boolean; error?: string }>
   fetchTourTickets: (formData: FormData) => Promise<{ tickets: Ticket[] }>
   fetchTours: (formData: FormData) => Promise<{ tours: Tour[] }>
+  fetchLotterySlots: (formData: FormData) => Promise<{ lotterySlots: LotterySlot[] }>
 }

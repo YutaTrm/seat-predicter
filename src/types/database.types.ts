@@ -29,6 +29,29 @@ export type Database = {
           updated_at?: string
         }
       }
+      lottery_slots: {
+        Row: {
+          id: number
+          artist_id: number
+          name: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          artist_id: number
+          name: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          artist_id?: number
+          name?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
       tours: {
         Row: {
           id: number
@@ -57,6 +80,7 @@ export type Database = {
           id: number
           artist_id: number
           tour_id: number
+          lottery_slots_id: number
           block: string
           column: number
           number: number
@@ -67,6 +91,7 @@ export type Database = {
           id?: number
           artist_id: number
           tour_id: number
+          lottery_slots_id: number
           block: string
           column: number
           number: number
@@ -77,6 +102,7 @@ export type Database = {
           id?: number
           artist_id?: number
           tour_id?: number
+          lottery_slots_id?: number
           block?: string
           column?: number
           number?: number

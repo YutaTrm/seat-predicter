@@ -39,6 +39,7 @@ export const fetchTickets = async (
 export const submitTicket = async (
   selectedArtist: number,
   selectedTour: number,
+  selectedLotterySlot: number,
   block: string,
   column: number,
   seatNumber: number,
@@ -47,6 +48,7 @@ export const submitTicket = async (
   const formData = new FormData()
   formData.append('artist_id', selectedArtist.toString())
   formData.append('tour_id', selectedTour.toString())
+  formData.append('lottery_slots_id', selectedLotterySlot.toString())
   formData.append('block', block)
   formData.append('column', column.toString())
   formData.append('number', seatNumber.toString())

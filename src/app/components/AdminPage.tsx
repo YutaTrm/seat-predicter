@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Artist, Tour, Ticket, AdminPageProps } from '../../types/admin'
+import { Artist, Tour, Ticket, LotterySlot, AdminPageProps } from '../../types/admin'
 import { fetchArtistTours } from '../../utils/tourUtils'
 import ArtistSection from './admin/ArtistSection'
 import TourSection from './admin/TourSection'
 import TicketSection from './admin/TicketSection'
+import LotterySlotSection from './admin/LotterySlotSection'
 
 /**
  * 管理画面コンポーネント
@@ -14,17 +15,23 @@ export default function AdminPage({
   initialArtists,
   initialTours,
   initialTickets,
+  initialLotterySlots,
   handleAddArtist,
   handleEditArtist,
   handleDeleteArtist,
   handleAddTour,
   handleEditTour,
   handleDeleteTour,
-  handleFetchTours
+  handleFetchTours,
+  handleAddLotterySlot,
+  handleEditLotterySlot,
+  handleDeleteLotterySlot,
+  handleFetchLotterySlots
 }: AdminPageProps) {
   const [artists, setArtists] = useState<Artist[]>(initialArtists)
   const [tours, setTours] = useState<Tour[]>(initialTours)
   const [tickets] = useState<Ticket[]>(initialTickets)
+  const [lotterySlots, setLotterySlots] = useState<LotterySlot[]>(initialLotterySlots)
   const [selectedArtistId, setSelectedArtistId] = useState('')
   const [selectedTourId, setSelectedTourId] = useState('')
 
@@ -39,13 +46,20 @@ export default function AdminPage({
       try {
         const newTours = await fetchArtistTours(artistId, handleFetchTours)
         setTours(newTours)
+
+        const formData = new FormData()
+        formData.append('artist_id', artistId)
+        const { lotterySlots: newLotterySlots } = await handleFetchLotterySlots(formData)
+        setLotterySlots(newLotterySlots)
       } catch (err) {
-        console.error('ツアー取得エラー:', err)
-        alert('ツアーの取得に失敗しました')
+        console.error('データ取得エラー:', err)
+        alert('データの取得に失敗しました')
         setTours([])
+        setLotterySlots([])
       }
     } else {
       setTours([])
+      setLotterySlots([])
     }
   }
 
@@ -102,6 +116,29 @@ export default function AdminPage({
     }
   }
 
+  /**
+   * 抽選枠追加時のハンドラー
+   */
+  const handleLotterySlotAdd = (lotterySlot: LotterySlot) => {
+    setLotterySlots([...lotterySlots, lotterySlot])
+  }
+
+  /**
+   * 抽選枠編集時のハンドラー
+   */
+  const handleLotterySlotEdit = (id: number, newName: string) => {
+    setLotterySlots(lotterySlots.map(slot =>
+      slot.id === id ? { ...slot, name: newName } : slot
+    ))
+  }
+
+  /**
+   * 抽選枠削除時のハンドラー
+   */
+  const handleLotterySlotDelete = (id: number) => {
+    setLotterySlots(lotterySlots.filter(slot => slot.id !== id))
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="p-6">
@@ -129,6 +166,19 @@ export default function AdminPage({
             handleAddTour={handleAddTour}
             handleEditTour={handleEditTour}
             handleDeleteTour={handleDeleteTour}
+          />
+
+          <LotterySlotSection
+            artists={artists}
+            lotterySlots={lotterySlots}
+            selectedArtistId={selectedArtistId}
+            onArtistSelect={handleArtistSelect}
+            onLotterySlotAdd={handleLotterySlotAdd}
+            onLotterySlotEdit={handleLotterySlotEdit}
+            onLotterySlotDelete={handleLotterySlotDelete}
+            handleAddLotterySlot={handleAddLotterySlot}
+            handleEditLotterySlot={handleEditLotterySlot}
+            handleDeleteLotterySlot={handleDeleteLotterySlot}
           />
 
           <TicketSection

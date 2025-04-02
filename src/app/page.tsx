@@ -1,7 +1,8 @@
 import HomePage from './components/HomePage'
-import { createTicket, fetchArtists, fetchTickets, fetchToursByArtist } from '@/lib/supabase/server'
+import { createTicket, fetchArtists, fetchLotterySlots as fetchLotterySlotsFromDB, fetchTickets, fetchToursByArtist } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { Suspense } from 'react'
+import { LotterySlot } from '@/types/ticket'
 
 // ダイナミックレンダリングを強制
 export const dynamic = 'force-dynamic'
@@ -12,6 +13,7 @@ async function handleTicketSubmit(formData: FormData) {
 
   const artistId = Number(formData.get('artist_id'))
   const tourId = Number(formData.get('tour_id'))
+  const lotterySlotId = Number(formData.get('lottery_slots_id'))
   const block = formData.get('block') as string
   const column = Number(formData.get('column'))
   const number = Number(formData.get('number'))
@@ -20,6 +22,7 @@ async function handleTicketSubmit(formData: FormData) {
     await createTicket({
       artist_id: artistId,
       tour_id: tourId,
+      lottery_slots_id: lotterySlotId,
       block,
       column,
       number
@@ -53,6 +56,16 @@ async function fetchTours(formData: FormData) {
   return { tours }
 }
 
+// 抽選枠一覧を取得するServer Action
+async function fetchLotterySlots(formData: FormData): Promise<{ lotterySlots: LotterySlot[] }> {
+  'use server'
+
+  const artistId = Number(formData.get('artist_id'))
+
+  const lotterySlots = await fetchLotterySlotsFromDB(artistId)
+  return { lotterySlots }
+}
+
 export default async function Page() {
   const artists = await fetchArtists()
 
@@ -74,6 +87,7 @@ export default async function Page() {
         handleTicketSubmit={handleTicketSubmit}
         fetchTourTickets={fetchTourTickets}
         fetchTours={fetchTours}
+        fetchLotterySlots={fetchLotterySlots}
       />
     </Suspense>
   )

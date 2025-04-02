@@ -6,12 +6,16 @@ import {
   fetchArtists,
   fetchToursByArtist,
   fetchTickets,
+  fetchLotterySlots,
   addArtist,
   updateArtist,
   deleteArtist,
   addTour,
   updateTour,
-  deleteTour
+  deleteTour,
+  addLotterySlot,
+  updateLotterySlot,
+  deleteLotterySlot
 } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
@@ -87,11 +91,53 @@ async function handleFetchTours(formData: FormData) {
   return { tours }
 }
 
+// 抽選枠追加のServer Action
+async function handleAddLotterySlot(formData: FormData) {
+  'use server'
+
+  const artistId = Number(formData.get('artist_id'))
+  const name = formData.get('name') as string
+  const lotterySlot = await addLotterySlot(artistId, name)
+  revalidatePath('/admin')
+  return { lotterySlot }
+}
+
+// 抽選枠編集のServer Action
+async function handleEditLotterySlot(formData: FormData) {
+  'use server'
+
+  const id = Number(formData.get('id'))
+  const name = formData.get('name') as string
+  await updateLotterySlot(id, name)
+  revalidatePath('/admin')
+  return { success: true }
+}
+
+// 抽選枠削除のServer Action
+async function handleDeleteLotterySlot(formData: FormData) {
+  'use server'
+
+  const id = Number(formData.get('id'))
+  await deleteLotterySlot(id)
+  revalidatePath('/admin')
+  return { success: true }
+}
+
+// 抽選枠一覧を取得するServer Action
+async function handleFetchLotterySlots(formData: FormData) {
+  'use server'
+
+  const artistId = Number(formData.get('artist_id'))
+  const lotterySlots = await fetchLotterySlots(artistId)
+  return { lotterySlots }
+}
+
 export default async function Page() {
   // 初期データの取得
   const artists = await fetchArtists()
   const tours = artists.length > 0 ? await fetchToursByArtist(artists[0].id) : []
   const tickets = tours.length > 0 ? await fetchTickets(artists[0].id, tours[0].id) : []
+  const lotterySlots = artists.length > 0 ? await fetchLotterySlots(artists[0].id) : []
 
   return (
     <Suspense fallback={
@@ -105,6 +151,7 @@ export default async function Page() {
         initialArtists={artists}
         initialTours={tours}
         initialTickets={tickets}
+        initialLotterySlots={lotterySlots}
         handleAddArtist={handleAddArtist}
         handleEditArtist={handleEditArtist}
         handleDeleteArtist={handleDeleteArtist}
@@ -112,6 +159,10 @@ export default async function Page() {
         handleEditTour={handleEditTour}
         handleDeleteTour={handleDeleteTour}
         handleFetchTours={handleFetchTours}
+        handleAddLotterySlot={handleAddLotterySlot}
+        handleEditLotterySlot={handleEditLotterySlot}
+        handleDeleteLotterySlot={handleDeleteLotterySlot}
+        handleFetchLotterySlots={handleFetchLotterySlots}
       />
     </Suspense>
   )

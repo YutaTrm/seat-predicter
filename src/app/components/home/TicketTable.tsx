@@ -43,7 +43,7 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
             <th className="px-3 py-1 border-b text-center font-semibold">ブロック</th>
             <th className="px-3 py-1 border-b text-center font-semibold">列</th>
             <th className="px-3 py-1 border-b text-center font-semibold">席番号</th>
-            <th className="px-3 py-1 border-b text-center font-semibold">投稿日時</th>
+            <th className="px-3 py-1 border-b text-center font-semibold">抽選枠</th>
           </tr>
         </thead>
         <tbody>
@@ -63,15 +63,7 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
                 <td className="px-3 py-1 border-b text-right">{ticket.block}</td>
                 <td className="px-3 py-1 border-b text-right">{ticket.column}</td>
                 <td className="px-3 py-1 border-b text-right">{ticket.number}</td>
-                <td className="px-3 py-1 border-b text-right">
-                  {new Date(ticket.created_at).toLocaleString('ja-JP', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </td>
+                <td className="px-3 py-1 border-b text-right text-xs">{ticket.lottery_slots_name}</td>
               </tr>
             )
           })}

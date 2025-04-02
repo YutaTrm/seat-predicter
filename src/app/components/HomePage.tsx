@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Artist, Tour, Ticket, HomePageProps } from '../../types/ticket'
+import { Artist, Tour, Ticket, LotterySlot, HomePageProps } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
@@ -15,16 +15,19 @@ export default function HomePage({
   artists: initialArtists,
   handleTicketSubmit,
   fetchTourTickets,
-  fetchTours
+  fetchTours,
+  fetchLotterySlots
 }: HomePageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const [artists] = useState<Artist[]>(initialArtists)
   const [tours, setTours] = useState<Tour[]>([])
+  const [lotterySlots, setLotterySlots] = useState<LotterySlot[]>([])
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
   const [selectedTour, setSelectedTour] = useState<number | null>(null)
+  const [selectedLotterySlot, setSelectedLotterySlot] = useState<number | null>(null)
   const [showTickets, setShowTickets] = useState<boolean>(false)
 
   /**
@@ -33,6 +36,7 @@ export default function HomePage({
   const handleReset = () => {
     setSelectedArtist(null)
     setSelectedTour(null)
+    setSelectedLotterySlot(null)
     setTickets([])
     setShowTickets(false)
   }
@@ -51,12 +55,13 @@ export default function HomePage({
   /**
    * チケットを登録する関数
    */
-  const handleSubmitTicket = async (block: string, column: number, seatNumber: number) => {
+  const handleSubmitTicket = async (block: string, column: number, seatNumber: number, lotterySlotId: number) => {
     if (!selectedArtist || !selectedTour) return
 
     const result = await submitTicket(
       selectedArtist,
       selectedTour,
+      lotterySlotId,
       block,
       column,
       seatNumber,
@@ -121,6 +126,21 @@ export default function HomePage({
     loadTours()
   }, [selectedArtist, fetchTours])
 
+  // 選択されたアーティストに基づいて抽選枠を取得
+  useEffect(() => {
+    async function loadLotterySlots() {
+      if (selectedArtist) {
+        const formData = new FormData()
+        formData.append('artist_id', selectedArtist.toString())
+        const { lotterySlots: newLotterySlots } = await fetchLotterySlots(formData)
+        setLotterySlots(newLotterySlots)
+      } else {
+        setLotterySlots([])
+      }
+    }
+    loadLotterySlots()
+  }, [selectedArtist, fetchLotterySlots])
+
   return (
     <main className="min-h-screen px-4 py-8">
       <section className="container mx-auto h-screen relative">
@@ -129,10 +149,13 @@ export default function HomePage({
         <TicketForm
           artists={artists}
           tours={tours}
+          lotterySlots={lotterySlots}
           selectedArtist={selectedArtist}
           selectedTour={selectedTour}
+          selectedLotterySlot={selectedLotterySlot}
           onArtistChange={setSelectedArtist}
           onTourChange={setSelectedTour}
+          onLotterySlotChange={setSelectedLotterySlot}
           onSubmit={handleSubmitTicket}
           onReset={handleReset}
           onShowTickets={handleShowTickets}
