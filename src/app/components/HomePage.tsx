@@ -44,7 +44,7 @@ export default function HomePage({
   const generatePostText = () => {
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
     const currentUrl = `${baseUrl}/?artist=${selectedArtist}&tour=${selectedTour}`
-    return `${selectedArtistName}の${selectedTourName}の座席予想をしています。${currentUrl}`
+    return `${selectedArtistName}\n『${selectedTourName}』\nの座席予想をしています。\n${currentUrl}`
   }
 
   /**
