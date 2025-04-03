@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Artist, Tour, Ticket, LotterySlot, AdminPageProps } from '../../types/admin'
 import { fetchArtistTours } from '../../utils/tourUtils'
 import ArtistSection from './admin/ArtistSection'
@@ -139,10 +141,26 @@ export default function AdminPage({
     setLotterySlots(lotterySlots.filter(slot => slot.id !== id))
   }
 
+  const router = useRouter()
+  const supabase = createClientComponentClient()
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">管理画面</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">管理画面</h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            ログアウト
+          </button>
+        </div>
 
         <div className="flex gap-4 text-sm">
           <ArtistSection
