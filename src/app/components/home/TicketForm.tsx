@@ -115,6 +115,8 @@ export default function TicketForm({
               }
               return <option key={char} value={char}>{char}</option>;
             }).flat()}
+            <option>S</option>
+            <option>その他</option>
           </select>
 
           <input
