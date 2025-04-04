@@ -70,7 +70,7 @@ export default function TicketForm({
             onArtistChange(value || null)
             updateUrlParams(router, value || null, null)
           }}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-white"
         >
           <option value="">アーティストを選択</option>
           {artists.map(artist => (
@@ -88,7 +88,7 @@ export default function TicketForm({
             updateUrlParams(router, selectedArtist, value || null)
           }}
           disabled={!selectedArtist}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-white"
         >
           <option value="">ツアーを選択</option>
           {tours.map(tour => (
@@ -102,7 +102,7 @@ export default function TicketForm({
           <select
             value={block}
             onChange={(e) => setBlock(e.target.value)}
-            className="w-2/6 p-2 border rounded"
+            className="w-2/6 p-2 border rounded  bg-white"
           >
             <option value="">ブロック</option>
             {Array.from({ length: 16 }, (_, i) => { //全アルファベットじゃなくて途中まで
@@ -124,7 +124,7 @@ export default function TicketForm({
             value={column || ''}
             onChange={(e) => setColumn(Number(e.target.value))}
             placeholder="列番"
-            className="w-1/6 p-2 border rounded"
+            className="w-1/6 p-2 border rounded  bg-white"
           />
 
           <input
@@ -132,7 +132,7 @@ export default function TicketForm({
             value={seatNumber || ''}
             onChange={(e) => setSeatNumber(Number(e.target.value))}
             placeholder="席番"
-            className="w-1/6 p-2 border rounded"
+            className="w-1/6 p-2 border rounded  bg-white"
           />
 
           <select
@@ -142,7 +142,7 @@ export default function TicketForm({
               onLotterySlotChange(value || null)
             }}
             disabled={!selectedArtist}
-            className="w-2/6 p-2 border rounded"
+            className="w-2/6 p-2 border rounded  bg-white"
           >
             <option value="">抽選枠</option>
             {lotterySlots.map(slot => (
