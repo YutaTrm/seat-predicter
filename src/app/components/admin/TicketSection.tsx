@@ -6,7 +6,6 @@ import { TicketSectionProps } from '../../../types/admin'
  * チケット一覧セクションコンポーネント
  */
 export default function TicketSection({
-  artists,
   tours,
   tickets,
   selectedArtistId,

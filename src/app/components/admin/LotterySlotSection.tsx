@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Artist, LotterySlot, LotterySlotSectionProps } from '../../../types/admin'
+import { LotterySlot, LotterySlotSectionProps } from '../../../types/admin'
 import { addLotterySlot, editLotterySlot, deleteLotterySlot } from '../../../utils/lotterySlotUtils'
 
 /**

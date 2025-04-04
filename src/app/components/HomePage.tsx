@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { Artist, Tour, Ticket, LotterySlot } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
@@ -20,7 +20,6 @@ export default function HomePage({
 }: {
   artists: Artist[]
 }) {
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   const [artists] = useState<Artist[]>(initialArtists)
