@@ -17,7 +17,7 @@ export default async function Page() {
     <Suspense fallback={
       <div className="min-h-screen px-4 py-8">
         <div className="container mx-auto">
-          <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">読み込み中...</h1>
+          <h1 className="text-2xl text-rose-500 font-bold text-center mb-4">読み込み中...</h1>
         </div>
       </div>
     }>
