@@ -1,40 +1,41 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { M_PLUS_1p } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const mplus = M_PLUS_1p({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  preload: false,
+})
 
 export const metadata: Metadata = {
   title: {
-    default: "ライブ座席予想(β版)",
-    template: "%s | ライブ座席予想(β版)"
+    default: "座席予想掲示板(β)",
+    template: "%s | 座席予想掲示板(β)"
   },
-  description: "ライブ座席予想(β版)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。",
-  keywords: ["座席予想", "ライブ", "コンサート", "オタ活", "チケット情報", "チケット一覧","座席一覧","ブロック予想"],
+  description: "座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。",
   appleWebApp: true,
   openGraph: {
-    title: "ライブ座席予想(β版)",
-    description: "映ライブ座席予想(β版)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリ",
+    title: "座席予想掲示板(β)",
+    description: "座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリ",
     type: "website",
     url: "https://cast-finder.vercel.app",
-    siteName: "ライブ座席予想(β版)",
-    // images: [
-    //   {
-    //     url: "/images/og-image.png", // OG画像のパスを適切に設定
-    //     width: 1200,
-    //     height: 630,
-    //   },
-    // ],
+    siteName: "座席予想掲示板(β)",
+    images: [
+      {
+        url: "/images/icon.png", // OG画像のパスを適切に設定
+      },
+    ],
   },
   twitter: {
-    // card: "summary_large_image",
-    title: "ライブ座席予想(β版)",
+    card: "summary_large_image",
+    title: "座席予想掲示板(β)",
     description: "チケット番号を登録/一覧化し、ブロックの情報を可視化するアプリ",
-    // images: ["/images/twitter-image.png"], // Twitter Card画像のパスを適切に設定
+    images: ["/images/icon.png"], // Twitter Card画像のパスを適切に設定
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "images/favicon.ico",
+    apple: "images/icon.png",
   },
   robots: {
     index: true,
@@ -53,7 +54,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className={inter.className}>
+      <body className={mplus.className}>
         {children}
       </body>
     </html>

@@ -185,7 +185,7 @@ export default function HomePage({
   return (
     <main className="min-h-screen px-4 py-8">
       <section className="container mx-auto h-screen relative">
-        <h1 className="text-2xl text-gray-800 font-bold text-center mb-4">ライブ座席予想(β版)</h1>
+        <h1 className="text-2xl text-rose-500 font-bold text-center mb-4">座席予想掲示板(β)</h1>
 
         <TicketForm
           artists={artists}
@@ -202,9 +202,9 @@ export default function HomePage({
           onShowTickets={handleShowTickets}
         />
 
-        <section className="mt-8">
+        <section className="mt-12">
           <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl text-gray-600 font-bold">ツアーチケット一覧</h2>
+            <h2 className="text-xl text-gray-600 font-bold">チケット一覧</h2>
             {selectedArtist && selectedTour && (
               <button
                 onClick={postToX}

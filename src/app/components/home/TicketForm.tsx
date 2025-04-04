@@ -177,7 +177,7 @@ export default function TicketForm({
 
           <button
             type="submit"
-            className="w-1/3 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="w-1/3 p-2 bg-rose-500 text-white rounded hover:bg-rose-600"
           >
             登録
           </button>
