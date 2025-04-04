@@ -133,6 +133,16 @@ async function handleFetchLotterySlots(formData: FormData) {
   return { lotterySlots }
 }
 
+// チケット一覧を取得するServer Action
+async function handleFetchTickets(formData: FormData) {
+  'use server'
+
+  const artistId = Number(formData.get('artist_id'))
+  const tourId = Number(formData.get('tour_id'))
+  const tickets = await fetchTickets(artistId, tourId)
+  return { tickets }
+}
+
 export default async function Page() {
   // 初期データの取得
   const artists = await fetchArtists()
@@ -164,6 +174,7 @@ export default async function Page() {
         handleEditLotterySlot={handleEditLotterySlot}
         handleDeleteLotterySlot={handleDeleteLotterySlot}
         handleFetchLotterySlots={handleFetchLotterySlots}
+        handleFetchTickets={handleFetchTickets}
       />
     </Suspense>
   )

@@ -21,6 +21,7 @@ export type AdminPageProps = {
   handleFetchLotterySlots: (formData: FormData) => Promise<{ lotterySlots: LotterySlot[] }>
   handleEditLotterySlot: (formData: FormData) => Promise<{ success: boolean }>
   handleDeleteLotterySlot: (formData: FormData) => Promise<{ success: boolean }>
+  handleFetchTickets: (formData: FormData) => Promise<{ tickets: Ticket[] }>
 }
 
 export type ArtistSectionProps = {

@@ -28,11 +28,12 @@ export default function AdminPage({
   handleAddLotterySlot,
   handleEditLotterySlot,
   handleDeleteLotterySlot,
-  handleFetchLotterySlots
+  handleFetchLotterySlots,
+  handleFetchTickets
 }: AdminPageProps) {
   const [artists, setArtists] = useState<Artist[]>(initialArtists)
   const [tours, setTours] = useState<Tour[]>(initialTours)
-  const [tickets] = useState<Ticket[]>(initialTickets)
+  const [tickets, setTickets] = useState<Ticket[]>(initialTickets)
   const [lotterySlots, setLotterySlots] = useState<LotterySlot[]>(initialLotterySlots)
   const [selectedArtistId, setSelectedArtistId] = useState('')
   const [selectedTourId, setSelectedTourId] = useState('')
@@ -205,7 +206,24 @@ export default function AdminPage({
             tickets={tickets}
             selectedArtistId={selectedArtistId}
             selectedTourId={selectedTourId}
-            onTourSelect={setSelectedTourId}
+            onTourSelect={async (tourId: string) => {
+              setSelectedTourId(tourId)
+              if (tourId && selectedArtistId) {
+                try {
+                  const formData = new FormData()
+                  formData.append('artist_id', selectedArtistId)
+                  formData.append('tour_id', tourId)
+                  const { tickets: newTickets } = await handleFetchTickets(formData)
+                  setTickets(newTickets)
+                } catch (err) {
+                  console.error('チケット取得エラー:', err)
+                  alert('チケットの取得に失敗しました')
+                  setTickets([])
+                }
+              } else {
+                setTickets([])
+              }
+            }}
           />
         </div>
       </div>
