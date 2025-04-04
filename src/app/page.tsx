@@ -1,5 +1,5 @@
 import HomePage from './components/HomePage'
-import { fetchArtists } from '@/lib/supabase/server'
+import { fetchArtists, getSupabaseCredentials } from '@/lib/supabase/server'
 import { Suspense } from 'react'
 
 // ダイナミックレンダリングを強制
@@ -7,10 +7,16 @@ export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const artists = await fetchArtists()
+  const { url: supabaseUrl, key: supabaseKey } = getSupabaseCredentials()
 
   if (!artists || artists.length === 0) {
     console.error('アーティスト情報の取得に失敗しました')
     return <div>アーティスト情報の読み込みに失敗しました</div>
+  }
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Supabase認証情報の取得に失敗しました')
+    return <div>認証情報の読み込みに失敗しました</div>
   }
 
   return (
@@ -21,7 +27,11 @@ export default async function Page() {
         </div>
       </div>
     }>
-      <HomePage artists={artists} />
+      <HomePage
+        artists={artists}
+        supabaseUrl={supabaseUrl}
+        supabaseKey={supabaseKey}
+      />
     </Suspense>
   )
 }

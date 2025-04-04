@@ -2,6 +2,14 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import type { Database } from '../../types/database.types'
 
+// Supabaseの認証情報を取得
+export function getSupabaseCredentials() {
+  return {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_ANON_KEY
+  }
+}
+
 // 通常のサーバーサイドのSupabaseクライアントを作成
 async function createServerSupabaseClient() {
   const cookieStore = cookies()

@@ -12,14 +12,19 @@ import { createSupabaseClient } from '@/lib/supabase/client'
 /**
  * ホームページコンポーネント
  */
-// Supabaseクライアントをコンポーネントの外部で作成
-const supabase = createSupabaseClient()
+interface HomePageProps {
+  artists: Artist[];
+  supabaseUrl: string;
+  supabaseKey: string;
+}
 
 export default function HomePage({
-  artists: initialArtists
-}: {
-  artists: Artist[]
-}) {
+  artists: initialArtists,
+  supabaseUrl,
+  supabaseKey
+}: HomePageProps) {
+  // Supabaseクライアントを初期化
+  const supabase = createSupabaseClient(supabaseUrl, supabaseKey)
   const searchParams = useSearchParams()
 
   const [artists] = useState<Artist[]>(initialArtists)
