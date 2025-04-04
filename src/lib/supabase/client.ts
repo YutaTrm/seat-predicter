@@ -8,6 +8,7 @@ let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null
  * クライアントサイドのSupabaseクライアントを作成（シングルトンパターン）
  */
 export const createSupabaseClient = () => {
+  console.log('★NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   if (supabaseInstance) {
     return supabaseInstance
   }
