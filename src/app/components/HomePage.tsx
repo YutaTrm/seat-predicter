@@ -138,7 +138,7 @@ export default function HomePage({
       }
     }
     initializeFromUrl()
-  }, [searchParams, artists, supabase])
+  }, [searchParams, artists])
 
   // 選択されたアーティストに基づいてツアーを取得
   useEffect(() => {
@@ -159,7 +159,7 @@ export default function HomePage({
       }
     }
     loadTours()
-  }, [selectedArtist, supabase])
+  }, [selectedArtist])
 
   // 選択されたアーティストに基づいて抽選枠を取得
   useEffect(() => {
@@ -180,7 +180,7 @@ export default function HomePage({
       }
     }
     loadLotterySlots()
-  }, [selectedArtist, supabase])
+  }, [selectedArtist])
 
   return (
     <main className="min-h-screen px-4 py-8">

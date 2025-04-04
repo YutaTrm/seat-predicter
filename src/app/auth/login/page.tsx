@@ -23,7 +23,7 @@ function LoginForm() {
       }
     }
     checkSession()
-  }, [])
+  }, [router, searchParams, supabase.auth])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
