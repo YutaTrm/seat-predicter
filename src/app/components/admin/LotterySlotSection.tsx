@@ -98,6 +98,8 @@ export default function LotterySlotSection({
         <h3 className="text-lg font-semibold mb-2">
           抽選枠一覧 <span className="text-gray-500 text-sm">({lotterySlots.length}件)</span>
         </h3>
+      </div>
+      {selectedArtistId ? (
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-50">
@@ -157,7 +159,9 @@ export default function LotterySlotSection({
             ))}
           </tbody>
         </table>
-      </div>
+      ) : (
+        <p className="text-gray-500">アーティストを選択してください</p>
+      )}
     </div>
   )
 }

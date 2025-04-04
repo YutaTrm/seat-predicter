@@ -2,22 +2,24 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Artist, Tour, Ticket, LotterySlot, HomePageProps } from '../../types/ticket'
+import { Artist, Tour, Ticket, LotterySlot } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import Footer from './common/Footer'
+import { createSupabaseClient } from '@/lib/supabase/client'
 
 /**
  * ホームページコンポーネント
  */
+// Supabaseクライアントをコンポーネントの外部で作成
+const supabase = createSupabaseClient()
+
 export default function HomePage({
-  artists: initialArtists,
-  handleTicketSubmit,
-  fetchTourTickets,
-  fetchTours,
-  fetchLotterySlots
-}: HomePageProps) {
+  artists: initialArtists
+}: {
+  artists: Artist[]
+}) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -72,7 +74,7 @@ export default function HomePage({
    */
   const handleShowTickets = async () => {
     if (selectedArtist && selectedTour) {
-      const newTickets = await fetchTickets(selectedArtist, selectedTour, fetchTourTickets)
+      const newTickets = await fetchTickets(selectedArtist, selectedTour)
       setTickets(newTickets)
       setShowTickets(true)
     }
@@ -90,14 +92,13 @@ export default function HomePage({
       lotterySlotId,
       block,
       column,
-      seatNumber,
-      handleTicketSubmit
+      seatNumber
     )
 
     if (result.success) {
       alert('チケットを登録しました')
       // チケット登録後に一覧を更新
-      const updatedTickets = await fetchTickets(selectedArtist, selectedTour, fetchTourTickets)
+      const updatedTickets = await fetchTickets(selectedArtist, selectedTour)
       setTickets(updatedTickets)
       setShowTickets(true)
     } else {
@@ -119,53 +120,68 @@ export default function HomePage({
           setSelectedArtist(artist.id)
 
           if (tourId) {
-            const formData = new FormData()
-            formData.append('artist_id', artist.id.toString())
-            const { tours: artistTours } = await fetchTours(formData)
+            const { data: artistTours } = await supabase
+              .from('tours')
+              .select('*')
+              .eq('artist_id', artist.id)
 
-            const parsedTourId = parseInt(tourId)
-            const tour = artistTours.find(t => t.id === parsedTourId)
+            if (artistTours) {
+              const parsedTourId = parseInt(tourId)
+              const tour = artistTours.find(t => t.id === parsedTourId)
 
-            if (tour) {
-              setSelectedTour(tour.id)
-              setTours(artistTours)
+              if (tour) {
+                setSelectedTour(tour.id)
+                setTours(artistTours)
+              }
             }
           }
         }
       }
     }
     initializeFromUrl()
-  }, [searchParams, artists, fetchTours])
+  }, [searchParams, artists, supabase])
 
   // 選択されたアーティストに基づいてツアーを取得
   useEffect(() => {
     async function loadTours() {
       if (selectedArtist) {
-        const formData = new FormData()
-        formData.append('artist_id', selectedArtist.toString())
-        const { tours: newTours } = await fetchTours(formData)
-        setTours(newTours)
+        const { data: newTours } = await supabase
+          .from('tours')
+          .select('*')
+          .eq('artist_id', selectedArtist)
+
+        if (newTours) {
+          setTours(newTours)
+        } else {
+          setTours([])
+        }
       } else {
         setTours([])
       }
     }
     loadTours()
-  }, [selectedArtist, fetchTours])
+  }, [selectedArtist, supabase])
 
   // 選択されたアーティストに基づいて抽選枠を取得
   useEffect(() => {
     async function loadLotterySlots() {
       if (selectedArtist) {
-        const formData = new FormData()
-        formData.append('artist_id', selectedArtist.toString())
-        const { lotterySlots: newLotterySlots } = await fetchLotterySlots(formData)
-        setLotterySlots(newLotterySlots)
+        const { data: newLotterySlots } = await supabase
+          .from('lottery_slots')
+          .select('*')
+          .eq('artist_id', selectedArtist)
+
+        if (newLotterySlots) {
+          setLotterySlots(newLotterySlots)
+        } else {
+          setLotterySlots([])
+        }
       } else {
         setLotterySlots([])
       }
     }
     loadLotterySlots()
-  }, [selectedArtist, fetchLotterySlots])
+  }, [selectedArtist, supabase])
 
   return (
     <main className="min-h-screen px-4 py-8">

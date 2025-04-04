@@ -3,8 +3,9 @@ import { cookies } from 'next/headers'
 import type { Database } from '../../types/database.types'
 
 // 通常のサーバーサイドのSupabaseクライアントを作成
-function createServerSupabaseClient() {
+async function createServerSupabaseClient() {
   const cookieStore = cookies()
+  const cookieString = await Promise.resolve(cookieStore.toString())
   return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -15,7 +16,7 @@ function createServerSupabaseClient() {
       },
       global: {
         headers: {
-          Cookie: cookieStore.toString()
+          Cookie: cookieString
         }
       }
     }
@@ -38,7 +39,7 @@ function createAdminSupabaseClient() {
 
 // 現在のセッションを取得
 export async function getSession() {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data: { session }, error } = await supabase.auth.getSession()
   if (error) {
     console.error('セッション取得エラー:', error)
@@ -59,7 +60,7 @@ export async function requireAuth<T>(
 }
 
 export async function fetchArtists() {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data, error } = await supabase
     .from('artists')
     .select('*')
@@ -74,7 +75,7 @@ export async function fetchArtists() {
 }
 
 export async function fetchToursByArtist(artistId: number) {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data, error } = await supabase
     .from('tours')
     .select('*')
@@ -90,7 +91,7 @@ export async function fetchToursByArtist(artistId: number) {
 }
 
 export async function fetchLotterySlots(artistId: number) {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data, error } = await supabase
     .from('lottery_slots')
     .select('*')
@@ -106,7 +107,7 @@ export async function fetchLotterySlots(artistId: number) {
 }
 
 export async function fetchArtistById(artistId: number) {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data, error } = await supabase
     .from('artists')
     .select('*')
@@ -122,7 +123,7 @@ export async function fetchArtistById(artistId: number) {
 }
 
 export async function fetchTourById(tourId: number, artistId: number) {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data, error } = await supabase
     .from('tours')
     .select('*')
@@ -139,7 +140,7 @@ export async function fetchTourById(tourId: number, artistId: number) {
 }
 
 export async function fetchTickets(artistId: number, tourId: number) {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data, error } = await supabase
     .from('tickets')
     .select(`
@@ -164,7 +165,7 @@ export async function fetchTickets(artistId: number, tourId: number) {
 
 export async function createTicket(ticket: Database['public']['Tables']['tickets']['Insert']) {
   return requireAuth(async () => {
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     const { error } = await supabase
       .from('tickets')
       .insert(ticket)

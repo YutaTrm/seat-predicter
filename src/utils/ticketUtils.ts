@@ -2,6 +2,7 @@
 
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { Ticket } from '../types/ticket'
+import { createSupabaseClient } from '@/lib/supabase/client'
 
 /**
  * URLパラメータを更新する関数
@@ -22,15 +23,30 @@ export const updateUrlParams = (
  */
 export const fetchTickets = async (
   selectedArtist: number,
-  selectedTour: number,
-  fetchTourTickets: (formData: FormData) => Promise<{ tickets: Ticket[] }>
+  selectedTour: number
 ): Promise<Ticket[]> => {
-  const formData = new FormData()
-  formData.append('artist_id', selectedArtist.toString())
-  formData.append('tour_id', selectedTour.toString())
+  const supabase = createSupabaseClient()
 
-  const { tickets } = await fetchTourTickets(formData)
-  return tickets
+  const { data: tickets, error } = await supabase
+    .from('tickets')
+    .select(`
+      *,
+      lottery_slots (
+        name
+      )
+    `)
+    .eq('artist_id', selectedArtist)
+    .eq('tour_id', selectedTour)
+
+  if (error) {
+    console.error('チケット取得エラー:', error)
+    return []
+  }
+
+  return tickets.map(ticket => ({
+    ...ticket,
+    lottery_slots_name: ticket.lottery_slots?.name || null
+  }))
 }
 
 /**
@@ -42,16 +58,25 @@ export const submitTicket = async (
   selectedLotterySlot: number,
   block: string,
   column: number,
-  seatNumber: number,
-  handleTicketSubmit: (formData: FormData) => Promise<{ success: boolean; error?: string }>
+  seatNumber: number
 ) => {
-  const formData = new FormData()
-  formData.append('artist_id', selectedArtist.toString())
-  formData.append('tour_id', selectedTour.toString())
-  formData.append('lottery_slots_id', selectedLotterySlot.toString())
-  formData.append('block', block)
-  formData.append('column', column.toString())
-  formData.append('number', seatNumber.toString())
+  const supabase = createSupabaseClient()
 
-  return await handleTicketSubmit(formData)
+  const { error } = await supabase
+    .from('tickets')
+    .insert({
+      artist_id: selectedArtist,
+      tour_id: selectedTour,
+      lottery_slots_id: selectedLotterySlot,
+      block,
+      column,
+      number: seatNumber
+    })
+
+  if (error) {
+    console.error('チケット登録エラー:', error)
+    return { success: false, error: 'チケットの登録に失敗しました' }
+  }
+
+  return { success: true }
 }

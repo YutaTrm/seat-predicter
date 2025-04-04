@@ -18,6 +18,7 @@ import {
   deleteLotterySlot
 } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { Tour, Ticket, LotterySlot } from '@/types/admin'
 
 // アーティスト追加のServer Action
 async function handleAddArtist(formData: FormData) {
@@ -135,9 +136,9 @@ async function handleFetchLotterySlots(formData: FormData) {
 export default async function Page() {
   // 初期データの取得
   const artists = await fetchArtists()
-  const tours = artists.length > 0 ? await fetchToursByArtist(artists[0].id) : []
-  const tickets = tours.length > 0 ? await fetchTickets(artists[0].id, tours[0].id) : []
-  const lotterySlots = artists.length > 0 ? await fetchLotterySlots(artists[0].id) : []
+  const tours: Tour[] = []
+  const tickets: Ticket[] = []
+  const lotterySlots: LotterySlot[] = []
 
   return (
     <Suspense fallback={
