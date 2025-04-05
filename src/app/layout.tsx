@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { M_PLUS_1p } from 'next/font/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
+
+const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
 const mplus = M_PLUS_1p({
   weight: ['400', '500', '700'],
@@ -56,6 +59,9 @@ export default function RootLayout({
     <html lang="ja">
       <body className={mplus.className}>
         {children}
+        {gaId && (
+          <GoogleAnalytics gaId={gaId} />
+        )}
       </body>
     </html>
   )
