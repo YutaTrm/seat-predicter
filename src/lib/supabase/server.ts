@@ -73,7 +73,7 @@ export async function fetchArtists() {
   const { data, error } = await supabase
     .from('artists')
     .select('*')
-    .order('name')
+    .order('id')
 
   if (error) {
     console.error('アーティスト取得エラー:', error)
@@ -89,7 +89,7 @@ export async function fetchToursByArtist(artistId: number) {
     .from('tours')
     .select('*')
     .eq('artist_id', artistId)
-    .order('name')
+    .order('id')
 
   if (error) {
     console.error('ツアー取得エラー:', error)
@@ -105,7 +105,7 @@ export async function fetchLotterySlots(artistId: number) {
     .from('lottery_slots')
     .select('*')
     .eq('artist_id', artistId)
-    .order('name')
+    .order('id')
 
   if (error) {
     console.error('抽選枠取得エラー:', error)
