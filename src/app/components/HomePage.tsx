@@ -189,8 +189,9 @@ export default function HomePage({
 
   return (
     <main className="min-h-screen px-4 py-8">
-      <section className="container mx-auto h-screen relative">
-        <h1 className="text-2xl text-rose-500 font-bold text-center mb-4">座席予想掲示板(β)</h1>
+      <section className="container mx-auto h-screen relative ">
+        <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板(β)</h1>
+        <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
 
         <TicketForm
           artists={artists}

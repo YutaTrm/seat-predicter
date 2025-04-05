@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "座席予想掲示板(β)",
     description: "座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリ",
     type: "website",
-    url: "https://cast-finder.vercel.app",
+    url: "https://zasekiyosou.com/",
     siteName: "座席予想掲示板(β)",
     images: [
       {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "座席予想掲示板(β)",
     description: "チケット番号を登録/一覧化し、ブロックの情報を可視化するアプリ",
     images: ["/images/icon.png"], // Twitter Card画像のパスを適切に設定
