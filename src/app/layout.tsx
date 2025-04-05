@@ -17,16 +17,30 @@ export const metadata: Metadata = {
     template: "%s | 座席予想掲示板(β)"
   },
   description: "座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。",
+  keywords: ["座席予想", "チケット", "コンサート", "ライブ", "座席", "ブロック", "可視化"],
   appleWebApp: true,
+  metadataBase: new URL('https://zasekiyosou.com'),
+  alternates: {
+    canonical: '/',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
   openGraph: {
     title: "座席予想掲示板(β)",
     description: "座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリ",
     type: "website",
     url: "https://zasekiyosou.com/",
     siteName: "座席予想掲示板(β)",
+    locale: 'ja_JP',
     images: [
       {
-        url: "/images/icon.png", // OG画像のパスを適切に設定
+        url: "/images/icon.png",
+        width: 320,
+        height: 320,
+        alt: "座席予想掲示板(β)のロゴ",
       },
     ],
   },
@@ -34,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "座席予想掲示板(β)",
     description: "チケット番号を登録/一覧化し、ブロックの情報を可視化するアプリ",
-    images: ["/images/icon.png"], // Twitter Card画像のパスを適切に設定
+    images: ["/images/icon.png"],
   },
   icons: {
     icon: "images/favicon.ico",
