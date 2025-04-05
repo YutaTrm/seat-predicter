@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "座席予想掲示板(β)",
-    description: "チケット番号を登録/一覧化し、ブロックの情報を可視化するアプリ",
+    description: "みんなのチケット情報を集計して座席構成を予想しよう",
     images: ["/images/icon.png"],
   },
   icons: {
