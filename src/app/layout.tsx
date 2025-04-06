@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "座席予想掲示板(β)",
-    description: "座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリ",
+    description: "みんなのチケット情報を集計して座席構成を予想しよう",
     type: "website",
     url: "https://zasekiyosou.com/",
     siteName: "座席予想掲示板(β)",
@@ -47,6 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
+    site: "@seat_predicter",
     title: "座席予想掲示板(β)",
     description: "みんなのチケット情報を集計して座席構成を予想しよう",
     images: ["/images/icon.png"],

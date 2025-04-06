@@ -50,7 +50,7 @@ export default function HomePage({
   const generatePostText = () => {
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
     const currentUrl = `${baseUrl}/?artist=${selectedArtist}&tour=${selectedTour}`
-    return `${selectedArtistName}\n『${selectedTourName}』\nの座席予想をしています。\n${currentUrl}`
+    return `${selectedArtistName}\n『${selectedTourName}』\nのチケット情報を集計しています。\n${currentUrl}`
   }
 
   /**
