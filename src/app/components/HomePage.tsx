@@ -188,49 +188,46 @@ export default function HomePage({
   }, [selectedArtist])
 
   return (
-    <main className="min-h-screen px-4 py-8">
-      <section className="container mx-auto h-screen relative ">
-        <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板(β)</h1>
-        <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
+      <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板(β)</h1>
+      <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
 
-        <TicketForm
-          artists={artists}
-          tours={tours}
-          lotterySlots={lotterySlots}
-          selectedArtist={selectedArtist}
-          selectedTour={selectedTour}
-          selectedLotterySlot={selectedLotterySlot}
-          onArtistChange={setSelectedArtist}
-          onTourChange={setSelectedTour}
-          onLotterySlotChange={setSelectedLotterySlot}
-          onSubmit={handleSubmitTicket}
-          onReset={handleReset}
-          onShowTickets={handleShowTickets}
+      <TicketForm
+        artists={artists}
+        tours={tours}
+        lotterySlots={lotterySlots}
+        selectedArtist={selectedArtist}
+        selectedTour={selectedTour}
+        selectedLotterySlot={selectedLotterySlot}
+        onArtistChange={setSelectedArtist}
+        onTourChange={setSelectedTour}
+        onLotterySlotChange={setSelectedLotterySlot}
+        onSubmit={handleSubmitTicket}
+        onReset={handleReset}
+        onShowTickets={handleShowTickets}
+      />
+
+      <section className="mt-12">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl text-gray-600 font-bold">チケット一覧</h2>
+          {selectedArtist && selectedTour && (
+            <button
+              onClick={postToX}
+              className="bg-gray-900 hover:bg-gray-700 text-white px-2 py-1 rounded text-sm flex items-center"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              でシェア
+            </button>
+          )}
+        </div>
+        <TicketTable
+          tickets={tickets}
+          showTickets={showTickets}
         />
-
-        <section className="mt-12">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl text-gray-600 font-bold">チケット一覧</h2>
-            {selectedArtist && selectedTour && (
-              <button
-                onClick={postToX}
-                className="bg-gray-900 hover:bg-gray-700 text-white px-2 py-1 rounded text-sm flex items-center"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-                でシェア
-              </button>
-            )}
-          </div>
-          <TicketTable
-            tickets={tickets}
-            showTickets={showTickets}
-          />
-        </section>
-
-        <Footer />
       </section>
+      <Footer />
     </main>
   )
 }
