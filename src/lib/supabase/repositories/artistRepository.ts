@@ -1,6 +1,5 @@
 import { Database } from '../../../types/database.types'
 import { createServerSupabaseClient, createAdminSupabaseClient, handleAdminError } from '../utils'
-import { requireAdminAuth } from '../auth'
 
 // アーティスト一覧を取得
 export async function fetchArtists() {
@@ -37,63 +36,57 @@ export async function fetchArtistById(artistId: number) {
 
 // アーティストを追加
 export async function addArtist(name: string) {
-  return requireAdminAuth(async () => {
-    try {
-      const supabase = createAdminSupabaseClient()
-      const { data, error } = await supabase
-        .from('artists')
-        .insert({ name } as Database['public']['Tables']['artists']['Insert'])
-        .select()
+  try {
+    const supabase = createAdminSupabaseClient()
+    const { data, error } = await supabase
+      .from('artists')
+      .insert({ name } as Database['public']['Tables']['artists']['Insert'])
+      .select()
 
-      if (error || !data) {
-        handleAdminError(error)
-      }
-
-      return data![0]
-    } catch (error) {
+    if (error || !data) {
       handleAdminError(error)
     }
-  })
+
+    return data![0]
+  } catch (error) {
+    handleAdminError(error)
+  }
 }
 
 // アーティストを更新
 export async function updateArtist(id: number, name: string) {
-  return requireAdminAuth(async () => {
-    try {
-      const supabase = createAdminSupabaseClient()
-      const { error } = await supabase
-        .from('artists')
-        .update({ name } as Database['public']['Tables']['artists']['Update'])
-        .eq('id', id)
+  try {
+    const supabase = createAdminSupabaseClient()
+    const { error } = await supabase
+      .from('artists')
+      .update({ name } as Database['public']['Tables']['artists']['Update'])
+      .eq('id', id)
 
-      if (error) {
-        handleAdminError(error)
-      }
-
-      return true
-    } catch (error) {
+    if (error) {
       handleAdminError(error)
     }
-  })
+
+    return true
+  } catch (error) {
+    handleAdminError(error)
+  }
 }
 
 // アーティストを削除
 export async function deleteArtist(id: number) {
-  return requireAdminAuth(async () => {
-    try {
-      const supabase = createAdminSupabaseClient()
-      const { error } = await supabase
-        .from('artists')
-        .delete()
-        .eq('id', id)
+  try {
+    const supabase = createAdminSupabaseClient()
+    const { error } = await supabase
+      .from('artists')
+      .delete()
+      .eq('id', id)
 
-      if (error) {
-        handleAdminError(error)
-      }
-
-      return true
-    } catch (error) {
+    if (error) {
       handleAdminError(error)
     }
-  })
+
+    return true
+  } catch (error) {
+    handleAdminError(error)
+  }
 }
