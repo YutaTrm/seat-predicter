@@ -58,20 +58,15 @@ export async function requireAuth<T>(
 export async function requireAdminAuth<T>(
   callback: () => Promise<T>
 ): Promise<T> {
-  const session = await getSession()
-  if (!session) {
+  const supabase = await createServerSupabaseClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
     throw new Error('認証が必要です')
   }
 
   // 管理者権限チェック
-  const supabase = await createServerSupabaseClient()
-  const { data: roles } = await supabase
-    .from('user_roles')
-    .select('role')
-    .eq('user_id', session.user.id)
-    .single()
-
-  if (!roles || roles.role !== 'admin') {
+  if (!user.user_metadata.role || user.user_metadata.role !== 'admin') {
     throw new Error('管理者権限が必要です')
   }
 

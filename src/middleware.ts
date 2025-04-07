@@ -10,12 +10,10 @@ export async function middleware(request: NextRequest) {
     const res = NextResponse.next()
     const supabase = createMiddlewareClient({ req: request, res })
 
-    // セッションチェック
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+    // ユーザー情報を取得
+    const { data: { user }, error } = await supabase.auth.getUser()
 
-    if (!session) {
+    if (error || !user) {
       // 未認証の場合、ログインページにリダイレクト
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/auth/login'
@@ -24,13 +22,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // 管理者権限チェック
-    const { data: roles } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', session.user.id)
-      .single()
-
-    if (!roles || roles.role !== 'admin') {
+    if (!user.user_metadata.role || user.user_metadata.role !== 'admin') {
       // 管理者権限がない場合、トップページにリダイレクト
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/'
