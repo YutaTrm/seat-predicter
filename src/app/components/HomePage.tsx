@@ -174,6 +174,7 @@ export default function HomePage({
           .from('lottery_slots')
           .select('*')
           .eq('artist_id', selectedArtist)
+          .order('id')
 
         if (newLotterySlots) {
           setLotterySlots(newLotterySlots)
