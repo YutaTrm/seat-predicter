@@ -5,8 +5,8 @@ import type { Database } from '../../types/database.types'
 // Supabaseの認証情報を取得
 export function getSupabaseCredentials() {
   return {
-    url: process.env.SUPABASE_URL,
-    key: process.env.SUPABASE_ANON_KEY
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   }
 }
 
@@ -15,8 +15,8 @@ async function createServerSupabaseClient() {
   const cookieStore = cookies()
   const cookieString = await Promise.resolve(cookieStore.toString())
   return createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       auth: {
         autoRefreshToken: true,
@@ -203,7 +203,7 @@ export async function addArtist(name: string) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -235,7 +235,7 @@ export async function updateArtist(id: number, name: string) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -267,7 +267,7 @@ export async function deleteArtist(id: number) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -299,7 +299,7 @@ export async function addTour(artistId: number, name: string) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -334,7 +334,7 @@ export async function updateTour(id: number, name: string) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -366,7 +366,7 @@ export async function deleteTour(id: number) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -398,7 +398,7 @@ export async function addLotterySlot(artistId: number, name: string) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -433,7 +433,7 @@ export async function updateLotterySlot(id: number, name: string) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
@@ -465,7 +465,7 @@ export async function deleteLotterySlot(id: number) {
   return requireAdminAuth(async () => {
     try {
       const supabase = createClient<Database>(
-        process.env.SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         {
           auth: {
