@@ -5,11 +5,12 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // /adminパスへのアクセスにJWT認証を適用
+  // /adminパスへのアクセスに管理者認証を適用
   if (pathname.startsWith('/admin')) {
     const res = NextResponse.next()
     const supabase = createMiddlewareClient({ req: request, res })
 
+    // セッションチェック
     const {
       data: { session },
     } = await supabase.auth.getSession()
@@ -19,6 +20,20 @@ export async function middleware(request: NextRequest) {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/auth/login'
       redirectUrl.searchParams.set('redirect', request.nextUrl.pathname)
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    // 管理者権限チェック
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', session.user.id)
+      .single()
+
+    if (!roles || roles.role !== 'admin') {
+      // 管理者権限がない場合、トップページにリダイレクト
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/'
       return NextResponse.redirect(redirectUrl)
     }
 
