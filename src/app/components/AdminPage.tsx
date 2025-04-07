@@ -151,8 +151,8 @@ export default function AdminPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="p-6">
+    <div className="min-h-screen bg-gray-100">
+      <div className="p-4 lg:p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">管理画面</h1>
           <button
@@ -163,7 +163,7 @@ export default function AdminPage({
           </button>
         </div>
 
-        <div className="flex gap-4 text-sm">
+        <div className="flex flex-col gap-2 text-sm lg:flex-row lg:gap-4">
           <ArtistSection
             artists={artists}
             onArtistAdd={handleArtistAdd}

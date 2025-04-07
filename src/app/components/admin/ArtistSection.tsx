@@ -56,7 +56,7 @@ export default function ArtistSection({
   }
 
   return (
-    <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-2/6">
+    <div className="mb-6 bg-white p-6 rounded-lg shadow-md lg:w-2/6  lg:p-4">
       <h2 className="text-xl font-semibold mb-4">アーティスト追加</h2>
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex">
