@@ -31,36 +31,6 @@ async function createServerSupabaseClient() {
   )
 }
 
-// 管理者用のサーバーサイドのSupabaseクライアントを作成
-async function createAdminSupabaseClient() {
-  const session = await getSession()
-  if (!session) {
-    throw new Error('認証が必要です')
-  }
-
-  // 管理者権限チェック
-  const supabase = await createServerSupabaseClient()
-  const { data: roles } = await supabase
-    .from('user_roles')
-    .select('role')
-    .eq('user_id', session.user.id)
-    .single()
-
-  if (!roles || roles.role !== 'admin') {
-    throw new Error('管理者権限が必要です')
-  }
-
-  return createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    }
-  )
-}
 
 // 現在のセッションを取得
 export async function getSession() {
@@ -81,6 +51,30 @@ export async function requireAuth<T>(
   if (!session) {
     throw new Error('認証が必要です')
   }
+  return callback()
+}
+
+// 管理者権限を必要とする関数のラッパー
+export async function requireAdminAuth<T>(
+  callback: () => Promise<T>
+): Promise<T> {
+  const session = await getSession()
+  if (!session) {
+    throw new Error('認証が必要です')
+  }
+
+  // 管理者権限チェック
+  const supabase = await createServerSupabaseClient()
+  const { data: roles } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', session.user.id)
+    .single()
+
+  if (!roles || roles.role !== 'admin') {
+    throw new Error('管理者権限が必要です')
+  }
+
   return callback()
 }
 
@@ -206,235 +200,295 @@ export async function createTicket(ticket: Database['public']['Tables']['tickets
 
 // 管理者用の関数
 export async function addArtist(name: string) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { data, error } = await supabase
-      .from('artists')
-      .insert({ name } as Database['public']['Tables']['artists']['Insert'])
-      .select()
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
-      // 本番環境ではエラー詳細をログサービスに送信
+      const { data, error } = await supabase
+        .from('artists')
+        .insert({ name } as Database['public']['Tables']['artists']['Insert'])
+        .select()
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return data[0]
+    } catch (error) {
       console.error('Admin operation error:', error)
-      // クライアントには一般的なメッセージを返す
       throw new Error('操作に失敗しました')
     }
-
-    return data[0]
-  } catch (error) {
-    // エラーの種類に応じて適切なメッセージを返す
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function updateArtist(id: number, name: string) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { error } = await supabase
-      .from('artists')
-      .update({ name } as Database['public']['Tables']['artists']['Update'])
-      .eq('id', id)
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { error } = await supabase
+        .from('artists')
+        .update({ name } as Database['public']['Tables']['artists']['Update'])
+        .eq('id', id)
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return true
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return true
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function deleteArtist(id: number) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { error } = await supabase
-      .from('artists')
-      .delete()
-      .eq('id', id)
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { error } = await supabase
+        .from('artists')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return true
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return true
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function addTour(artistId: number, name: string) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { data, error } = await supabase
-      .from('tours')
-      .insert({
-        artist_id: artistId,
-        name
-      } as Database['public']['Tables']['tours']['Insert'])
-      .select()
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { data, error } = await supabase
+        .from('tours')
+        .insert({
+          artist_id: artistId,
+          name
+        } as Database['public']['Tables']['tours']['Insert'])
+        .select()
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return data[0]
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return data[0]
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function updateTour(id: number, name: string) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { error } = await supabase
-      .from('tours')
-      .update({ name } as Database['public']['Tables']['tours']['Update'])
-      .eq('id', id)
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { error } = await supabase
+        .from('tours')
+        .update({ name } as Database['public']['Tables']['tours']['Update'])
+        .eq('id', id)
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return true
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return true
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function deleteTour(id: number) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { error } = await supabase
-      .from('tours')
-      .delete()
-      .eq('id', id)
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { error } = await supabase
+        .from('tours')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return true
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return true
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function addLotterySlot(artistId: number, name: string) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { data, error } = await supabase
-      .from('lottery_slots')
-      .insert({
-        artist_id: artistId,
-        name
-      } as Database['public']['Tables']['lottery_slots']['Insert'])
-      .select()
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { data, error } = await supabase
+        .from('lottery_slots')
+        .insert({
+          artist_id: artistId,
+          name
+        } as Database['public']['Tables']['lottery_slots']['Insert'])
+        .select()
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return data[0]
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return data[0]
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function updateLotterySlot(id: number, name: string) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { error } = await supabase
-      .from('lottery_slots')
-      .update({ name } as Database['public']['Tables']['lottery_slots']['Update'])
-      .eq('id', id)
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { error } = await supabase
+        .from('lottery_slots')
+        .update({ name } as Database['public']['Tables']['lottery_slots']['Update'])
+        .eq('id', id)
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return true
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return true
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
 
 export async function deleteLotterySlot(id: number) {
-  try {
-    const supabase = await createAdminSupabaseClient()
-    const { error } = await supabase
-      .from('lottery_slots')
-      .delete()
-      .eq('id', id)
+  return requireAdminAuth(async () => {
+    try {
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          auth: {
+            autoRefreshToken: false,
+            persistSession: false
+          }
+        }
+      )
 
-    if (error) {
+      const { error } = await supabase
+        .from('lottery_slots')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.error('Admin operation error:', error)
+        throw new Error('操作に失敗しました')
+      }
+
+      return true
+    } catch (error) {
       console.error('Admin operation error:', error)
       throw new Error('操作に失敗しました')
     }
-
-    return true
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '認証が必要です' ||
-          error.message === '管理者権限が必要です') {
-        throw error
-      }
-    }
-    throw new Error('操作に失敗しました')
-  }
+  })
 }
