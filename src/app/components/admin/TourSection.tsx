@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Tour, TourSectionProps } from '../../../types/admin'
 import { addTour, editTour, deleteTour } from '../../../utils/tourUtils'
+import Icon from '../common/Icon'
 
 /**
  * ツアー管理セクションコンポーネント
@@ -113,7 +114,7 @@ export default function TourSection({
               <thead>
                 <tr className="bg-gray-50">
                   <th className="border p-2 text-left">ツアー名</th>
-                  <th className="border p-2 text-center w-24">操作</th>
+                  <th className="border p-2 text-center w-[5em]">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -153,13 +154,13 @@ export default function TourSection({
                             onClick={() => setEditingTour(tour)}
                             className="text-blue-500 hover:text-blue-700 mr-2"
                           >
-                            編集
+                            <Icon type='edit'/>
                           </button>
                           <button
                             onClick={() => handleDelete(tour.id)}
                             className="text-red-500 hover:text-red-700"
                           >
-                            削除
+                            <Icon type='delete'/>
                           </button>
                         </>
                       )}

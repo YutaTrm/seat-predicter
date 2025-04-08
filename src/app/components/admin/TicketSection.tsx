@@ -57,6 +57,8 @@ export default function TicketSection({
                     <th className="border p-2 text-left">ブロック</th>
                     <th className="border p-2 text-center">列</th>
                     <th className="border p-2 text-center">番号</th>
+                    <th className="border p-2 text-center">種別</th>
+                    <th className="border p-2 text-center">操作</th>
                   </tr>
                 </thead>
                 <tbody>
