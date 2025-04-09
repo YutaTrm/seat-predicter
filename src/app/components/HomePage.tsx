@@ -8,6 +8,8 @@ import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import Footer from './common/Footer'
 import { createSupabaseClient } from '@/lib/supabase/client'
+// import Accordion from './common/Accordion'
+// import InfoList from './home/InfoList'
 
 /**
  * ホームページコンポーネント
