@@ -17,7 +17,7 @@ export default function InfoList() {
   return (
     <dl className="space-y-2">
       {infoItems.map((item, index) => (
-        <dl key={index} className="flex gap-2 text-xs">
+        <dl key={index} className="flex gap-2 text-sm">
           <dt className="text-gray-500 mr-2">{item.date}</dt>
           <dd>{item.content}</dd>
         </dl>
