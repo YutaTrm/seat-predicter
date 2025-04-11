@@ -20,6 +20,9 @@ export default function Footer() {
           問い合わせ
         </a>
       </div>
+      <p className="text-xs text-gray-500 text-center mt-1">
+        ©2025 座席予想掲示板 · <a href="/license" className="underline">License</a>
+      </p>
     </footer>
   )
 }
