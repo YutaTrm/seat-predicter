@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import SectionHeader from '../components/common/SectionHeader';
 
 export default function AboutPage() {
@@ -36,6 +37,7 @@ export default function AboutPage() {
         <ul className="list-disc list-outside text-gray-600 space-y-1 ml-[1em]">
           <li>誰でも気軽に無料で使えることをコンセプトにしています。</li>
           <li>運営にはサーバー設置費、URL取得費、データベース月額費がかかるため、これらを賄うために広告を設置しています。</li>
+          <li>本アプリのライセンス情報は<Link href="/license" className="underline text-rose-700 hover:text-rose-900 transition-colors">Licenses</Link>をご確認ください。</li>
         </ul>
       </section>
 
