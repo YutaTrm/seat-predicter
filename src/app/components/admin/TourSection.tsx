@@ -1,8 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Tour, TourSectionProps } from '../../../types/admin'
 import { addTour, editTour, deleteTour } from '../../../utils/tourUtils'
+
+/**
+ * ツアーが終了しているかどうかを判定する関数
+ */
+const isTourEnded = (endDate: string): boolean => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const tourEndDate = new Date(endDate)
+  tourEndDate.setHours(0, 0, 0, 0)
+  return tourEndDate < today
+}
 
 /**
  * ツアー管理セクションコンポーネント
@@ -20,25 +31,29 @@ export default function TourSection({
   handleDeleteTour
 }: TourSectionProps) {
   const [tourName, setTourName] = useState('')
+  const [tourEndDate, setTourEndDate] = useState('')
   const [editingTour, setEditingTour] = useState<Tour | null>(null)
+  const [editingName, setEditingName] = useState('')
+  const [editingEndDate, setEditingEndDate] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedArtistId || !tourName.trim()) return
+    if (!selectedArtistId || !tourName.trim() || !tourEndDate) return
 
     try {
-      const tour = await addTour(selectedArtistId, tourName, handleAddTour)
+      const tour = await addTour(selectedArtistId, tourName, tourEndDate, handleAddTour)
       onTourAdd(tour)
       setTourName('')
+      setTourEndDate('')
       alert('ツアーを追加しました')
     } catch (err) {
       alert(err instanceof Error ? err.message : 'ツアーの追加に失敗しました')
     }
   }
 
-  const handleEdit = async (id: number, newName: string) => {
+  const handleEdit = async (id: number, newName: string, newEndDate: string) => {
     try {
-      await editTour(id, newName, handleEditTour)
+      await editTour(id, newName, newEndDate, handleEditTour)
       onTourEdit(id, newName)
       setEditingTour(null)
       alert('ツアーを編集しました')
@@ -58,10 +73,11 @@ export default function TourSection({
     }
   }
 
-  // 選択されたアーティストのツアーをフィルタリング
-  const filteredTours = selectedArtistId
-    ? tours.filter(tour => tour.artist_id === Number(selectedArtistId))
-    : []
+  // 選択されたアーティストのツアーをフィルタリング（メモ化）
+  const filteredTours = useMemo(() => {
+    if (!selectedArtistId) return []
+    return tours.filter(tour => tour.artist_id === Number(selectedArtistId))
+  }, [selectedArtistId, tours])
 
   return (
     <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-2/6">
@@ -79,20 +95,28 @@ export default function TourSection({
             </option>
           ))}
         </select>
-        <div className="flex">
+        <div className="space-y-2">
           <input
             type="text"
             value={tourName}
             onChange={(e) => setTourName(e.target.value)}
             placeholder="ツアー名"
-            className="flex-grow p-2 border rounded-l"
+            className="w-full p-2 border rounded"
           />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded-r"
-          >
-            追加
-          </button>
+          <div className="flex space-x-2">
+            <input
+              type="date"
+              value={tourEndDate}
+              onChange={(e) => setTourEndDate(e.target.value)}
+              className="flex-grow p-2 border rounded"
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 text-white p-2 rounded"
+            >
+              追加
+            </button>
+          </div>
         </div>
       </form>
       <hr/>
@@ -113,29 +137,56 @@ export default function TourSection({
               <thead>
                 <tr className="bg-gray-50">
                   <th className="border p-2 text-left">ツアー名</th>
+                  {/* <th className="border p-2 text-left">終了日</th> */}
                   <th className="border p-2 text-center w-24">操作</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredTours.map(tour => (
-                  <tr key={tour.id} className="border-b">
+                  <tr
+                    key={tour.id}
+                    className={`border-b ${isTourEnded(tour.end_date) ? 'bg-gray-100' : ''}`}
+                  >
                     <td className="border p-2">
                       {editingTour?.id === tour.id ? (
                         <input
                           type="text"
-                          value={editingTour.name}
-                          onChange={(e) => setEditingTour({ ...editingTour, name: e.target.value })}
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
                           className="w-full p-1 border rounded"
                         />
                       ) : (
                         tour.name
                       )}
+                      <br/>【終了日】
+                      {editingTour?.id === tour.id ? (
+                        <input
+                          type="date"
+                          value={editingEndDate}
+                          onChange={(e) => setEditingEndDate(e.target.value)}
+                          className="w-full p-1 border rounded"
+                        />
+                      ) : (
+                        new Date(tour.end_date).toLocaleDateString('ja-JP')
+                      )}
                     </td>
+                    {/* <td className="border p-2">
+                      {editingTour?.id === tour.id ? (
+                        <input
+                          type="date"
+                          value={editingTour.end_date}
+                          onChange={(e) => setEditingTour({ ...editingTour, end_date: e.target.value })}
+                          className="w-full p-1 border rounded"
+                        />
+                      ) : (
+                        new Date(tour.end_date).toLocaleDateString('ja-JP')
+                      )}
+                    </td> */}
                     <td className="border p-2 text-center">
                       {editingTour?.id === tour.id ? (
                         <>
                           <button
-                            onClick={() => handleEdit(tour.id, editingTour.name)}
+                            onClick={() => handleEdit(tour.id, editingName, editingEndDate)}
                             className="text-green-500 hover:text-green-700 mr-2"
                           >
                             保存
@@ -150,7 +201,11 @@ export default function TourSection({
                       ) : (
                         <>
                           <button
-                            onClick={() => setEditingTour(tour)}
+                            onClick={() => {
+                              setEditingTour(tour)
+                              setEditingName(tour.name)
+                              setEditingEndDate(tour.end_date.split('T')[0])
+                            }}
                             className="text-blue-500 hover:text-blue-700 mr-2"
                           >
                             編集

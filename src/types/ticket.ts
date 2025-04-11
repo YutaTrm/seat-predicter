@@ -20,6 +20,7 @@ export type Tour = {
   id: number
   artist_id: number
   name: string
+  end_date: string
 }
 
 export type LotterySlot = {

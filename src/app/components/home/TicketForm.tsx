@@ -1,9 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Artist, Tour, LotterySlot } from '../../../types/ticket'
 import { updateUrlParams } from '../../../utils/ticketUtils'
 import { useRouter } from 'next/navigation'
+
+/**
+ * ツアーが終了しているかどうかを判定する関数
+ */
+const isTourEnded = (endDate: string): boolean => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const tourEndDate = new Date(endDate)
+  tourEndDate.setHours(0, 0, 0, 0)
+  return tourEndDate < today
+}
 
 type TicketFormProps = {
   artists: Artist[]
@@ -42,6 +53,11 @@ export default function TicketForm({
   const [blockNumber, setBlockNumber] = useState<number | null>(null)
   const [column, setColumn] = useState<number | null>(null)
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
+
+  // 終了していないツアーのみをフィルタリング（メモ化）
+  const availableTours = useMemo(() => {
+    return tours.filter(tour => !isTourEnded(tour.end_date))
+  }, [tours])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -93,7 +109,7 @@ export default function TicketForm({
           className="w-full p-2 border rounded bg-white"
         >
           <option value="">ツアーを選択</option>
-          {tours.map(tour => (
+          {availableTours.map(tour => (
             <option key={tour.id} value={tour.id}>
               {tour.name}
             </option>
