@@ -64,6 +64,7 @@ export type Database = {
           id: number
           artist_id: number
           name: string
+          end_date: string
           created_at: string
           updated_at: string
         }
@@ -71,6 +72,7 @@ export type Database = {
           id?: number
           artist_id: number
           name: string
+          end_date: string
           created_at?: string
           updated_at?: string
         }
@@ -78,6 +80,7 @@ export type Database = {
           id?: number
           artist_id?: number
           name?: string
+          end_date?: string
           created_at?: string
           updated_at?: string
         }

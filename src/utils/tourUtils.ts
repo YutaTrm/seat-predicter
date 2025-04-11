@@ -8,11 +8,13 @@ import { Tour } from '../types/admin'
 export const addTour = async (
   artistId: string,
   name: string,
+  endDate: string,
   handleAddTour: (formData: FormData) => Promise<{ tour: Tour }>
 ): Promise<Tour> => {
   const formData = new FormData()
   formData.append('artistId', artistId)
   formData.append('name', name)
+  formData.append('endDate', endDate)
 
   try {
     const { tour } = await handleAddTour(formData)
@@ -29,11 +31,13 @@ export const addTour = async (
 export const editTour = async (
   id: number,
   newName: string,
+  newEndDate: string,
   handleEditTour: (formData: FormData) => Promise<{ success: boolean }>
 ): Promise<void> => {
   const formData = new FormData()
   formData.append('id', id.toString())
   formData.append('name', newName)
+  formData.append('endDate', newEndDate)
 
   try {
     await handleEditTour(formData)
