@@ -37,6 +37,8 @@ export const fetchTickets = async (
     `)
     .eq('artist_id', selectedArtist)
     .eq('tour_id', selectedTour)
+    .order('block')
+    .order('block_number')
 
   if (error) {
     console.error('チケット取得エラー:', error)
@@ -57,6 +59,7 @@ export const submitTicket = async (
   selectedTour: number,
   selectedLotterySlot: number,
   block: string,
+  blockNumber: number,
   column: number,
   seatNumber: number
 ) => {
@@ -69,6 +72,7 @@ export const submitTicket = async (
       tour_id: selectedTour,
       lottery_slots_id: selectedLotterySlot,
       block,
+      block_number: blockNumber,
       column,
       number: seatNumber
     })

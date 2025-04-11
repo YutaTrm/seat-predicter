@@ -5,6 +5,7 @@ export type Ticket = {
   lottery_slots_id: number
   lottery_slots_name?: string
   block: string
+  block_number: number
   column: number
   number: number
   created_at: string
