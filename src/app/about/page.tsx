@@ -1,9 +1,10 @@
 import React from 'react';
+import SectionHeader from '../components/common/SectionHeader';
 
 export default function AboutPage() {
   return (
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 text-md">
-      <h1 className="text-2xl font-bold text-rose-500 mb-6 text-center">座席予想掲示板(β)について</h1>
+      <SectionHeader title="座席予想掲示板(β)について" />
 
       <section className="mb-8">
         <h2 className="text-lg text-gray-700 font-bold mb-2">アプリの概要</h2>
