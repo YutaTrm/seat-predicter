@@ -54,19 +54,20 @@ export default function TicketSection({
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="bg-gray-50">
-                    <th className="border p-2 text-left">ブロック</th>
+                    <th className="border p-2 text-left">ブロ</th>
                     <th className="border p-2 text-center">列</th>
-                    <th className="border p-2 text-center">番号</th>
+                    <th className="border p-2 text-center">席</th>
                     <th className="border p-2 text-center">種別</th>
                     <th className="border p-2 text-center">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredTickets.map(ticket => (
-                    <tr key={ticket.id} className="border-b">
-                      <td className="border p-2">{ticket.block}</td>
+                    <tr key={ticket.id} className="border-b text-xs">
+                      <td className="border p-2">{ticket.block}{ticket.block_number}</td>
                       <td className="border p-2 text-center">{ticket.column}</td>
                       <td className="border p-2 text-center">{ticket.number}</td>
+                      <td className="border p-2 text-right">{ticket.lottery_slots_name}</td>
                     </tr>
                   ))}
                 </tbody>

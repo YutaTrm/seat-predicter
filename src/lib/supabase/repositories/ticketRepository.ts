@@ -4,7 +4,7 @@ import { createServerSupabaseClient, handleError } from '../utils'
 // チケット一覧を取得
 export async function fetchTickets(artistId: number, tourId: number) {
   const supabase = await createServerSupabaseClient()
-  const { data, error } = await supabase
+  const { data: tickets, error } = await supabase
     .from('tickets')
     .select(`
       *,
@@ -15,15 +15,17 @@ export async function fetchTickets(artistId: number, tourId: number) {
     .eq('artist_id', artistId)
     .eq('tour_id', tourId)
     .order('block')
-    .order('column')
-    .order('number')
+    .order('block_number')
 
   if (error) {
     console.error('チケット取得エラー:', error)
     return []
   }
 
-  return data
+  return tickets.map(ticket => ({
+    ...ticket,
+    lottery_slots_name: ticket.lottery_slots?.name || null
+  }))
 }
 
 // チケットを作成
