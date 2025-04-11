@@ -135,7 +135,7 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
                 className="hover:bg-gray-50 text-sm"
                 style={{ backgroundColor }}
               >
-                <td className="px-3 py-1 border-b text-right">{ticket.block}</td>
+                <td className="px-3 py-1 border-b text-right">{ticket.block}{ticket.block_number}</td>
                 <td className="px-3 py-1 border-b text-right">{ticket.column}</td>
                 <td className="px-3 py-1 border-b text-right">{ticket.number}</td>
                 <td className="px-3 py-1 border-b text-right text-xs">{ticket.lottery_slots_name}</td>

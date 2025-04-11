@@ -15,7 +15,7 @@ type TicketFormProps = {
   onArtistChange: (artistId: number | null) => void
   onTourChange: (tourId: number | null) => void
   onLotterySlotChange: (lotterySlotId: number | null) => void
-  onSubmit: (block: string, column: number, seatNumber: number, lotterySlotId: number) => void
+  onSubmit: (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number) => void
   onReset: () => void
   onShowTickets: () => void
 }
@@ -39,21 +39,23 @@ export default function TicketForm({
 }: TicketFormProps) {
   const router = useRouter()
   const [block, setBlock] = useState<string>('')
+  const [blockNumber, setBlockNumber] = useState<number | null>(null)
   const [column, setColumn] = useState<number | null>(null)
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!block || !column || !seatNumber || !selectedLotterySlot) {
+    if (!block || !blockNumber || !column || !seatNumber || !selectedLotterySlot) {
       alert('すべての情報を入力してください')
       return
     }
-    onSubmit(block, column, seatNumber, selectedLotterySlot)
+    onSubmit(block, blockNumber, column, seatNumber, selectedLotterySlot)
   }
 
   const handleReset = () => {
     router.replace("/");
     setBlock('')
+    setBlockNumber(null)
     setColumn(null)
     setSeatNumber(null)
     onReset()
@@ -62,7 +64,7 @@ export default function TicketForm({
   return (
     <section>
       <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 text-sm">
+      <form onSubmit={handleSubmit} className="space-y-2 text-sm">
         <select
           value={selectedArtist || ''}
           onChange={(e) => {
@@ -98,59 +100,60 @@ export default function TicketForm({
           ))}
         </select>
 
-        <div className="flex space-x-2">
+        <select
+          value={selectedLotterySlot || ''}
+          onChange={(e) => {
+            const value = Number(e.target.value)
+            onLotterySlotChange(value || null)
+          }}
+          disabled={!selectedArtist}
+          className="w-full p-2 border rounded  bg-white"
+        >
+          <option value="">抽選枠</option>
+          {lotterySlots.map(slot => (
+            <option key={slot.id} value={slot.id}>
+              {slot.name}
+            </option>
+          ))}
+        </select>
+
+        <div className="flex gap-1">
           <select
             value={block}
             onChange={(e) => setBlock(e.target.value)}
-            className="w-2/6 p-2 border rounded  bg-white"
+            className="p-2 border rounded bg-white text-right w-2/6"
           >
             <option value="">ブロック</option>
             {Array.from({ length: 16 }, (_, i) => { //全アルファベットじゃなくて途中まで
               const char = String.fromCharCode(65 + i);
-              if (char === 'P') {
-                // P1からP20までのオプションを生成
-                return Array.from({ length: 20 }, (_, j) => (
-                  <option key={`P${j + 1}`} value={`P${j + 1}`}>P{j + 1}</option>
-                ));
-              }
               return <option key={char} value={char}>{char}</option>;
             }).flat()}
-            <option>S</option>
             <option>その他</option>
           </select>
 
           <input
             type="number"
+            value={blockNumber || ''}
+            onChange={(e) => setBlockNumber(Number(e.target.value))}
+            placeholder="ブロック番号"
+            className="p-2 border rounded bg-white text-right w-2/6"
+          />
+
+          <input
+            type="number"
             value={column || ''}
             onChange={(e) => setColumn(Number(e.target.value))}
-            placeholder="列番"
-            className="w-1/6 p-2 border rounded  bg-white"
+            placeholder="列"
+            className="p-2 border rounded bg-white text-right w-1/6"
           />
 
           <input
             type="number"
             value={seatNumber || ''}
             onChange={(e) => setSeatNumber(Number(e.target.value))}
-            placeholder="席番"
-            className="w-1/6 p-2 border rounded  bg-white"
+            placeholder="席"
+            className="p-2 border rounded bg-white text-right w-1/6"
           />
-
-          <select
-            value={selectedLotterySlot || ''}
-            onChange={(e) => {
-              const value = Number(e.target.value)
-              onLotterySlotChange(value || null)
-            }}
-            disabled={!selectedArtist}
-            className="w-2/6 p-2 border rounded  bg-white"
-          >
-            <option value="">抽選枠</option>
-            {lotterySlots.map(slot => (
-              <option key={slot.id} value={slot.id}>
-                {slot.name}
-              </option>
-            ))}
-          </select>
         </div>
 
         <div className="flex space-x-2 text-sm">

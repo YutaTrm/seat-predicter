@@ -87,7 +87,7 @@ export default function HomePage({
   /**
    * チケットを登録する関数
    */
-  const handleSubmitTicket = async (block: string, column: number, seatNumber: number, lotterySlotId: number) => {
+  const handleSubmitTicket = async (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number) => {
     if (!selectedArtist || !selectedTour) return
 
     const result = await submitTicket(
@@ -95,6 +95,7 @@ export default function HomePage({
       selectedTour,
       lotterySlotId,
       block,
+      blockNumber,
       column,
       seatNumber
     )
