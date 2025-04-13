@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useArtistData } from '@/hooks/useArtistData'
+import { useTourData } from '@/hooks/useTourData'
+import { useLotterySlotData } from '@/hooks/useLotterySlotData'
 import { Artist, Tour, Ticket, LotterySlot } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
@@ -22,19 +24,19 @@ export default function HomePage({
   supabaseUrl,
   supabaseKey
 }: HomePageProps) {
-  // Supabaseクライアントを初期化
-  const supabase = createSupabaseClient(supabaseUrl, supabaseKey)
-  const searchParams = useSearchParams()
-
-  // アーティストデータを取得
-  const { artists, isLoading: isLoadingArtists, error: artistsError } = useArtistData(supabaseUrl, supabaseKey)
-  const [tours, setTours] = useState<Tour[]>([])
-  const [lotterySlots, setLotterySlots] = useState<LotterySlot[]>([])
-  const [tickets, setTickets] = useState<Ticket[]>([])
+  // 状態管理
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
   const [selectedTour, setSelectedTour] = useState<number | null>(null)
   const [selectedLotterySlot, setSelectedLotterySlot] = useState<number | null>(null)
+  const [tickets, setTickets] = useState<Ticket[]>([])
   const [showTickets, setShowTickets] = useState<boolean>(false)
+
+  const searchParams = useSearchParams()
+
+  // データを取得
+  const { artists, isLoading: isLoadingArtists, error: artistsError } = useArtistData(supabaseUrl, supabaseKey)
+  const { tours, isLoading: isLoadingTours, error: toursError } = useTourData(supabaseUrl, supabaseKey, selectedArtist)
+  const { lotterySlots, isLoading: isLoadingLotterySlots, error: lotterySlotsError } = useLotterySlotData(supabaseUrl, supabaseKey, selectedArtist)
 
   // 選択中のアーティストとツアーの名前を取得
   const selectedArtistName = selectedArtist
@@ -113,96 +115,44 @@ export default function HomePage({
 
   // URLパラメータから初期値を設定
   useEffect(() => {
-    async function initializeFromUrl() {
-      const artistId = searchParams.get('artist')
-      const tourId = searchParams.get('tour')
+    const artistId = searchParams.get('artist')
+    const tourId = searchParams.get('tour')
 
-      if (artistId) {
-        const parsedArtistId = parseInt(artistId)
-        const artist = artists.find(a => a.id === parsedArtistId)
+    if (artistId) {
+      const parsedArtistId = parseInt(artistId)
+      const artist = artists.find(a => a.id === parsedArtistId)
 
-        if (artist) {
-          setSelectedArtist(artist.id)
+      if (artist) {
+        setSelectedArtist(artist.id)
 
-          if (tourId) {
-            const { data: artistTours } = await supabase
-              .from('tours')
-              .select('*')
-              .eq('artist_id', artist.id)
+        if (tourId) {
+          const parsedTourId = parseInt(tourId)
+          const tour = tours.find(t => t.id === parsedTourId)
 
-            if (artistTours) {
-              const parsedTourId = parseInt(tourId)
-              const tour = artistTours.find(t => t.id === parsedTourId)
-
-              if (tour) {
-                setSelectedTour(tour.id)
-                setTours(artistTours)
-              }
-            }
+          if (tour) {
+            setSelectedTour(tour.id)
           }
         }
       }
     }
-    initializeFromUrl()
-  }, [searchParams, artists])
-
-  // 選択されたアーティストに基づいてツアーを取得
-  useEffect(() => {
-    async function loadTours() {
-      if (selectedArtist) {
-        const { data: newTours } = await supabase
-          .from('tours')
-          .select('*')
-          .eq('artist_id', selectedArtist)
-
-        if (newTours) {
-          setTours(newTours)
-        } else {
-          setTours([])
-        }
-      } else {
-        setTours([])
-      }
-    }
-    loadTours()
-  }, [selectedArtist])
-
-  // 選択されたアーティストに基づいて抽選枠を取得
-  useEffect(() => {
-    async function loadLotterySlots() {
-      if (selectedArtist) {
-        const { data: newLotterySlots } = await supabase
-          .from('lottery_slots')
-          .select('*')
-          .eq('artist_id', selectedArtist)
-          .order('id')
-
-        if (newLotterySlots) {
-          setLotterySlots(newLotterySlots)
-        } else {
-          setLotterySlots([])
-        }
-      } else {
-        setLotterySlots([])
-      }
-    }
-    loadLotterySlots()
-  }, [selectedArtist])
+  }, [searchParams, artists, tours])
 
   return (
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
       <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板(β)</h1>
       <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
 
-      {isLoadingArtists && (
+      {/* ローディング状態の表示 */}
+      {(isLoadingArtists || isLoadingTours || isLoadingLotterySlots) && (
         <div className="text-center text-gray-600">
-          アーティスト情報を読み込み中...
+          データを読み込み中...
         </div>
       )}
 
-      {artistsError && (
+      {/* エラー状態の表示 */}
+      {(artistsError || toursError || lotterySlotsError) && (
         <div className="text-center text-red-600">
-          アーティスト情報の読み込みに失敗しました
+          データの読み込みに失敗しました
         </div>
       )}
 
