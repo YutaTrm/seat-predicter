@@ -5,12 +5,11 @@ import { useSearchParams } from 'next/navigation'
 import { useArtistData } from '@/hooks/useArtistData'
 import { useTourData } from '@/hooks/useTourData'
 import { useLotterySlotData } from '@/hooks/useLotterySlotData'
-import { Artist, Tour, Ticket, LotterySlot } from '../../types/ticket'
+import { Ticket } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import Footer from './common/Footer'
-import { createSupabaseClient } from '@/lib/supabase/client'
 
 /**
  * ホームページコンポーネント
