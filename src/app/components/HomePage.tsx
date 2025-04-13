@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useArtistData } from '@/hooks/useArtistData'
 import { Artist, Tour, Ticket, LotterySlot } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
@@ -13,13 +14,11 @@ import { createSupabaseClient } from '@/lib/supabase/client'
  * ホームページコンポーネント
  */
 interface HomePageProps {
-  artists: Artist[];
   supabaseUrl: string;
   supabaseKey: string;
 }
 
 export default function HomePage({
-  artists: initialArtists,
   supabaseUrl,
   supabaseKey
 }: HomePageProps) {
@@ -27,7 +26,8 @@ export default function HomePage({
   const supabase = createSupabaseClient(supabaseUrl, supabaseKey)
   const searchParams = useSearchParams()
 
-  const [artists] = useState<Artist[]>(initialArtists)
+  // アーティストデータを取得
+  const { artists, isLoading: isLoadingArtists, error: artistsError } = useArtistData(supabaseUrl, supabaseKey)
   const [tours, setTours] = useState<Tour[]>([])
   const [lotterySlots, setLotterySlots] = useState<LotterySlot[]>([])
   const [tickets, setTickets] = useState<Ticket[]>([])
@@ -193,6 +193,18 @@ export default function HomePage({
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
       <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板(β)</h1>
       <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
+
+      {isLoadingArtists && (
+        <div className="text-center text-gray-600">
+          アーティスト情報を読み込み中...
+        </div>
+      )}
+
+      {artistsError && (
+        <div className="text-center text-red-600">
+          アーティスト情報の読み込みに失敗しました
+        </div>
+      )}
 
       <TicketForm
         artists={artists}
