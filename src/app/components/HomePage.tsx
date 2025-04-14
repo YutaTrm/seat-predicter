@@ -174,7 +174,7 @@ export default function HomePage({
 
       <section className="mt-12">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xl text-gray-600 font-bold">チケット一覧</h2>
+          <h2 className="text-xl text-gray-600 font-bold">チケット一覧 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
           {selectedArtist && selectedTour && (
             <button
               onClick={postToX}
