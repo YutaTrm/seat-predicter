@@ -2,10 +2,14 @@
 
 import Script from 'next/script'
 
+interface AdmaxAdsProps {
+  code: string;
+}
+
 /**
  * Admax広告を表示するコンポーネント
  */
-export default function AdmaxAds() {
+export default function AdmaxAds({ code }: AdmaxAdsProps) {
   // 本番環境でない場合は何も表示しない
   if (process.env.NODE_ENV !== 'production') {
     return null
@@ -14,13 +18,13 @@ export default function AdmaxAds() {
     <>
       <div
         className="admax-ads"
-        data-admax-id="3e6bd2d29e9a3eacb2b94ce7200c3c3a"
+        data-admax-id={code}
         style={{ display: 'inline-block' }}
       />
       <Script id="admax-init">
         {`
           (admaxads = window.admaxads || []).push({
-            admax_id: "3e6bd2d29e9a3eacb2b94ce7200c3c3a",
+            admax_id: ${code},
             type: "banner"
           });
         `}

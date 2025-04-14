@@ -195,14 +195,16 @@ export default function HomePage({
         {showTickets && tickets.length > 0 && (
           <div className="mt-8">
             <h2 className="text-xl text-gray-600 font-bold">座席分布</h2>
-            <p className='text-xs text-gray-400 mb-4'>登録済みチケットから算出した分布</p>
+            <p className='text-xs text-gray-400 mb-4'>
+              登録済みチケットから算出した分布
+            </p>
             <TicketGrid tickets={tickets} />
           </div>
         )}
 
         {/* 広告の表示 */}
         <div className="mt-4 text-center">
-          <AdmaxAds />
+          <AdmaxAds code="6320491eb1d6b1456841a6bf9a04cb19"/>
         </div>
       </section>
       <Footer />
