@@ -138,7 +138,7 @@ export default function HomePage({
 
   return (
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
-      <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板(β)</h1>
+      <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
       <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
 
       {/* ローディング状態の表示 */}
