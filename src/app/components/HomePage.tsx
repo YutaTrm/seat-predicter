@@ -10,6 +10,7 @@ import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import Footer from './common/Footer'
+import AdmaxAds from './common/AdmaxAds'
 
 /**
  * ホームページコンポーネント
@@ -190,9 +191,10 @@ export default function HomePage({
           showTickets={showTickets}
         />
 
-        {/* <!-- admax --> */}
-        <script src="https://adm.shinobi.jp/s/3e6bd2d29e9a3eacb2b94ce7200c3c3a"></script>
-        {/* <!-- admax --> */}
+        {/* 広告の表示 */}
+        <div className="mt-4 text-center">
+          <AdmaxAds />
+        </div>
       </section>
       <Footer />
     </main>
