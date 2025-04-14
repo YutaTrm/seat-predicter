@@ -18,13 +18,13 @@ export default function AdmaxAds({ code }: AdmaxAdsProps) {
     <>
       <div
         className="admax-ads"
-        data-admax-id="{code}"
+        data-admax-id={code}
         style={{ display: 'inline-block' }}
       />
       <Script id="admax-init">
         {`
           (admaxads = window.admaxads || []).push({
-            admax_id: ${code},
+            admax_id: "${code}",
             type: "banner"
           });
         `}
