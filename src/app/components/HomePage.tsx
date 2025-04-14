@@ -189,6 +189,10 @@ export default function HomePage({
           tickets={tickets}
           showTickets={showTickets}
         />
+
+        {/* <!-- admax --> */}
+        <script src="https://adm.shinobi.jp/s/3e6bd2d29e9a3eacb2b94ce7200c3c3a"></script>
+        {/* <!-- admax --> */}
       </section>
       <Footer />
     </main>
