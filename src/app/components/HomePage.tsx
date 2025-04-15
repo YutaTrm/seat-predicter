@@ -201,7 +201,8 @@ export default function HomePage({
             <p className='text-xs text-gray-400 mb-4'>
               登録済みチケットから算出した分布
             </p>
-            <TicketGrid tickets={tickets} />
+            {/* <TicketGrid tickets={tickets} /> */}
+            ※機能改修中です
           </div>
         )}
 
