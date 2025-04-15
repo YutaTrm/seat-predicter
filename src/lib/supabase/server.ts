@@ -233,13 +233,14 @@ export async function deleteArtist(id: number) {
   return true
 }
 
-export async function addTour(artistId: number, name: string) {
+export async function addTour(artistId: number, name: string, endDate: string) {
   const supabase = createAdminSupabaseClient()
   const { data, error } = await supabase
     .from('tours')
     .insert({
       artist_id: artistId,
-      name
+      name,
+      end_date: endDate
     } as Database['public']['Tables']['tours']['Insert'])
     .select()
 
