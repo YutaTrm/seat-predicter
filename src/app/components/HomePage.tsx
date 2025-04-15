@@ -9,7 +9,7 @@ import { Ticket } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
-import TicketGrid from './home/TicketGrid'
+// import TicketGrid from './home/TicketGrid'
 import Footer from './common/Footer'
 import AdmaxAds from './common/AdmaxAds'
 
