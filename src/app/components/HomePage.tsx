@@ -143,34 +143,37 @@ export default function HomePage({
       <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
       <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
 
-      {/* ローディング状態の表示 */}
-      {(isLoadingArtists || isLoadingTours || isLoadingLotterySlots) && (
-        <div className="text-center text-gray-600">
-          データを読み込み中...
+      <section className="mt-12">
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
+          {/* ローディング状態の表示 */}
+          {(isLoadingArtists || isLoadingTours || isLoadingLotterySlots) && (
+            <span className="inline-block animate-spin rounded-full h-[1em] w-[1em] border-4 border-rose-500 border-t-transparent -mt-2" />
+          )}
         </div>
-      )}
 
-      {/* エラー状態の表示 */}
-      {(artistsError || toursError || lotterySlotsError) && (
-        <div className="text-center text-red-600">
-          データの読み込みに失敗しました
-        </div>
-      )}
+        {/* エラー状態の表示 */}
+        {(artistsError || toursError || lotterySlotsError) && (
+          <div className="text-center text-red-600 text-xs mb-4">
+            データの取得に失敗しました。ページを再更新してください。
+          </div>
+        )}
 
-      <TicketForm
-        artists={artists}
-        tours={tours}
-        lotterySlots={lotterySlots}
-        selectedArtist={selectedArtist}
-        selectedTour={selectedTour}
-        selectedLotterySlot={selectedLotterySlot}
-        onArtistChange={setSelectedArtist}
-        onTourChange={setSelectedTour}
-        onLotterySlotChange={setSelectedLotterySlot}
-        onSubmit={handleSubmitTicket}
-        onReset={handleReset}
-        onShowTickets={handleShowTickets}
-      />
+        <TicketForm
+          artists={artists}
+          tours={tours}
+          lotterySlots={lotterySlots}
+          selectedArtist={selectedArtist}
+          selectedTour={selectedTour}
+          selectedLotterySlot={selectedLotterySlot}
+          onArtistChange={setSelectedArtist}
+          onTourChange={setSelectedTour}
+          onLotterySlotChange={setSelectedLotterySlot}
+          onSubmit={handleSubmitTicket}
+          onReset={handleReset}
+          onShowTickets={handleShowTickets}
+        />
+      </section>
 
       <section className="mt-12">
         <div className="flex justify-between items-center mb-2">
