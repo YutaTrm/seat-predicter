@@ -32,12 +32,6 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
       return acc
     }, {})
 
-    const sortedKeys = Object.keys(grouped)
-      .sort((a, b) => {
-        if (a[0] !== b[0]) return a.charCodeAt(0) - b.charCodeAt(0)
-        return parseInt(a.slice(1)) - parseInt(b.slice(1))
-      })
-
     const blockLetters = Array.from(new Set(validTickets.map(t => t.block))).sort()
 
     const maxBlockNumbers = blockLetters.reduce<Record<string, number>>((acc, letter) => {
