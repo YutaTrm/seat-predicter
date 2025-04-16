@@ -92,46 +92,48 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
   const sortedTickets = sortTickets(tickets)
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border mb-3">
-        <thead>
-          <tr className="bg-gray-600 text-gray-100 text-xs">
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('block')}
-            >
-              ブロック{renderSortIcon('block')}
-            </th>
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('column')}
-            >
-              列{renderSortIcon('column')}
-            </th>
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('number')}
-            >
-              席{renderSortIcon('number')}
-            </th>
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('lottery_slots_name')}
-            >
-              抽選枠{renderSortIcon('lottery_slots_name')}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedTickets.map((ticket) => (
-            <TicketRow key={ticket.id} ticket={ticket} />
-          ))}
-        </tbody>
-      </table>
+    <div className="flex flex-col">
+      <div className="max-h-[80vh] overflow-auto mb-4">
+        <table className="min-w-full bg-white border relative">
+          <thead className="sticky top-0 bg-gray-600">
+            <tr className="text-gray-100 text-xs">
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('block')}
+              >
+                ブロック{renderSortIcon('block')}
+              </th>
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('column')}
+              >
+                列{renderSortIcon('column')}
+              </th>
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('number')}
+              >
+                席{renderSortIcon('number')}
+              </th>
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('lottery_slots_name')}
+              >
+                抽選枠{renderSortIcon('lottery_slots_name')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedTickets.map((ticket) => (
+              <TicketRow key={ticket.id} ticket={ticket} />
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* ブロックごとのレコード数を表示 */}
       <h3 className="text-gray-600 font-bold mb-2">ブロックごとの集計数</h3>
-      <table className="mb-4">
+      <table className="">
         <tbody>
           {Object.entries(blockCounts).map(([block, count]) => (
             <tr key={block} className="text-sm p-2 rounded">
