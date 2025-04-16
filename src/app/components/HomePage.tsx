@@ -12,6 +12,7 @@ import TicketTable from './home/TicketTable'
 import TicketGrid from './home/TicketGrid'
 import Footer from './common/Footer'
 import AdmaxAds from './common/AdmaxAds'
+import Modal from '@/app/components/common/Modal'
 
 /**
  * ホームページコンポーネント
@@ -31,6 +32,7 @@ export default function HomePage({
   const [selectedLotterySlot, setSelectedLotterySlot] = useState<number | null>(null)
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [showTickets, setShowTickets] = useState<boolean>(false)
+  const [showGridHelp, setShowGridHelp] = useState<boolean>(false)
 
   const searchParams = useSearchParams()
 
@@ -190,20 +192,52 @@ export default function HomePage({
             </button>
           )}
         </div>
+
         <TicketTable
           tickets={tickets}
           showTickets={showTickets}
         />
 
         {showTickets && tickets.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-xl text-gray-600 font-bold">座席分布</h2>
-            <p className='text-xs text-gray-400 mb-4'>
-              登録済みチケットから算出した分布
-            </p>
-            <TicketGrid tickets={tickets} />
-            ※機能改修中です
-          </div>
+          <>
+            <div className="mt-8">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-xl text-gray-600 font-bold">座席分布</h2>
+                <button
+                  onClick={() => setShowGridHelp(true)}
+                  className="text-sm text-rose-500 hover:text-rose-700"
+                >
+                  分布について
+                </button>
+              </div>
+              <p className='text-xs text-gray-400 mb-4'>
+                登録済みチケットから算出した分布
+              </p>
+              <TicketGrid tickets={tickets} />
+            </div>
+
+            {/* モーダル要素 */}
+            <Modal
+              isOpen={showGridHelp}
+              onClose={() => setShowGridHelp(false)}
+              title="分布について"
+            >
+              <div className="space-y-4">
+                <p>
+                  同じアルファベットのブロックを横一列に並べています。
+                </p>
+                <p>
+                  各ブロックの横と幅は、ブロック内のチケットの最大位置に合わせて自動調整しています。
+                </p>
+                <p>
+                  チケットが無いブロックも、無いことがわかるように5x5で配置しています。
+                </p>
+                <p>
+                  ブロック全体は横方向中央に寄せて表示しています。
+                </p>
+              </div>
+            </Modal>
+          </>
         )}
 
         {/* 広告の表示 */}
