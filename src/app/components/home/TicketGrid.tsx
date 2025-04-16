@@ -7,12 +7,12 @@ type TicketGridCanvasProps = {
   tickets: Ticket[]
 }
 
-const CELL_SIZE = 16
+const CELL_SIZE = 20
 const BLOCK_SPACING_X = 40
 const BLOCK_SPACING_Y = 60
 const LABEL_HEIGHT = 16
 const PADDING = 20
-const FONT_SIZE = 12
+const FONT_SIZE = 14
 
 const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
