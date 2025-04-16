@@ -7,6 +7,7 @@ type TicketGridCanvasProps = {
   tickets: Ticket[]
 }
 
+// ==== パラメータ（調整しやすいようにまとめる） ====
 const CELL_SIZE = 20
 const BLOCK_SPACING_X = 40
 const BLOCK_SPACING_Y = 60
@@ -16,8 +17,11 @@ const FONT_SIZE = 14
 
 const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [imageUrl, setImageUrl] = useState<string>('')
+  const [isCentered, setIsCentered] = useState<boolean>(true)
 
-  useEffect(() => {
+  // ==== Canvasを描画する処理 ====
+  const drawCanvas = () => {
     if (!canvasRef.current) return
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
@@ -25,6 +29,7 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
 
     const validTickets = tickets.filter(t => /^[A-Z]$/.test(t.block))
 
+    // ブロックごとにチケットをまとめる
     const grouped = validTickets.reduce<Record<string, Ticket[]>>((acc, t) => {
       const key = `${t.block}${t.block_number}`
       acc[key] = acc[key] || []
@@ -34,38 +39,56 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
 
     const blockLetters = Array.from(new Set(validTickets.map(t => t.block))).sort()
 
+    // 各ブロック文字ごとの最大番号を取得
     const maxBlockNumbers = blockLetters.reduce<Record<string, number>>((acc, letter) => {
       acc[letter] = Math.max(...validTickets.filter(t => t.block === letter).map(t => t.block_number))
       return acc
     }, {})
 
+    // 全てのブロックキーを生成（例：A1, A2, B1...）
     const allBlockKeys = blockLetters.flatMap(letter => {
       return Array.from({ length: maxBlockNumbers[letter] }, (_, i) => `${letter}${i + 1}`)
     })
 
-    const blockSizes: Record<string, { width: number, height: number, count: number }> = {}
+    // === ブロックサイズを計算（最大列数＆行数に揃える） ===
+    const maxColsPerNumber: Record<number, number> = {}
+    const maxRowsPerLetter: Record<string, number> = {}
 
     allBlockKeys.forEach(blockKey => {
+      const [letter, numberStr] = blockKey.match(/^([A-Z])(\d+)$/)!.slice(1)
+      const number = Number(numberStr)
       const blockTickets = grouped[blockKey] || []
-      const width = blockTickets.length > 0 ? Math.max(...blockTickets.map(t => t.number)) : 5
-      const height = blockTickets.length > 0 ? Math.max(...blockTickets.map(t => t.column)) : 5
+      const cols = blockTickets.length > 0 ? Math.max(...blockTickets.map(t => t.number)) : 5
+      const rows = blockTickets.length > 0 ? Math.max(...blockTickets.map(t => t.column)) : 5
+
+      maxColsPerNumber[number] = Math.max(maxColsPerNumber[number] || 0, cols)
+      maxRowsPerLetter[letter] = Math.max(maxRowsPerLetter[letter] || 0, rows)
+    })
+
+    // ブロックごとのサイズを記録
+    const blockSizes: Record<string, { width: number; height: number; count: number }> = {}
+    allBlockKeys.forEach(blockKey => {
+      const [letter, numberStr] = blockKey.match(/^([A-Z])(\d+)$/)!.slice(1)
+      const number = Number(numberStr)
+      const blockTickets = grouped[blockKey] || []
       blockSizes[blockKey] = {
-        width,
-        height,
+        width: maxColsPerNumber[number],
+        height: maxRowsPerLetter[letter],
         count: blockTickets.length
       }
     })
 
+    // ==== キャンバスサイズを計算 ====
     const rowHeights: Record<string, number> = {}
     const rowWidths: Record<string, number> = {}
 
     const canvasWidth = blockLetters.reduce((maxWidth, letter) => {
-      const blocks = allBlockKeys.filter(key => key.startsWith(letter))
+      const blocks = allBlockKeys.filter(k => k.startsWith(letter))
       const rowWidth = blocks.reduce((sum, key) => {
         return sum + blockSizes[key].width * CELL_SIZE + BLOCK_SPACING_X
-      }, -BLOCK_SPACING_X) // 最後のブロックに余計なスペースが入らないように
+      }, -BLOCK_SPACING_X)
       rowWidths[letter] = rowWidth
-      rowHeights[letter] = Math.max(...blocks.map(key => blockSizes[key].height)) * CELL_SIZE + BLOCK_SPACING_Y
+      rowHeights[letter] = Math.max(...blocks.map(k => blockSizes[k].height)) * CELL_SIZE + BLOCK_SPACING_Y
       return Math.max(maxWidth, rowWidth)
     }, 0) + PADDING * 2
 
@@ -74,22 +97,21 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
     canvas.width = canvasWidth
     canvas.height = canvasHeight
 
-    // 背景を白で塗りつぶす
+    // ==== 背景を白く塗る ====
     ctx.fillStyle = '#FFFFFF'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
+
     ctx.font = `${FONT_SIZE}px sans-serif`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'
 
+    // ==== ブロックを描画 ====
     let yOffset = PADDING
-
     for (const letter of blockLetters) {
       const blockKeys = allBlockKeys.filter(k => k.startsWith(letter))
-      const rowHeight = rowHeights[letter]
       const rowWidth = rowWidths[letter]
-
-      // 🎯 中央寄せ：xOffsetのスタート位置をcanvas中央から逆算
-      let xOffset = (canvas.width - rowWidth) / 2
+      const rowHeight = rowHeights[letter]
+      let xOffset = isCentered ? (canvas.width - rowWidth) / 2 : PADDING
 
       for (const blockKey of blockKeys) {
         const blockTickets = grouped[blockKey] || []
@@ -100,17 +122,14 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
         ctx.fillStyle = '#F43F5E'
         ctx.fillText(blockKey, xOffset + (width * CELL_SIZE) / 2, yOffset)
 
-        // セル
+        // セルを描画
         for (let row = 1; row <= height; row++) {
           for (let col = 1; col <= width; col++) {
             const x = xOffset + (col - 1) * CELL_SIZE
             const y = yOffset + LABEL_HEIGHT + (row - 1) * CELL_SIZE
-
             const has = ticketSet.has(`${row}-${col}`)
-
             ctx.fillStyle = has ? '#F43F5E' : '#F3F4F6'
             ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE)
-
             ctx.strokeStyle = '#D1D5DB'
             ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE)
           }
@@ -139,16 +158,16 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
 
       yOffset += rowHeight
     }
-  }, [tickets])
 
-  const [imageUrl, setImageUrl] = useState<string>('')
+    // ==== imageUrlを更新 ====
+    const dataUrl = canvas.toDataURL('image/png')
+    setImageUrl(dataUrl)
+  }
 
+  // 初回とチケット・中央寄せの切り替え時に再描画
   useEffect(() => {
-    if (canvasRef.current) {
-      const dataUrl = canvasRef.current.toDataURL('image/png')
-      setImageUrl(dataUrl)
-    }
-  }, [tickets])
+    drawCanvas()
+  }, [tickets, isCentered])
 
   return (
     <>
@@ -159,6 +178,14 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
           alt="座席分布"
           className="max-w-full cursor-pointer hover:opacity-80"
         />
+      </div>
+      <div className="text-center mt-2">
+        <button
+          onClick={() => setIsCentered(prev => !prev)}
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+        >
+          {isCentered ? 'ブロックを左寄せ' : 'ブロックを中央寄せ'}
+        </button>
       </div>
     </>
   )
