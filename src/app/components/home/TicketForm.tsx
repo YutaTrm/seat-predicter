@@ -167,31 +167,45 @@ export default function TicketForm({
             const char = String.fromCharCode(65 + i);
             return <option key={char} value={char}>{char}</option>;
           }).flat()}
-          <option>その他</option>
         </select>
 
         <input
           type="number"
           value={blockNumber || ''}
-          onChange={(e) => setBlockNumber(Number(e.target.value))}
+          onChange={(e) => {
+            const value = Math.floor(Number(e.target.value));
+            setBlockNumber(value >= 0 ? value : null);
+          }}
           placeholder="ブロック番号"
           className="p-2 border rounded bg-white text-right w-2/6"
+          step="1"
+          min="0"
         />
 
         <input
           type="number"
           value={column || ''}
-          onChange={(e) => setColumn(Number(e.target.value))}
+          onChange={(e) => {
+            const value = Math.floor(Number(e.target.value));
+            setColumn(value >= 0 ? value : null);
+          }}
           placeholder="列"
           className="p-2 border rounded bg-white text-right w-1/6"
+          step="1"
+          min="0"
         />
 
         <input
           type="number"
           value={seatNumber || ''}
-          onChange={(e) => setSeatNumber(Number(e.target.value))}
+          onChange={(e) => {
+            const value = Math.floor(Number(e.target.value));
+            setSeatNumber(value >= 0 ? value : null);
+          }}
           placeholder="席"
           className="p-2 border rounded bg-white text-right w-1/6"
+          step="1"
+          min="0"
         />
       </div>
 
