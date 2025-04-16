@@ -37,14 +37,15 @@ export async function fetchTourById(tourId: number, artistId: number) {
 }
 
 // ツアーを追加
-export async function addTour(artistId: number, name: string) {
+export async function addTour(artistId: number, name: string, endDate: string) {
   try {
     const supabase = createAdminSupabaseClient()
     const { data, error } = await supabase
       .from('tours')
       .insert({
         artist_id: artistId,
-        name
+        name,
+        end_date: endDate
       } as Database['public']['Tables']['tours']['Insert'])
       .select()
 

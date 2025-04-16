@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { Tour, TourSectionProps } from '../../../types/admin'
-import { addTour, editTour, deleteTour } from '../../../utils/tourUtils'
+import { addTourWithHandler as addTour, editTour, deleteTour } from '../../../utils/tourUtils'
 import Icon from '../common/Icon'
 
 /**

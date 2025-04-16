@@ -45,3 +45,22 @@ export async function createTicket(ticket: Database['public']['Tables']['tickets
     handleError(error, 'チケットの登録に失敗しました')
   }
 }
+
+// チケットを削除
+export async function deleteTicket(id: number) {
+  try {
+    const supabase = await createServerSupabaseClient()
+    const { error } = await supabase
+      .from('tickets')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      handleError(error, 'チケットの削除に失敗しました')
+    }
+
+    return true
+  } catch (error) {
+    handleError(error, 'チケットの削除に失敗しました')
+  }
+}

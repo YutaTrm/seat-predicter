@@ -1,6 +1,8 @@
 'use client'
 
 import { TicketSectionProps } from '../../../types/admin'
+import { deleteTicket } from '../../../utils/ticketUtils'
+import Icon from '../common/Icon'
 
 /**
  * チケット一覧セクションコンポーネント
@@ -10,7 +12,9 @@ export default function TicketSection({
   tickets,
   selectedArtistId,
   selectedTourId,
-  onTourSelect
+  onTourSelect,
+  onTicketDelete,
+  handleDeleteTicket
 }: TicketSectionProps) {
   // 選択されたツアーのチケットをフィルタリング
   const filteredTickets = selectedTourId
@@ -57,8 +61,8 @@ export default function TicketSection({
                     <th className="border p-2 text-left">ブロ</th>
                     <th className="border p-2 text-center">列</th>
                     <th className="border p-2 text-center">席</th>
-                    <th className="border p-2 text-center">種別</th>
-                    <th className="border p-2 text-center">操作</th>
+                    <th className="border p-2 text-right">種別</th>
+                    <th className="border p-2 text-center w-12">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -68,6 +72,23 @@ export default function TicketSection({
                       <td className="border p-2 text-center">{ticket.column}</td>
                       <td className="border p-2 text-center">{ticket.number}</td>
                       <td className="border p-2 text-right">{ticket.lottery_slots_name}</td>
+                      <td className="border p-2 text-center">
+                        <button
+                          onClick={async () => {
+                            try {
+                              await deleteTicket(ticket.id, handleDeleteTicket)
+                              onTicketDelete(ticket.id)
+                              alert('チケットを削除しました')
+                            } catch (err) {
+                              if (err instanceof Error && err.message === 'キャンセルされました') return
+                              alert(err instanceof Error ? err.message : 'チケットの削除に失敗しました')
+                            }
+                          }}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <Icon type='delete'/>
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

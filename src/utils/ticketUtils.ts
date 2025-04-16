@@ -84,3 +84,24 @@ export const submitTicket = async (
 
   return { success: true }
 }
+
+/**
+ * チケットを削除する関数
+ */
+export const deleteTicket = async (
+  id: number,
+  handleDeleteTicket: (formData: FormData) => Promise<{ success: boolean }>
+) => {
+  const confirmDelete = window.confirm('このチケットを削除してもよろしいですか？')
+  if (!confirmDelete) {
+    throw new Error('キャンセルされました')
+  }
+
+  const formData = new FormData()
+  formData.append('id', id.toString())
+
+  const { success } = await handleDeleteTicket(formData)
+  if (!success) {
+    throw new Error('チケットの削除に失敗しました')
+  }
+}

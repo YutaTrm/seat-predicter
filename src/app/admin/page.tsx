@@ -15,7 +15,8 @@ import {
   deleteTour,
   addLotterySlot,
   updateLotterySlot,
-  deleteLotterySlot
+  deleteLotterySlot,
+  deleteTicket
 } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { Tour, Ticket, LotterySlot } from '@/types/admin'
@@ -144,6 +145,16 @@ async function handleFetchTickets(formData: FormData) {
   return { tickets }
 }
 
+// チケット削除のServer Action
+async function handleDeleteTicket(formData: FormData) {
+  'use server'
+
+  const id = Number(formData.get('id'))
+  await deleteTicket(id)
+  revalidatePath('/admin')
+  return { success: true }
+}
+
 export default async function Page() {
   // 初期データの取得
   const artists = await fetchArtists()
@@ -176,6 +187,7 @@ export default async function Page() {
         handleDeleteLotterySlot={handleDeleteLotterySlot}
         handleFetchLotterySlots={handleFetchLotterySlots}
         handleFetchTickets={handleFetchTickets}
+        handleDeleteTicket={handleDeleteTicket}
       />
     </Suspense>
   )

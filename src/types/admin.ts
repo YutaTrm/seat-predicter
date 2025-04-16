@@ -22,6 +22,7 @@ export type AdminPageProps = {
   handleEditLotterySlot: (formData: FormData) => Promise<{ success: boolean }>
   handleDeleteLotterySlot: (formData: FormData) => Promise<{ success: boolean }>
   handleFetchTickets: (formData: FormData) => Promise<{ tickets: Ticket[] }>
+  handleDeleteTicket: (formData: FormData) => Promise<{ success: boolean }>
 }
 
 export type ArtistSectionProps = {
@@ -67,4 +68,6 @@ export type TicketSectionProps = {
   selectedArtistId: string
   selectedTourId: string
   onTourSelect: (tourId: string) => void
+  onTicketDelete: (id: number) => void
+  handleDeleteTicket: (formData: FormData) => Promise<{ success: boolean }>
 }

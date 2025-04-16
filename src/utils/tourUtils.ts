@@ -5,7 +5,7 @@ import { Tour } from '../types/admin'
 /**
  * ツアーを追加する
  */
-export const addTour = async (
+export const addTourWithHandler = async (
   artistId: string,
   name: string,
   endDate: string,

@@ -29,7 +29,8 @@ export default function AdminPage({
   handleEditLotterySlot,
   handleDeleteLotterySlot,
   handleFetchLotterySlots,
-  handleFetchTickets
+  handleFetchTickets,
+  handleDeleteTicket
 }: AdminPageProps) {
   const [artists, setArtists] = useState<Artist[]>(initialArtists)
   const [tours, setTours] = useState<Tour[]>(initialTours)
@@ -37,6 +38,13 @@ export default function AdminPage({
   const [lotterySlots, setLotterySlots] = useState<LotterySlot[]>(initialLotterySlots)
   const [selectedArtistId, setSelectedArtistId] = useState('')
   const [selectedTourId, setSelectedTourId] = useState('')
+
+  /**
+   * チケット削除時のハンドラー
+   */
+  const handleTicketDelete = (id: number) => {
+    setTickets(tickets.filter(ticket => ticket.id !== id))
+  }
 
   /**
    * アーティスト選択時のハンドラー
@@ -206,6 +214,8 @@ export default function AdminPage({
             tickets={tickets}
             selectedArtistId={selectedArtistId}
             selectedTourId={selectedTourId}
+            onTicketDelete={handleTicketDelete}
+            handleDeleteTicket={handleDeleteTicket}
             onTourSelect={async (tourId: string) => {
               setSelectedTourId(tourId)
               if (tourId && selectedArtistId) {
