@@ -9,7 +9,7 @@ import { Ticket } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
-// import TicketGrid from './home/TicketGrid'
+import TicketGrid from './home/TicketGrid'
 import Footer from './common/Footer'
 import AdmaxAds from './common/AdmaxAds'
 
@@ -139,7 +139,7 @@ export default function HomePage({
   }, [searchParams, artists, tours])
 
   return (
-    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 lg:width-[100%]">
       <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
       <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
 
@@ -201,7 +201,7 @@ export default function HomePage({
             <p className='text-xs text-gray-400 mb-4'>
               登録済みチケットから算出した分布
             </p>
-            {/* <TicketGrid tickets={tickets} /> */}
+            <TicketGrid tickets={tickets} />
             ※機能改修中です
           </div>
         )}
