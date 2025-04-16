@@ -10,7 +10,7 @@ type TicketGridCanvasProps = {
 const CELL_SIZE = 20
 const BLOCK_SPACING_X = 40
 const BLOCK_SPACING_Y = 60
-const LABEL_HEIGHT = 16
+const LABEL_HEIGHT = 24
 const PADDING = 20
 const FONT_SIZE = 14
 
@@ -74,7 +74,9 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
     canvas.width = canvasWidth
     canvas.height = canvasHeight
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // 背景を白で塗りつぶす
+    ctx.fillStyle = '#FFFFFF'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.font = `${FONT_SIZE}px sans-serif`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'
@@ -148,11 +150,54 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
     }
   }, [tickets])
 
+  const handleImageClick = () => {
+    const newWindow = window.open('', '_blank')
+    if (newWindow) {
+      newWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>座席分布</title>
+            <style>
+              body {
+                margin: 0;
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                background: #f3f4f6;
+              }
+              img {
+                max-width: 100%;
+                height: auto;
+                background: white;
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+              }
+            </style>
+          </head>
+          <body>
+            <img src="${imageUrl}" alt="座席分布" />
+          </body>
+        </html>
+      `)
+      newWindow.document.close()
+    }
+  }
+
   return (
-    <div className="overflow-x-auto border p-2 bg-white">
-      <canvas ref={canvasRef} className="hidden" />
-      <img src={imageUrl} alt="座席分布" className="max-w-full" />
-    </div>
+    <>
+      <div className="overflow-x-auto border p-2 bg-white">
+        <canvas ref={canvasRef} className="hidden" />
+        <img
+          src={imageUrl}
+          alt="座席分布"
+          className="max-w-full cursor-pointer hover:opacity-80"
+          onClick={handleImageClick}
+          title="クリックで拡大表示"
+        />
+      </div>
+    </>
   )
 }
 

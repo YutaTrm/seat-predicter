@@ -15,7 +15,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-rose-100 p-6 rounded max-w-lg w-full mx-4">
+      <div className="bg-rose-50 p-6 rounded max-w-lg w-full mx-4">
         {title && (
           <h3 className="text-lg font-bold text-rose-500 mb-4">{title}</h3>
         )}
