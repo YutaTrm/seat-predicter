@@ -150,41 +150,6 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
     }
   }, [tickets])
 
-  const handleImageClick = () => {
-    const newWindow = window.open('', '_blank')
-    if (newWindow) {
-      newWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>座席分布</title>
-            <style>
-              body {
-                margin: 0;
-                padding: 20px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-                background: #f3f4f6;
-              }
-              img {
-                max-width: 100%;
-                height: auto;
-                background: white;
-                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-              }
-            </style>
-          </head>
-          <body>
-            <img src="${imageUrl}" alt="座席分布" />
-          </body>
-        </html>
-      `)
-      newWindow.document.close()
-    }
-  }
-
   return (
     <>
       <div className="overflow-x-auto border p-2 bg-white">
@@ -193,8 +158,6 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
           src={imageUrl}
           alt="座席分布"
           className="max-w-full cursor-pointer hover:opacity-80"
-          onClick={handleImageClick}
-          title="クリックで拡大表示"
         />
       </div>
     </>
