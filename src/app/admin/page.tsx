@@ -57,7 +57,8 @@ async function handleAddTour(formData: FormData) {
 
   const artistId = Number(formData.get('artistId'))
   const name = formData.get('name') as string
-  const tour = await addTour(artistId, name)
+  const endDate = formData.get('endDate') as string
+  const tour = await addTour(artistId, name, endDate)
   revalidatePath('/admin')
   return { tour }
 }

@@ -16,6 +16,19 @@ const isTourEnded = (endDate: string): boolean => {
   return tourEndDate < today
 }
 
+/**
+ * チケット発券可能かどうかを判定する関数
+ * @param printStartDate 発券開始日（nullの場合は発券不可）
+ */
+const isTourPrintable = (printStartDate: string | null): boolean => {
+  if (!printStartDate) return false
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const startDate = new Date(printStartDate)
+  startDate.setHours(0, 0, 0, 0)
+  return today >= startDate
+}
+
 type TicketFormProps = {
   artists: Artist[]
   tours: Tour[]
@@ -59,6 +72,18 @@ export default function TicketForm({
     return tours.filter(tour => !isTourEnded(tour.end_date))
   }, [tours])
 
+  // 選択されたツアーの情報を取得（メモ化）
+  const selectedTourInfo = useMemo(() => {
+    if (!selectedTour) return null
+    return tours.find(tour => tour.id === selectedTour)
+  }, [selectedTour, tours])
+
+  // 印刷可能かどうかを判定（メモ化）
+  const isPrintable = useMemo(() => {
+    if (!selectedTourInfo) return false
+    return isTourPrintable(selectedTourInfo.print_start_date)
+  }, [selectedTourInfo])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!block || !blockNumber || !column || !seatNumber || !selectedLotterySlot) {
@@ -78,130 +103,138 @@ export default function TicketForm({
   }
 
   return (
-    <section>
-      <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
-      <form onSubmit={handleSubmit} className="space-y-2 text-sm">
+    <form onSubmit={handleSubmit} className="space-y-2 text-sm">
+      <select
+        value={selectedArtist || ''}
+        onChange={(e) => {
+          const value = Number(e.target.value)
+          onArtistChange(value || null)
+          updateUrlParams(router, value || null, null)
+        }}
+        className="w-full p-2 border rounded bg-white"
+      >
+        <option value="">アーティストを選択</option>
+        {artists.map(artist => (
+          <option key={artist.id} value={artist.id}>
+            {artist.name}
+          </option>
+        ))}
+      </select>
+
+      <select
+        value={selectedTour || ''}
+        onChange={(e) => {
+          const value = Number(e.target.value)
+          onTourChange(value || null)
+          updateUrlParams(router, selectedArtist, value || null)
+        }}
+        disabled={!selectedArtist}
+        className="w-full p-2 border rounded bg-white"
+      >
+        <option value="">ツアーを選択</option>
+        {availableTours.map(tour => (
+          <option key={tour.id} value={tour.id}>
+            {tour.name}
+          </option>
+        ))}
+      </select>
+
+      <select
+        value={selectedLotterySlot || ''}
+        onChange={(e) => {
+          const value = Number(e.target.value)
+          onLotterySlotChange(value || null)
+        }}
+        disabled={!selectedArtist}
+        className="w-full p-2 border rounded  bg-white"
+      >
+        <option value="">抽選枠</option>
+        {lotterySlots.map(slot => (
+          <option key={slot.id} value={slot.id}>
+            {slot.name}
+          </option>
+        ))}
+      </select>
+
+      <div className="flex gap-1">
         <select
-          value={selectedArtist || ''}
-          onChange={(e) => {
-            const value = Number(e.target.value)
-            onArtistChange(value || null)
-            updateUrlParams(router, value || null, null)
-          }}
-          className="w-full p-2 border rounded bg-white"
+          value={block}
+          onChange={(e) => setBlock(e.target.value)}
+          className="p-2 border rounded bg-white text-right w-2/6"
         >
-          <option value="">アーティストを選択</option>
-          {artists.map(artist => (
-            <option key={artist.id} value={artist.id}>
-              {artist.name}
-            </option>
-          ))}
+          <option value="">ブロック</option>
+          {Array.from({ length: 16 }, (_, i) => { //全アルファベットじゃなくて途中まで
+            const char = String.fromCharCode(65 + i);
+            return <option key={char} value={char}>{char}</option>;
+          }).flat()}
+          <option>その他</option>
         </select>
 
-        <select
-          value={selectedTour || ''}
-          onChange={(e) => {
-            const value = Number(e.target.value)
-            onTourChange(value || null)
-            updateUrlParams(router, selectedArtist, value || null)
-          }}
-          disabled={!selectedArtist}
-          className="w-full p-2 border rounded bg-white"
+        <input
+          type="number"
+          value={blockNumber || ''}
+          onChange={(e) => setBlockNumber(Number(e.target.value))}
+          placeholder="ブロック番号"
+          className="p-2 border rounded bg-white text-right w-2/6"
+        />
+
+        <input
+          type="number"
+          value={column || ''}
+          onChange={(e) => setColumn(Number(e.target.value))}
+          placeholder="列"
+          className="p-2 border rounded bg-white text-right w-1/6"
+        />
+
+        <input
+          type="number"
+          value={seatNumber || ''}
+          onChange={(e) => setSeatNumber(Number(e.target.value))}
+          placeholder="席"
+          className="p-2 border rounded bg-white text-right w-1/6"
+        />
+      </div>
+
+      <div className="flex space-x-2 text-sm">
+        <button
+          type="button"
+          onClick={handleReset}
+          className="w-1/3 p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
         >
-          <option value="">ツアーを選択</option>
-          {availableTours.map(tour => (
-            <option key={tour.id} value={tour.id}>
-              {tour.name}
-            </option>
-          ))}
-        </select>
+          リセット
+        </button>
 
-        <select
-          value={selectedLotterySlot || ''}
-          onChange={(e) => {
-            const value = Number(e.target.value)
-            onLotterySlotChange(value || null)
-          }}
-          disabled={!selectedArtist}
-          className="w-full p-2 border rounded  bg-white"
+        <button
+          type="button"
+          onClick={onShowTickets}
+          disabled={!selectedTour || !isPrintable}
+          className={`w-1/3 p-2 text-white rounded ${
+            selectedTour && isPrintable
+              ? 'bg-amber-500 hover:bg-amber-600'
+              : 'bg-gray-300 cursor-not-allowed'
+          }`}
         >
-          <option value="">抽選枠</option>
-          {lotterySlots.map(slot => (
-            <option key={slot.id} value={slot.id}>
-              {slot.name}
-            </option>
-          ))}
-        </select>
+          一覧
+        </button>
 
-        <div className="flex gap-1">
-          <select
-            value={block}
-            onChange={(e) => setBlock(e.target.value)}
-            className="p-2 border rounded bg-white text-right w-2/6"
-          >
-            <option value="">ブロック</option>
-            {Array.from({ length: 16 }, (_, i) => { //全アルファベットじゃなくて途中まで
-              const char = String.fromCharCode(65 + i);
-              return <option key={char} value={char}>{char}</option>;
-            }).flat()}
-            <option>その他</option>
-          </select>
+        <button
+          type="submit"
+          disabled={!isPrintable}
+          className={`w-1/3 p-2 text-white rounded ${
+            isPrintable
+              ? 'bg-rose-500 hover:bg-rose-600'
+              : 'bg-gray-300 cursor-not-allowed'
+          }`}
+        >
+          登録
+        </button>
+      </div>
 
-          <input
-            type="number"
-            value={blockNumber || ''}
-            onChange={(e) => setBlockNumber(Number(e.target.value))}
-            placeholder="ブロック番号"
-            className="p-2 border rounded bg-white text-right w-2/6"
-          />
-
-          <input
-            type="number"
-            value={column || ''}
-            onChange={(e) => setColumn(Number(e.target.value))}
-            placeholder="列"
-            className="p-2 border rounded bg-white text-right w-1/6"
-          />
-
-          <input
-            type="number"
-            value={seatNumber || ''}
-            onChange={(e) => setSeatNumber(Number(e.target.value))}
-            placeholder="席"
-            className="p-2 border rounded bg-white text-right w-1/6"
-          />
-        </div>
-
-        <div className="flex space-x-2 text-sm">
-          <button
-            type="button"
-            onClick={handleReset}
-            className="w-1/3 p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-          >
-            リセット
-          </button>
-
-          <button
-            type="button"
-            onClick={onShowTickets}
-            disabled={!selectedTour}
-            className={`w-1/3 p-2 text-white rounded ${
-              selectedTour
-                ? 'bg-amber-500 hover:bg-amber-600'
-                : 'bg-gray-300 cursor-not-allowed'
-            }`}
-          >
-            一覧
-          </button>
-
-          <button
-            type="submit"
-            className="w-1/3 p-2 bg-rose-500 text-white rounded hover:bg-rose-600"
-          >
-            登録
-          </button>
-        </div>
-      </form>
-    </section>
+      {(!isPrintable && selectedTour &&
+        <p className='text-xs text-rose-500 text-right'>
+          チケット発券日から押せるようになります
+        </p>
+      )}
+    </form>
   )
 }

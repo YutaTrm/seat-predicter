@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: '座席予想掲示板(β)',
+    name: '座席予想掲示板',
     short_name: '座席予想',
-    description: '座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。',
+    description: '座席予想掲示板は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。',
     start_url: '/',
     display: 'standalone',
     background_color: '#fff1f2',

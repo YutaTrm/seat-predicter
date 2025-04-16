@@ -1,10 +1,11 @@
 import React from 'react';
 import SectionHeader from '../components/common/SectionHeader';
 import type { Metadata } from 'next';
+import Footer from '../components/common/Footer';
 
 export const metadata: Metadata = {
-  title: 'ライセンス情報 | 座席予想掲示板(β)',
-  description: '座席予想掲示板(β)で使用しているライブラリのライセンス情報と利用規約について',
+  title: 'ライセンス情報 | 座席予想掲示板',
+  description: '座席予想掲示板で使用しているライブラリのライセンス情報について',
 };
 
 export default function LicensePage() {
@@ -12,11 +13,11 @@ export default function LicensePage() {
       <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 text-md">
         <SectionHeader title="Licenses and Attributions" />
 
-        <p className="mb-4">
+        <p className="text-gray-600 leading-relaxed mb-4">
           This web application was built using the following open-source software:
         </p>
 
-        <ul className="list-disc list-inside mb-6 space-y-2">
+        <ul className="list-disc list-inside text-gray-600 text-sm leading-relaxed mb-4">
           <li>
             <strong>Next.js</strong> – Licensed under the{' '}
             <a
@@ -52,11 +53,12 @@ export default function LicensePage() {
           </li>
         </ul>
 
-        <p>
+        <p className="text-gray-600 leading-relaxed mb-1">
           All third-party packages used in this project retain their respective licenses and copyrights.
           <br />
           This application’s source code is also released under the MIT License unless otherwise noted.
         </p>
+        <Footer/>
       </main>
     );
   }

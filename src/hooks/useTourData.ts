@@ -21,6 +21,7 @@ export const useTourData = (supabaseUrl: string, supabaseKey: string, artistId: 
     const { data, error } = await supabase
       .from('tours')
       .select('*')
+      .order('id')
       .eq('artist_id', artistId)
 
     if (error) {

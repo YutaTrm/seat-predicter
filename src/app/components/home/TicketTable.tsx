@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Ticket } from '../../../types/ticket'
+import TicketRow from './TicketRow'
 
 type TicketTableProps = {
   tickets: Ticket[]
@@ -91,63 +92,48 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
   const sortedTickets = sortTickets(tickets)
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border mb-3">
-        <thead>
-          <tr className="bg-gray-600 text-gray-100 text-xs">
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('block')}
-            >
-              ブロック{renderSortIcon('block')}
-            </th>
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('column')}
-            >
-              列{renderSortIcon('column')}
-            </th>
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('number')}
-            >
-              席{renderSortIcon('number')}
-            </th>
-            <th
-              className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
-              onClick={() => toggleSort('lottery_slots_name')}
-            >
-              抽選枠{renderSortIcon('lottery_slots_name')}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedTickets.map((ticket) => {
-            // ブロックごとに背景色を変える（A-Zの26色）
-            const blockIndex = ticket.block.charCodeAt(0) - 65
-            // 黄金角（137.5度）を使用して、隣接するブロックの色が離れるようにする
-            const hue = (blockIndex * 137.5) % 360
-            const backgroundColor = `hsl(${hue}, 80%, 80%)`//（色相・彩度・輝度）
-
-            return (
-              <tr
-                key={ticket.id}
-                className="hover:bg-gray-50 text-sm"
-                style={{ backgroundColor }}
+    <div className="flex flex-col">
+      <div className="max-h-[80vh] overflow-auto mb-4">
+        <table className="min-w-full bg-white border relative">
+          <thead className="sticky top-0 bg-gray-600">
+            <tr className="text-gray-100 text-xs">
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('block')}
               >
-                <td className="px-3 py-1 border-b text-right">{ticket.block}{ticket.block_number}</td>
-                <td className="px-3 py-1 border-b text-right">{ticket.column}</td>
-                <td className="px-3 py-1 border-b text-right">{ticket.number}</td>
-                <td className="px-3 py-1 border-b text-right text-xs">{ticket.lottery_slots_name}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+                ブロック{renderSortIcon('block')}
+              </th>
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('column')}
+              >
+                列{renderSortIcon('column')}
+              </th>
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('number')}
+              >
+                席{renderSortIcon('number')}
+              </th>
+              <th
+                className="px-2 py-1 border-b text-center font-semibold cursor-pointer hover:bg-gray-500"
+                onClick={() => toggleSort('lottery_slots_name')}
+              >
+                抽選枠{renderSortIcon('lottery_slots_name')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedTickets.map((ticket) => (
+              <TicketRow key={ticket.id} ticket={ticket} />
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* ブロックごとのレコード数を表示 */}
       <h3 className="text-gray-600 font-bold mb-2">ブロックごとの集計数</h3>
-      <table className="mb-4">
+      <table className="">
         <tbody>
           {Object.entries(blockCounts).map(([block, count]) => (
             <tr key={block} className="text-sm p-2 rounded">

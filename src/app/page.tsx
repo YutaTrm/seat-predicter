@@ -17,8 +17,8 @@ export default async function Page() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: '座席予想掲示板(β)',
-    description: '座席予想掲示板(β)は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。',
+    name: '座席予想掲示板',
+    description: '座席予想掲示板は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。',
     url: 'https://zasekiyosou.com'
   }
 
