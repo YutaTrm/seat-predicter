@@ -180,6 +180,7 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
         />
       </div>
       <div className="text-center mt-2 flex justify-center gap-4">
+        ブロックの配置：
         <label className="inline-flex items-center">
           <input
             type="radio"
@@ -188,7 +189,7 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
             onChange={() => setIsCentered(true)}
             className="form-radio h-4 w-4 text-rose-500"
           />
-          <span className="ml-2 text-sm">ブロックを中央寄せ</span>
+          <span className="ml-2 text-sm">中央寄せ</span>
         </label>
         <label className="inline-flex items-center">
           <input
@@ -198,7 +199,7 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
             onChange={() => setIsCentered(false)}
             className="form-radio h-4 w-4 text-rose-500"
           />
-          <span className="ml-2 text-sm">ブロックを左寄せ</span>
+          <span className="ml-2 text-sm">左寄せ</span>
         </label>
       </div>
     </>
