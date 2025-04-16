@@ -210,7 +210,7 @@ export default function HomePage({
                   分布について
                 </button>
               </div>
-              <p className='text-xs text-gray-400 mb-4'>
+              <p className='text-xs text-gray-400'>
                 登録済みチケットから算出した分布
               </p>
               <TicketGrid tickets={tickets} />

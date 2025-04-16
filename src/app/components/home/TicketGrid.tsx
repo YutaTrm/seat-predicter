@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Ticket } from '@/types/ticket'
 
 type TicketGridCanvasProps = {
   tickets: Ticket[]
 }
 
-const CELL_SIZE = 12
+const CELL_SIZE = 16
 const BLOCK_SPACING_X = 40
 const BLOCK_SPACING_Y = 60
 const LABEL_HEIGHT = 16
 const PADDING = 20
-const FONT_SIZE = 10
+const FONT_SIZE = 12
 
 const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -139,9 +139,19 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
     }
   }, [tickets])
 
+  const [imageUrl, setImageUrl] = useState<string>('')
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      const dataUrl = canvasRef.current.toDataURL('image/png')
+      setImageUrl(dataUrl)
+    }
+  }, [tickets])
+
   return (
-    <div className="overflow-x-auto border p-2">
-      <canvas ref={canvasRef} />
+    <div className="overflow-x-auto border p-2 bg-white">
+      <canvas ref={canvasRef} className="hidden" />
+      <img src={imageUrl} alt="座席分布" className="max-w-full" />
     </div>
   )
 }
