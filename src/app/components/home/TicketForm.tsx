@@ -16,6 +16,19 @@ const isTourEnded = (endDate: string): boolean => {
   return tourEndDate < today
 }
 
+/**
+ * チケット発券可能かどうかを判定する関数
+ * @param printStartDate 発券開始日（nullの場合は発券不可）
+ */
+const isTourPrintable = (printStartDate: string | null): boolean => {
+  if (!printStartDate) return false
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const startDate = new Date(printStartDate)
+  startDate.setHours(0, 0, 0, 0)
+  return today >= startDate
+}
+
 type TicketFormProps = {
   artists: Artist[]
   tours: Tour[]
@@ -58,6 +71,18 @@ export default function TicketForm({
   const availableTours = useMemo(() => {
     return tours.filter(tour => !isTourEnded(tour.end_date))
   }, [tours])
+
+  // 選択されたツアーの情報を取得（メモ化）
+  const selectedTourInfo = useMemo(() => {
+    if (!selectedTour) return null
+    return tours.find(tour => tour.id === selectedTour)
+  }, [selectedTour, tours])
+
+  // 印刷可能かどうかを判定（メモ化）
+  const isPrintable = useMemo(() => {
+    if (!selectedTourInfo) return false
+    return isTourPrintable(selectedTourInfo.print_start_date)
+  }, [selectedTourInfo])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -182,9 +207,9 @@ export default function TicketForm({
         <button
           type="button"
           onClick={onShowTickets}
-          disabled={!selectedTour}
+          disabled={!selectedTour || !isPrintable}
           className={`w-1/3 p-2 text-white rounded ${
-            selectedTour
+            selectedTour && isPrintable
               ? 'bg-amber-500 hover:bg-amber-600'
               : 'bg-gray-300 cursor-not-allowed'
           }`}
@@ -194,11 +219,22 @@ export default function TicketForm({
 
         <button
           type="submit"
-          className="w-1/3 p-2 bg-rose-500 text-white rounded hover:bg-rose-600"
+          disabled={!isPrintable}
+          className={`w-1/3 p-2 text-white rounded ${
+            isPrintable
+              ? 'bg-rose-500 hover:bg-rose-600'
+              : 'bg-gray-300 cursor-not-allowed'
+          }`}
         >
           登録
         </button>
       </div>
+
+      {(!isPrintable && selectedTour &&
+        <p className='text-xs text-rose-500 text-right'>
+          チケット発券日から押せるようになります
+        </p>
+      )}
     </form>
   )
 }
