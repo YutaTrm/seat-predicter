@@ -179,13 +179,27 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
           className="max-w-full cursor-pointer hover:opacity-80"
         />
       </div>
-      <div className="text-center mt-2">
-        <button
-          onClick={() => setIsCentered(prev => !prev)}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-        >
-          {isCentered ? 'ブロックを左寄せ' : 'ブロックを中央寄せ'}
-        </button>
+      <div className="text-center mt-2 flex justify-center gap-4">
+        <label className="inline-flex items-center">
+          <input
+            type="radio"
+            name="alignment"
+            checked={isCentered}
+            onChange={() => setIsCentered(true)}
+            className="form-radio h-4 w-4 text-rose-500"
+          />
+          <span className="ml-2 text-sm">ブロックを中央寄せ</span>
+        </label>
+        <label className="inline-flex items-center">
+          <input
+            type="radio"
+            name="alignment"
+            checked={!isCentered}
+            onChange={() => setIsCentered(false)}
+            className="form-radio h-4 w-4 text-rose-500"
+          />
+          <span className="ml-2 text-sm">ブロックを左寄せ</span>
+        </label>
       </div>
     </>
   )
