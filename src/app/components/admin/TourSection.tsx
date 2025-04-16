@@ -33,28 +33,31 @@ export default function TourSection({
 }: TourSectionProps) {
   const [tourName, setTourName] = useState('')
   const [tourEndDate, setTourEndDate] = useState('')
+  const [tourPrintStartDate, setTourPrintStartDate] = useState('')
   const [editingTour, setEditingTour] = useState<Tour | null>(null)
   const [editingName, setEditingName] = useState('')
   const [editingEndDate, setEditingEndDate] = useState('')
+  const [editingPrintStartDate, setEditingPrintStartDate] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedArtistId || !tourName.trim() || !tourEndDate) return
+    if (!selectedArtistId || !tourName.trim() || !tourEndDate || !tourPrintStartDate) return
 
     try {
-      const tour = await addTour(selectedArtistId, tourName, tourEndDate, handleAddTour)
+      const tour = await addTour(selectedArtistId, tourName, tourEndDate, tourPrintStartDate, handleAddTour)
       onTourAdd(tour)
       setTourName('')
       setTourEndDate('')
+      setTourPrintStartDate('')
       alert('ツアーを追加しました')
     } catch (err) {
       alert(err instanceof Error ? err.message : 'ツアーの追加に失敗しました')
     }
   }
 
-  const handleEdit = async (id: number, newName: string, newEndDate: string) => {
+  const handleEdit = async (id: number, newName: string, newEndDate: string, newPrintStartDate: string) => {
     try {
-      await editTour(id, newName, newEndDate, handleEditTour)
+      await editTour(id, newName, newEndDate, newPrintStartDate, handleEditTour)
       onTourEdit(id, newName)
       setEditingTour(null)
       alert('ツアーを編集しました')
@@ -104,19 +107,33 @@ export default function TourSection({
             placeholder="ツアー名"
             className="w-full p-2 border rounded"
           />
-          <div className="flex space-x-2">
-            <input
-              type="date"
-              value={tourEndDate}
-              onChange={(e) => setTourEndDate(e.target.value)}
-              className="flex-grow p-2 border rounded"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded"
-            >
-              追加
-            </button>
+          <div className="space-y-2">
+            <div className="flex items-center">
+              <span className="w-20">終了日：</span>
+              <input
+                type="date"
+                value={tourEndDate}
+                onChange={(e) => setTourEndDate(e.target.value)}
+                className="flex-grow p-2 border rounded"
+              />
+            </div>
+            <div className="flex items-center">
+              <span className="w-20">発券日：</span>
+              <input
+                type="date"
+                value={tourPrintStartDate}
+                onChange={(e) => setTourPrintStartDate(e.target.value)}
+                className="flex-grow p-2 border rounded"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                追加
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -159,17 +176,33 @@ export default function TourSection({
                       ) : (
                         tour.name
                       )}
-                      <br/>【終了日】
-                      {editingTour?.id === tour.id ? (
-                        <input
-                          type="date"
-                          value={editingEndDate}
-                          onChange={(e) => setEditingEndDate(e.target.value)}
-                          className="w-full p-1 border rounded"
-                        />
-                      ) : (
-                        new Date(tour.end_date).toLocaleDateString('ja-JP')
-                      )}
+                      <br/>
+                      <div className="mt-2">
+                        <span className="text-gray-600">【終了日】</span>
+                        {editingTour?.id === tour.id ? (
+                          <input
+                            type="date"
+                            value={editingEndDate}
+                            onChange={(e) => setEditingEndDate(e.target.value)}
+                            className="w-full p-1 border rounded"
+                          />
+                        ) : (
+                          new Date(tour.end_date).toLocaleDateString('ja-JP')
+                        )}
+                      </div>
+                      <div className="mt-2">
+                        <span className="text-gray-600">【発券日】</span>
+                        {editingTour?.id === tour.id ? (
+                          <input
+                            type="date"
+                            value={editingPrintStartDate}
+                            onChange={(e) => setEditingPrintStartDate(e.target.value)}
+                            className="w-full p-1 border rounded"
+                          />
+                        ) : (
+                          tour.print_start_date ? new Date(tour.print_start_date).toLocaleDateString('ja-JP') : '未設定'
+                        )}
+                      </div>
                     </td>
                     {/* <td className="border p-2">
                       {editingTour?.id === tour.id ? (
@@ -187,7 +220,7 @@ export default function TourSection({
                       {editingTour?.id === tour.id ? (
                         <>
                           <button
-                            onClick={() => handleEdit(tour.id, editingName, editingEndDate)}
+                            onClick={() => handleEdit(tour.id, editingName, editingEndDate, editingPrintStartDate)}
                             className="text-green-500 hover:text-green-700 mr-2"
                           >
                             保存
@@ -206,6 +239,7 @@ export default function TourSection({
                               setEditingTour(tour)
                               setEditingName(tour.name)
                               setEditingEndDate(tour.end_date.split('T')[0])
+                              setEditingPrintStartDate(tour.print_start_date?.split('T')[0] || '')
                             }}
                             className="text-blue-500 hover:text-blue-700"
                           >

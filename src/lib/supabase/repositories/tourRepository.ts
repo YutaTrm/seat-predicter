@@ -37,7 +37,7 @@ export async function fetchTourById(tourId: number, artistId: number) {
 }
 
 // ツアーを追加
-export async function addTour(artistId: number, name: string, endDate: string) {
+export async function addTour(artistId: number, name: string, endDate: string, printStartDate: string | null) {
   try {
     const supabase = createAdminSupabaseClient()
     const { data, error } = await supabase
@@ -45,7 +45,8 @@ export async function addTour(artistId: number, name: string, endDate: string) {
       .insert({
         artist_id: artistId,
         name,
-        end_date: endDate
+        end_date: endDate,
+        print_start_date: printStartDate
       } as Database['public']['Tables']['tours']['Insert'])
       .select()
 
@@ -60,12 +61,16 @@ export async function addTour(artistId: number, name: string, endDate: string) {
 }
 
 // ツアーを更新
-export async function updateTour(id: number, name: string) {
+export async function updateTour(id: number, name: string, endDate: string, printStartDate: string | null) {
   try {
     const supabase = createAdminSupabaseClient()
     const { error } = await supabase
       .from('tours')
-      .update({ name } as Database['public']['Tables']['tours']['Update'])
+      .update({
+        name,
+        end_date: endDate,
+        print_start_date: printStartDate
+      } as Database['public']['Tables']['tours']['Update'])
       .eq('id', id)
 
     if (error) {

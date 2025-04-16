@@ -59,7 +59,8 @@ async function handleAddTour(formData: FormData) {
   const artistId = Number(formData.get('artistId'))
   const name = formData.get('name') as string
   const endDate = formData.get('endDate') as string
-  const tour = await addTour(artistId, name, endDate)
+  const printStartDate = formData.get('printStartDate') as string
+  const tour = await addTour(artistId, name, endDate, printStartDate)
   revalidatePath('/admin')
   return { tour }
 }
@@ -70,7 +71,9 @@ async function handleEditTour(formData: FormData) {
 
   const id = Number(formData.get('id'))
   const name = formData.get('name') as string
-  await updateTour(id, name)
+  const endDate = formData.get('endDate') as string
+  const printStartDate = formData.get('printStartDate') as string
+  await updateTour(id, name, endDate, printStartDate)
   revalidatePath('/admin')
   return { success: true }
 }

@@ -65,6 +65,7 @@ export type Database = {
           artist_id: number
           name: string
           end_date: string
+          print_start_date: string | null
           created_at: string
           updated_at: string
         }
@@ -73,6 +74,7 @@ export type Database = {
           artist_id: number
           name: string
           end_date: string
+          print_start_date?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -81,6 +83,7 @@ export type Database = {
           artist_id?: number
           name?: string
           end_date?: string
+          print_start_date?: string | null
           created_at?: string
           updated_at?: string
         }
