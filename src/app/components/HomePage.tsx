@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { useArtistData } from '@/hooks/useArtistData'
 import { useTourData } from '@/hooks/useTourData'
 import { useLotterySlotData } from '@/hooks/useLotterySlotData'
-import { Ticket } from '../../types/ticket'
+import { Ticket, SubmitResult } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
@@ -92,8 +92,10 @@ export default function HomePage({
   /**
    * チケットを登録する関数
    */
-  const handleSubmitTicket = async (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number) => {
-    if (!selectedArtist || !selectedTour) return
+  const handleSubmitTicket = async (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number): Promise<SubmitResult> => {
+    if (!selectedArtist || !selectedTour) {
+      return { success: false, error: 'アーティストとツアーを選択してください' }
+    }
 
     const result = await submitTicket(
       selectedArtist,
@@ -106,14 +108,13 @@ export default function HomePage({
     )
 
     if (result.success) {
-      alert('チケットを登録しました')
       // チケット登録後に一覧を更新
       const updatedTickets = await fetchTickets(selectedArtist, selectedTour)
       setTickets(updatedTickets)
       setShowTickets(true)
-    } else {
-      alert(result.error || 'チケットの登録に失敗しました')
     }
+
+    return result
   }
 
   // URLパラメータから初期値を設定

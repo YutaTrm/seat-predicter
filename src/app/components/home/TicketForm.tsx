@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Artist, Tour, LotterySlot } from '../../../types/ticket'
+import { SubmitResult } from '../../../types/ticket'
 import { updateUrlParams } from '../../../utils/ticketUtils'
 import { useRouter } from 'next/navigation'
 
@@ -39,7 +40,7 @@ type TicketFormProps = {
   onArtistChange: (artistId: number | null) => void
   onTourChange: (tourId: number | null) => void
   onLotterySlotChange: (lotterySlotId: number | null) => void
-  onSubmit: (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number) => void
+  onSubmit: (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number) => Promise<SubmitResult>
   onReset: () => void
   onShowTickets: () => void
 }
@@ -66,6 +67,7 @@ export default function TicketForm({
   const [blockNumber, setBlockNumber] = useState<number | null>(null)
   const [column, setColumn] = useState<number | null>(null)
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   // 終了していないツアーのみをフィルタリング（メモ化）
   const availableTours = useMemo(() => {
@@ -84,31 +86,44 @@ export default function TicketForm({
     return isTourPrintable(selectedTourInfo.print_start_date)
   }, [selectedTourInfo])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!block || !blockNumber || !column || !seatNumber || !selectedLotterySlot) {
-      alert('すべての情報を入力してください')
-      return
-    }
-    const confirmed = confirm(`【${block + blockNumber + "ブロック " + column + "列 " + seatNumber + "番】"}を登録します。お間違いありませんか？`)
-    if (confirmed){
-      onSubmit(block, blockNumber, column, seatNumber, selectedLotterySlot)
-      // 連続いたずら登録防止
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      setError(null)
+
+      if (!block || !blockNumber || !column || !seatNumber || !selectedLotterySlot) {
+        setError('すべての情報を入力してください')
+        return
+      }
+
+      const confirmed = confirm(`【${block}${blockNumber}ブロック ${column}列 ${seatNumber}番】を登録します。お間違いありませんか？`)
+      if (confirmed) {
+        const result = await onSubmit(block, blockNumber, column, seatNumber, selectedLotterySlot)
+        if (result.success) {
+          // 連続いたずら登録防止
+          // setBlock('')
+          // setBlockNumber(null)
+          // setColumn(null)
+          setSeatNumber(null)
+        } else if (result.error) {
+          setError(result.error)
+        }
+      }
+    },
+    [block, blockNumber, column, seatNumber, selectedLotterySlot, onSubmit, setError, setBlock, setBlockNumber, setColumn, setSeatNumber]
+  )
+
+  const handleReset = useCallback(
+    () => {
+      router.replace("/")
       setBlock('')
       setBlockNumber(null)
       setColumn(null)
       setSeatNumber(null)
-    }
-  }
-
-  const handleReset = () => {
-    router.replace("/");
-    setBlock('')
-    setBlockNumber(null)
-    setColumn(null)
-    setSeatNumber(null)
-    onReset()
-  }
+      onReset()
+    },
+    [router, setBlock, setBlockNumber, setColumn, setSeatNumber, onReset]
+  )
 
   return (
     <form onSubmit={handleSubmit} className="space-y-2 text-sm">
@@ -255,6 +270,12 @@ export default function TicketForm({
       {(!isPrintable && selectedTour &&
         <p className='text-xs text-rose-500 text-right'>
           チケット発券日から押せるようになります
+        </p>
+      )}
+
+      {error && (
+        <p className='text-xs text-rose-500 text-right mt-2'>
+          {error}
         </p>
       )}
     </form>

@@ -37,3 +37,8 @@ export type HomePageProps = {
   fetchTours: (formData: FormData) => Promise<{ tours: Tour[] }>
   fetchLotterySlots: (formData: FormData) => Promise<{ lotterySlots: LotterySlot[] }>
 }
+
+export interface SubmitResult {
+  success: boolean
+  error?: string
+}

@@ -3,6 +3,7 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { Ticket } from '../types/ticket'
 import { createSupabaseClient } from '@/lib/supabase/client'
+import { checkPostLimit } from './postLimitUtils'
 
 /**
  * URLパラメータを更新する関数
@@ -63,6 +64,15 @@ export const submitTicket = async (
   column: number,
   seatNumber: number
 ) => {
+  // 投稿制限チェック
+  const { success: canPost } = checkPostLimit()
+  if (!canPost) {
+    return {
+      success: false,
+      error: '連続投稿はできません'
+    }
+  }
+
   const supabase = createSupabaseClient()
 
   const { error } = await supabase
