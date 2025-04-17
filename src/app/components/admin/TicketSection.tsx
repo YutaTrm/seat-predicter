@@ -23,7 +23,7 @@ export default function TicketSection({
     : []
 
   return (
-    <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-2/6">
+    <div className="mb-6 bg-white p-6 rounded-lg shadow-md lg:w-2/6 lg:p-4">
       <h2 className="text-xl font-semibold mb-4">
         {selectedTourId ? (
           <>
@@ -57,6 +57,8 @@ export default function TicketSection({
                     <th className="border p-2 text-left">ブロック</th>
                     <th className="border p-2 text-center">列</th>
                     <th className="border p-2 text-center">番号</th>
+                    <th className="border p-2 text-center">種別</th>
+                    <th className="border p-2 text-center">操作</th>
                   </tr>
                 </thead>
                 <tbody>

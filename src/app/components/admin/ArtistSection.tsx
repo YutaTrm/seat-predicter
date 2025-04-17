@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Artist, ArtistSectionProps } from '../../../types/admin'
 import { addArtist, editArtist, deleteArtist } from '../../../utils/artistUtils'
+import Icon from '../common/Icon'
 
 /**
  * アーティスト管理セクションコンポーネント
@@ -56,7 +57,7 @@ export default function ArtistSection({
   }
 
   return (
-    <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-2/6">
+    <div className="mb-6 bg-white p-6 rounded-lg shadow-md lg:w-2/6  lg:p-4">
       <h2 className="text-xl font-semibold mb-4">アーティスト追加</h2>
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex">
@@ -84,7 +85,7 @@ export default function ArtistSection({
           <thead>
             <tr className="bg-gray-50">
               <th className="border p-2 text-left">アーティスト名</th>
-              <th className="border p-2 text-center w-24">操作</th>
+              <th className="border p-2 text-center w-[5em]">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -124,13 +125,13 @@ export default function ArtistSection({
                         onClick={() => setEditingArtist(artist)}
                         className="text-blue-500 hover:text-blue-700 mr-2"
                       >
-                        編集
+                        <Icon type='edit'/>
                       </button>
                       <button
                         onClick={() => handleDelete(artist.id)}
                         className="text-red-500 hover:text-red-700"
                       >
-                        削除
+                        <Icon type='delete'/>
                       </button>
                     </>
                   )}

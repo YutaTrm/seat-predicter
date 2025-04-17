@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { LotterySlot, LotterySlotSectionProps } from '../../../types/admin'
 import { addLotterySlot, editLotterySlot, deleteLotterySlot } from '../../../utils/lotterySlotUtils'
+import Icon from '../common/Icon'
 
 /**
  * 抽選枠管理セクションコンポーネント
@@ -59,7 +60,7 @@ export default function LotterySlotSection({
   }
 
   return (
-    <div className="mb-6 bg-white p-6 rounded-lg shadow-md w-2/6">
+    <div className="mb-6 bg-white p-6 rounded-lg shadow-md lg:w-2/6 lg:p-4">
       <h2 className="text-xl font-semibold mb-4">抽選枠管理</h2>
       <div className="mb-4">
         <select
@@ -104,7 +105,7 @@ export default function LotterySlotSection({
           <thead>
             <tr className="bg-gray-50">
               <th className="border p-2 text-left">抽選枠名</th>
-              <th className="border p-2 text-center w-24">操作</th>
+              <th className="border p-2 text-center w-[5em]">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -144,13 +145,13 @@ export default function LotterySlotSection({
                         onClick={() => setEditingLotterySlot(slot)}
                         className="text-blue-500 hover:text-blue-700 mr-2"
                       >
-                        編集
+                        <Icon type='edit'/>
                       </button>
                       <button
                         onClick={() => handleDelete(slot.id)}
                         className="text-red-500 hover:text-red-700"
                       >
-                        削除
+                        <Icon type='delete'/>
                       </button>
                     </>
                   )}
