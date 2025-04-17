@@ -7,6 +7,13 @@ import { updateUrlParams } from '../../../utils/ticketUtils'
 import { useRouter } from 'next/navigation'
 
 /**
+ * 制限に使う定数
+ */
+const MAX_BLOCK_NUMBER = 20
+const MAX_COLUMN_NUMBER = 30
+const MAX_SEAT_NUMBER = 20
+
+/**
  * ツアーが終了しているかどうかを判定する関数
  */
 const isTourEnded = (endDate: string): boolean => {
@@ -186,7 +193,7 @@ export default function TicketForm({
           className="p-2 border rounded bg-white text-right w-2/6"
         >
           <option value="">ブロック</option>
-          {Array.from({ length: 16 }, (_, i) => { //全アルファベットじゃなくて途中まで
+          {Array.from({ length: 12 }, (_, i) => { //全アルファベットじゃなくて Lまで
             const char = String.fromCharCode(65 + i);
             return <option key={char} value={char}>{char}</option>;
           }).flat()}
@@ -197,12 +204,13 @@ export default function TicketForm({
           value={blockNumber || ''}
           onChange={(e) => {
             const value = Math.floor(Number(e.target.value));
-            setBlockNumber(value >= 0 ? value : null);
+            setBlockNumber(value >= 0 && value <= MAX_BLOCK_NUMBER ? value : null);
           }}
           placeholder="ブロック番号"
           className="p-2 border rounded bg-white text-right w-2/6"
           step="1"
           min="0"
+          max="20"
         />
 
         <input
@@ -210,12 +218,13 @@ export default function TicketForm({
           value={column || ''}
           onChange={(e) => {
             const value = Math.floor(Number(e.target.value));
-            setColumn(value >= 0 ? value : null);
+            setColumn(value >= 0 && value <= MAX_COLUMN_NUMBER ? value : null);
           }}
           placeholder="列"
           className="p-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
+          max="30"
         />
 
         <input
@@ -223,12 +232,13 @@ export default function TicketForm({
           value={seatNumber || ''}
           onChange={(e) => {
             const value = Math.floor(Number(e.target.value));
-            setSeatNumber(value >= 0 ? value : null);
+            setSeatNumber(value >= 0 && value <= MAX_SEAT_NUMBER ? value : null);
           }}
           placeholder="席"
           className="p-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
+          max="20"
         />
       </div>
 

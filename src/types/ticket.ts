@@ -7,7 +7,7 @@ export type Ticket = {
   block: string
   block_number: number
   column: number
-  number: number
+  number: number // 座席番号
   created_at: string
 }
 
