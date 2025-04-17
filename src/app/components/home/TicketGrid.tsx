@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { Ticket } from '@/types/ticket'
 
 type TicketGridCanvasProps = {
@@ -88,18 +89,20 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
       const blocks = allBlockKeys.filter(key => key.startsWith(letter))
 
       // 行の幅を計算（最後のブロックに余計なスペースが入らないように）
-      const rowWidth = blocks.reduce((sum, key) => {
+      const width = blocks.reduce((sum, key) => {
         return sum + blockSizes[key].width * CELL_SIZE + BLOCK_SPACING_X
       }, -BLOCK_SPACING_X)
 
       // 行の高さを計算（同じblockを持つブロック間で統一された高さを使用）
-      const rowHeight = blockMaxHeights[letter] * CELL_SIZE + BLOCK_SPACING_Y
+      const height = blockMaxHeights[letter] * CELL_SIZE + BLOCK_SPACING_Y
 
-      rowWidths[letter] = rowWidth
-      rowHeights[letter] = rowHeight
+      // 各行のサイズを保存
+      rowWidths[letter] = width
+      rowHeights[letter] = height
 
-      maxCanvasWidth = Math.max(maxCanvasWidth, rowWidth)
-      totalCanvasHeight += rowHeight
+      // キャンバス全体のサイズを更新
+      maxCanvasWidth = Math.max(maxCanvasWidth, width)
+      totalCanvasHeight += height
     })
 
     const canvasWidth = maxCanvasWidth + PADDING * 2
@@ -120,7 +123,6 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
     for (const letter of blockLetters) {
       const blockKeys = allBlockKeys.filter(k => k.startsWith(letter))
       const rowHeight = rowHeights[letter]
-      const rowWidth = rowWidths[letter]
 
       // 左寄せ：PADDINGからスタート
       let xOffset = PADDING
@@ -201,10 +203,13 @@ const TicketGridCanvas = ({ tickets }: TicketGridCanvasProps) => {
     <>
       <div className="overflow-x-auto border p-2 bg-white">
         <canvas ref={canvasRef} className="hidden" />
-        <img
+        <Image
           src={imageUrl}
           alt="座席分布"
+          width={canvasRef.current?.width || 800}
+          height={canvasRef.current?.height || 600}
           className="max-w-full cursor-pointer hover:opacity-80"
+          unoptimized // Data URLを使用するため最適化をスキップ
         />
       </div>
     </>
