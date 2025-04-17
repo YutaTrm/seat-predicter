@@ -207,13 +207,13 @@ export default function TourSection({
                               setEditingName(tour.name)
                               setEditingEndDate(tour.end_date.split('T')[0])
                             }}
-                            className="text-blue-500 hover:text-blue-700 mr-2"
+                            className="text-blue-500 hover:text-blue-700"
                           >
                             <Icon type='edit'/>
                           </button>
                           <button
                             onClick={() => handleDelete(tour.id)}
-                            className="text-red-500 hover:text-red-700"
+                            className="text-red-500 hover:text-red-700 hidden"
                           >
                             <Icon type='delete'/>
                           </button>
