@@ -10,7 +10,7 @@ export default async function Page() {
 
   if (!supabaseUrl || !supabaseKey) {
     console.error('Supabase認証情報の取得に失敗しました')
-    return <div>認証情報の読み込みに失敗しました</div>
+    return <div className='text-rose-300 text-center mt-[45vh]'><h1 className="text-2xl text-rose-500 font-bold">座席予想掲示板</h1>現在メンテナンス中です</div>
   }
 
   // JSON-LDの定義
