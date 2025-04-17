@@ -42,7 +42,7 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section>
+      <section className='mb-8'>
         <h2 className="text-lg text-rose-500 font-bold mb-2">注意事項</h2>
         <p className="text-gray-600 leading-relaxed">
           本アプリについて改善提案や要望などありましたら<a className='underline text-rose-700 hover:text-rose-900 transition-colors' href='https://docs.google.com/forms/d/e/1FAIpQLSdhaKuEJxG7hJBMRp1O5g2I4tzngi9gN2LqQfMEDjBUDaelIg/viewform?usp=header' target='_blank'>こちら</a>から連絡お願いします。

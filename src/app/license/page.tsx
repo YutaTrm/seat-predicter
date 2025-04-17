@@ -53,7 +53,7 @@ export default function LicensePage() {
           </li>
         </ul>
 
-        <p className="text-gray-600 leading-relaxed mb-1">
+        <p className="text-gray-600 leading-relaxed mb-8">
           All third-party packages used in this project retain their respective licenses and copyrights.
           <br />
           This application’s source code is also released under the MIT License unless otherwise noted.

@@ -5,7 +5,7 @@ import Link from "next/link"
  */
 export default function Footer() {
   return (
-    <footer className="text-sm text-rose-400 w-full mt-8">
+    <footer className="text-sm text-rose-400 w-full">
       <hr className="mb-4 border-rose-100"/>
       <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center gap-x-4 gap-y-2">
         <Link href="/about" className="hover:text-rose-600 transition-colors">
