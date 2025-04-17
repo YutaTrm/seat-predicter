@@ -90,7 +90,15 @@ export default function TicketForm({
       alert('すべての情報を入力してください')
       return
     }
-    onSubmit(block, blockNumber, column, seatNumber, selectedLotterySlot)
+    const confirmed = confirm(`【${block + blockNumber + "ブロック " + column + "列 " + seatNumber + "番】"}を登録します。お間違いありませんか？`)
+    if (confirmed){
+      onSubmit(block, blockNumber, column, seatNumber, selectedLotterySlot)
+      // 連続いたずら登録防止
+      setBlock('')
+      setBlockNumber(null)
+      setColumn(null)
+      setSeatNumber(null)
+    }
   }
 
   const handleReset = () => {
