@@ -198,10 +198,10 @@ export default function HomePage({
           )}
         </div>
 
-        <TicketTable
+        {/* <TicketTable
           tickets={tickets}
           showTickets={showTickets}
-        />
+        /> */}
 
         {showTickets && tickets.length > 0 && (
           <>
@@ -215,7 +215,11 @@ export default function HomePage({
                   分布について
                 </button>
               </div>
-              <TicketGrid tickets={tickets} />
+              <TicketGrid
+                tickets={tickets}
+                artistName={selectedArtistName || ''}
+                tourName={selectedTourName || ''}
+              />
             </div>
 
             {/* モーダル要素 */}
