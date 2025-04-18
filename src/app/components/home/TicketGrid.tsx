@@ -101,6 +101,11 @@ const filterOutliers = (values: number[], maxValue: number): number[] => {
 
 const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [enableOutlierDetection, setEnableOutlierDetection] = useState(false)
+  const [outlierStats, setOutlierStats] = useState<{
+    outliers: number
+    outlierTickets: string[]
+  }>({ outliers: 0, outlierTickets: [] })
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -129,8 +134,8 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
       return acc
     }, {})
 
-    // 各ブロックで異常値を除外
-    const filteredTickets = Object.entries(blockGroups).flatMap(([block, blockTickets]) => {
+    // 各ブロックで異常値を検出と除外
+    const processedData = Object.entries(blockGroups).reduce((acc, [block, blockTickets]) => {
       // 列番と席番の配列を取得
       const columns = blockTickets.map(t => t.column)
       const numbers = blockTickets.map(t => t.number)
@@ -139,34 +144,52 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
       const validColumns = new Set(filterOutliers(columns, MAX_COLUMN))
       const validNumbers = new Set(filterOutliers(numbers, MAX_NUMBER))
 
-      // 各ブロックの有効な値の範囲を保存
-      const blockKey = block
-      if (!stats.validRanges) {
-        stats.validRanges = {}
-      }
-      stats.validRanges[blockKey] = {
+      // 有効な値の範囲を保存
+      acc.validRanges[block] = {
         columns: validColumns,
         numbers: validNumbers
       }
 
-      // 除外されたチケットを記録
-      const excluded = blockTickets.filter(t => {
-        const isValid = t.block_number <= MAX_BLOCK_NUMBER &&
-          validColumns.has(t.column) &&
-          validNumbers.has(t.number)
+      // 異常値判定が有効な場合のみ除外処理を行う
+      if (enableOutlierDetection) {
+        // 除外されたチケットを記録
+        const excluded = blockTickets.filter(t => {
+          const isValid = t.block_number <= MAX_BLOCK_NUMBER &&
+            validColumns.has(t.column) &&
+            validNumbers.has(t.number)
 
-        if (!isValid) {
-          stats.outlierTickets.push(`${t.block}${t.block_number}-${t.column}-${t.number}`)
-        }
-        return !isValid
-      })
+          if (!isValid) {
+            acc.outlierTickets.push(`${t.block}${t.block_number}-${t.column}-${t.number}`)
+          }
+          return !isValid
+        })
 
-      // 除外されたチケット数を記録
-      stats.outliers += excluded.length
+        // 除外されたチケット数を記録
+        acc.outliers += excluded.length
 
-      // 有効なチケットのみを返す
-      return blockTickets.filter(t => !excluded.includes(t))
+        // 有効なチケットのみを追加
+        acc.filteredTickets.push(...blockTickets.filter(t => !excluded.includes(t)))
+      } else {
+        // 異常値判定が無効の場合は全てのチケットを使用
+        acc.filteredTickets.push(...blockTickets)
+      }
+
+      return acc
+    }, {
+      filteredTickets: [] as Ticket[],
+      outliers: 0,
+      outlierTickets: [] as string[],
+      validRanges: {} as Record<string, { columns: Set<number>, numbers: Set<number> }>
     })
+
+    // 除外チケット情報を保存
+    setOutlierStats({
+      outliers: processedData.outliers,
+      outlierTickets: processedData.outlierTickets
+    })
+
+    const filteredTickets = processedData.filteredTickets
+    stats.validRanges = processedData.validRanges
 
     // グループ化（ブロック+ブロック番号でグループ化）
     const grouped = filteredTickets.reduce<Record<string, Ticket[]>>((acc, t) => {
@@ -284,13 +307,17 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
 
     // 本番では描画しない 除外情報
     if (process.env.NODE_ENV !== 'production') {
-      ctx.fillText(`異常値として除外: ${stats.outliers}件 (${outlierPercentage}%)`, PADDING, PADDING + STATS_LINE_HEIGHT)// 左上に配置
+      ctx.fillText(
+        `異常値として除外: ${processedData.outliers}件 (${outlierPercentage}%)`,
+        PADDING,
+        PADDING + STATS_LINE_HEIGHT
+      )// 左上に配置
 
       // 除外されたチケットのリストを表示（1行あたり5件まで）
-      if (stats.outlierTickets.length > 0 && stats.validRanges) {
+      if (processedData.outlierTickets.length > 0 && processedData.validRanges) {
         const ticketsPerLine = 5
-        for (let i = 0; i < stats.outlierTickets.length; i += ticketsPerLine) {
-          const parts = stats.outlierTickets.slice(i, i + ticketsPerLine).map(ticket => {
+        for (let i = 0; i < processedData.outlierTickets.length; i += ticketsPerLine) {
+          const parts = processedData.outlierTickets.slice(i, i + ticketsPerLine).map(ticket => {
             const [blockInfo, column, number] = ticket.split('-')
             const [block, blockNum] = [blockInfo.slice(0, 1), parseInt(blockInfo.slice(1))]
             const columnNum = parseInt(column)
@@ -302,9 +329,9 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
             }
 
             return `${blockInfo}-${
-              !stats.validRanges[block]?.columns.has(columnNum) ? `<red>${column}</red>` : column
+              !processedData.validRanges[block]?.columns.has(columnNum) ? `<red>${column}</red>` : column
             }-${
-              !stats.validRanges[block]?.numbers.has(numberNum) ? `<red>${number}</red>` : number
+              !processedData.validRanges[block]?.numbers.has(numberNum) ? `<red>${number}</red>` : number
             }`
           })
 
@@ -424,7 +451,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
 
       yOffset += rowHeight
     }
-  }, [tickets, artistName, tourName])
+  }, [tickets, artistName, tourName, enableOutlierDetection])
 
   const [imageUrl, setImageUrl] = useState<string>('')
 
@@ -433,10 +460,10 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
       const dataUrl = canvasRef.current.toDataURL('image/png')
       setImageUrl(dataUrl)
     }
-  }, [tickets, artistName, tourName])
+  }, [tickets, artistName, tourName, enableOutlierDetection])
 
   return (
-    <>
+    <div className="space-y-4">
       <div className="overflow-x-auto border p-2 bg-white">
         <canvas ref={canvasRef} className="hidden" />
         <Image
@@ -444,11 +471,51 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
           alt="座席分布"
           width={canvasRef.current?.width || 800}
           height={canvasRef.current?.height || 600}
-          className="max-w-full cursor-pointer hover:opacity-80"
+          className="max-w-full"
           unoptimized // Data URLを使用するため最適化をスキップ
         />
       </div>
-    </>
+
+      <div className="flex items-center gap-4 px-2">
+        <h3 className='text-sm'>AIによる外れ値補正 :</h3>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            name="outlier-detection"
+            checked={!enableOutlierDetection}
+            onChange={() => setEnableOutlierDetection(false)}
+            className="text-rose-500 focus:ring-rose-500 hidden"
+          />
+          <span className={!enableOutlierDetection ? 'text-rose-500' : 'text-gray-600'}>OFF</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            name="outlier-detection"
+            checked={enableOutlierDetection}
+            onChange={() => setEnableOutlierDetection(true)}
+            className="text-rose-500 focus:ring-rose-500 hidden"
+          />
+          <span className={enableOutlierDetection ? 'text-rose-500' : 'text-gray-600'}>ON</span>
+        </label>
+      </div>
+
+      {enableOutlierDetection && outlierStats.outlierTickets.length > 0 && (
+        <div className="px-2 space-y-2 hidden">
+          <span className="text-sm text-gray-600">
+            除外されたチケット: {outlierStats.outliers}件　
+          </span>
+          <span className="text-sm text-gray-600 break-all">
+            {outlierStats.outlierTickets.map((ticket, i) => (
+              <span key={i}>
+                {ticket}
+                {i < outlierStats.outlierTickets.length - 1 && ', '}
+              </span>
+            ))}
+          </span>
+        </div>
+      )}
+    </div>
   )
 }
 
