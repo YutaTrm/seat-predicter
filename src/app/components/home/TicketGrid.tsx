@@ -55,7 +55,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
         {canvasRef.current && (
           <Image
             src={canvasRef.current.toDataURL('image/png')}
-            alt="座席分布"
+            alt={artistName + " " + tourName + " の座席分布"}
             width={canvasRef.current.width}
             height={canvasRef.current.height}
             className="max-w-full"

@@ -2,7 +2,7 @@
 export const CELL_SIZE = 20
 export const BLOCK_SPACING_X = 40
 export const BLOCK_SPACING_Y = 90
-export const LABEL_HEIGHT = 24
+export const LABEL_HEIGHT = 20
 export const PADDING = 20
 export const FONT_SIZE = 14
 export const DEFAULT_SIZE = 12 // チケットがない場合のデフォルトサイズ

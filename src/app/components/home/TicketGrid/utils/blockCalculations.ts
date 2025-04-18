@@ -1,6 +1,6 @@
 import { Ticket } from '@/types/ticket'
 import { DEFAULT_SIZE } from '@/constants/ticketGrid'
-import { BlockSize, ProcessedData } from '../types'
+import { BlockSize } from '../types'
 
 /**
  * ブロックレターとブロック番号でチケットをグループ化

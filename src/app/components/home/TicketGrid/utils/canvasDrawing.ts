@@ -1,5 +1,5 @@
-import { CELL_SIZE, BLOCK_SPACING_X, BLOCK_SPACING_Y, LABEL_HEIGHT, PADDING, EXCLUDED_VALUE_COLOR } from '@/constants/ticketGrid'
-import { BlockSize, ProcessedData } from '../types'
+import { CELL_SIZE, LABEL_HEIGHT, PADDING } from '@/constants/ticketGrid'
+import { BlockSize } from '../types'
 
 type FontSizes = {
   titleFontSize: number
@@ -63,7 +63,7 @@ export const drawStats = (
   ctx.fillStyle = '#6B7280'
 
   ctx.fillText(
-    `総チケット数: ${totalTickets}件 ${dateString}`,
+    `全:${totalTickets}件 ${dateString}`,
     PADDING,
     PADDING + titleFontSize * 3.5
   )
@@ -110,7 +110,7 @@ export const drawBlock = (
 
   // ラベル
   ctx.fillStyle = '#F43F5E'
-  ctx.fillText(blockKey, xOffset + (width * CELL_SIZE) / 2, yOffset)
+  ctx.fillText(blockKey, xOffset + (width * CELL_SIZE) / 2 + 12, yOffset + 12)
 
   // セル
   for (let row = 1; row <= height; row++) {
@@ -146,7 +146,7 @@ export const drawBlock = (
   // チケット数
   ctx.fillText(
     `[${count}枚]`,
-    xOffset + (width * CELL_SIZE) / 2,
+    xOffset + (width * CELL_SIZE) / 2 + 18,
     yOffset + LABEL_HEIGHT + height * CELL_SIZE + 36
   )
 }
