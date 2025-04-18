@@ -466,14 +466,16 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
     <div className="space-y-4">
       <div className="overflow-x-auto border p-2 bg-white">
         <canvas ref={canvasRef} className="hidden" />
-        <Image
-          src={imageUrl}
-          alt="座席分布"
-          width={canvasRef.current?.width || 800}
-          height={canvasRef.current?.height || 600}
-          className="max-w-full"
-          unoptimized // Data URLを使用するため最適化をスキップ
-        />
+        {imageUrl && (
+          <Image
+            src={imageUrl}
+            alt="座席分布"
+            width={canvasRef.current?.width || 800}
+            height={canvasRef.current?.height || 600}
+            className="max-w-full"
+            unoptimized // Data URLを使用するため最適化をスキップ
+          />
+        )}
       </div>
 
       <div className="flex items-center gap-4 px-2">
