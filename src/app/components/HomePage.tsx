@@ -221,10 +221,10 @@ export default function HomePage({
           )}
         </div>
 
-        {/* <TicketTable
+        <TicketTable
           tickets={tickets}
           showTickets={showTickets}
-        /> */}
+        />
 
         {showTickets && tickets.length > 0 && (
           <>
