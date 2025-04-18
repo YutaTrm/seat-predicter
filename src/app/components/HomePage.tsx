@@ -238,11 +238,17 @@ export default function HomePage({
                   分布について
                 </button>
               </div>
-              <TicketGrid
-                tickets={tickets}
-                artistName={selectedArtistName || ''}
-                tourName={selectedTourName || ''}
-              />
+              {tickets.length >= 20 ? (
+                <TicketGrid
+                  tickets={tickets}
+                  artistName={selectedArtistName || ''}
+                  tourName={selectedTourName || ''}
+                />
+              ) : (
+                <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">
+                  20件以上登録されると分布図が生成されます
+                </p>
+              )}
             </div>
 
             {/* モーダル要素 */}
