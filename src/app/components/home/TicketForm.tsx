@@ -105,13 +105,18 @@ export default function TicketForm({
   )
 
   const handleReset = useCallback(
-    () => {
-      router.replace("/")
-      setBlock('')
-      setBlockNumber(null)
-      setColumn(null)
-      setSeatNumber(null)
-      onReset()
+    async () => {
+      await Promise.all([
+        new Promise<void>(resolve => {
+          setBlock('')
+          setBlockNumber(null)
+          setColumn(null)
+          setSeatNumber(null)
+          onReset()
+          resolve()
+        }),
+        router.replace("/")
+      ])
     },
     [router, setBlock, setBlockNumber, setColumn, setSeatNumber, onReset]
   )

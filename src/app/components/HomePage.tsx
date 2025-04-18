@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useArtistData } from '@/hooks/useArtistData'
 import { useTourData } from '@/hooks/useTourData'
@@ -70,13 +70,24 @@ export default function HomePage({
   /**
    * フォームをリセットする関数
    */
-  const handleReset = () => {
-    setSelectedArtist(null)
-    setSelectedTour(null)
-    setSelectedLotterySlot(null)
-    setTickets([])
-    setShowTickets(false)
-  }
+  const handleReset = useCallback(() => {
+    // すべての状態を一度にリセット
+    Promise.all([
+      new Promise<void>(resolve => {
+        setSelectedArtist(null)
+        setSelectedTour(null)
+        setSelectedLotterySlot(null)
+        setTickets([])
+        setShowTickets(false)
+        resolve()
+      })
+    ]).then(() => {
+      // 状態が確実にリセットされた後にURLパラメータをクリア
+      if (typeof window !== 'undefined') {
+        window.history.replaceState({}, '', '/')
+      }
+    })
+  }, [])
 
   /**
    * チケット一覧を表示する関数
@@ -122,24 +133,36 @@ export default function HomePage({
     const artistId = searchParams.get('artist')
     const tourId = searchParams.get('tour')
 
-    if (artistId) {
-      const parsedArtistId = parseInt(artistId)
-      const artist = artists.find(a => a.id === parsedArtistId)
-
-      if (artist) {
-        setSelectedArtist(artist.id)
-
-        if (tourId) {
-          const parsedTourId = parseInt(tourId)
-          const tour = tours.find(t => t.id === parsedTourId)
-
-          if (tour) {
-            setSelectedTour(tour.id)
-          }
-        }
-      }
+    if (!artistId) {
+      setSelectedArtist(null)
+      setSelectedTour(null)
+      setSelectedLotterySlot(null)
+      return
     }
-  }, [searchParams, artists, tours])
+
+    const parsedArtistId = parseInt(artistId)
+    const artist = artists.find(a => a.id === parsedArtistId)
+
+    if (artist) {
+      setSelectedArtist(artist.id)
+
+      if (tourId) {
+        const parsedTourId = parseInt(tourId)
+        const tour = tours.find(t => t.id === parsedTourId)
+
+        if (tour) {
+          setSelectedTour(tour.id)
+        } else {
+          setSelectedTour(null)
+        }
+      } else {
+        setSelectedTour(null)
+      }
+    } else {
+      setSelectedArtist(null)
+      setSelectedTour(null)
+    }
+  }, [searchParams, artists, tours, setSelectedArtist, setSelectedTour, setSelectedLotterySlot])
 
   return (
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 lg:width-[100%]">
