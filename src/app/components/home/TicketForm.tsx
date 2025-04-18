@@ -14,17 +14,6 @@ const MAX_COLUMN_NUMBER = 30
 const MAX_SEAT_NUMBER = 20
 
 /**
- * ツアーが終了しているかどうかを判定する関数
- */
-const isTourEnded = (endDate: string): boolean => {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  const tourEndDate = new Date(endDate)
-  tourEndDate.setHours(0, 0, 0, 0)
-  return tourEndDate < today
-}
-
-/**
  * チケット発券可能かどうかを判定する関数
  * @param printStartDate 発券開始日（nullの場合は発券不可）
  */
@@ -75,11 +64,6 @@ export default function TicketForm({
   const [column, setColumn] = useState<number | null>(null)
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
-
-  // 終了していないツアーのみをフィルタリング（メモ化）
-  const availableTours = useMemo(() => {
-    return tours.filter(tour => !isTourEnded(tour.end_date))
-  }, [tours])
 
   // 選択されたツアーの情報を取得（メモ化）
   const selectedTourInfo = useMemo(() => {
@@ -162,7 +146,7 @@ export default function TicketForm({
         className="w-full p-2 border rounded bg-white"
       >
         <option value="">ツアーを選択</option>
-        {availableTours.map(tour => (
+        {tours.map(tour => (
           <option key={tour.id} value={tour.id}>
             {tour.name}
           </option>
