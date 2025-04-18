@@ -49,10 +49,7 @@ const BLOCK_SPACING_Y = 90
 const LABEL_HEIGHT = 24
 const PADDING = 20
 const FONT_SIZE = 14
-const OFFSET_Y_SIZE = 40
-const STATS_FONT_SIZE = 28 // 統計情報の文字サイズを大きく
 const DEFAULT_SIZE = 12 // チケットがない場合のデフォルトサイズ
-const STATS_LINE_HEIGHT = STATS_FONT_SIZE + 8 // 統計情報の行間
 const EXCLUDED_VALUE_COLOR = '#F43F5E' // 除外された値の色
 
 // チケットの制約値
@@ -271,9 +268,18 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
       totalCanvasHeight += height
     })
 
+    // フォントサイズを計算（キャンバスの仮サイズに基づいて）
+    const tempCanvasWidth = maxCanvasWidth + PADDING * 2
+    const tempCanvasHeight = totalCanvasHeight + PADDING * 2
+    const baseFontSize = Math.min(tempCanvasWidth, tempCanvasHeight) * 0.025
+    const titleFontSize = Math.min(Math.max(baseFontSize * 1.5, 16), 32)
+    const subtitleFontSize = Math.min(Math.max(baseFontSize * 1.2, 14), 24)
+    const normalFontSize = Math.min(Math.max(baseFontSize, 12), 18)
+    const lineHeight = normalFontSize * 1.5
+
+    // 最終的なキャンバスサイズを計算
     const canvasWidth = maxCanvasWidth + PADDING * 2
-    // SNSとURL情報のための余白を追加
-    const canvasHeight = totalCanvasHeight + PADDING * 2 + STATS_LINE_HEIGHT * 6
+    const canvasHeight = totalCanvasHeight + PADDING * 2 + titleFontSize * 6
 
     canvas.width = canvasWidth
     canvas.height = canvasHeight
@@ -282,17 +288,22 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
     ctx.fillStyle = '#FFFFFF'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+
     // アーティスト名とツアー名を表示
-    ctx.font = `${STATS_FONT_SIZE + 20}px sans-serif`
     ctx.textAlign = 'center'
     ctx.fillStyle = '#F43F5E'
-    ctx.fillText(`${artistName}`, canvas.width / 2, PADDING + STATS_LINE_HEIGHT * 2)
-    ctx.fillText(`${tourName}`, canvas.width / 2, PADDING + STATS_LINE_HEIGHT * 4)
+
+    ctx.font = `${titleFontSize}px sans-serif`
+    ctx.fillText(`${artistName}`, canvas.width / 2, PADDING + titleFontSize)
+
+    ctx.font = `${subtitleFontSize}px sans-serif`
+    ctx.fillText(`${tourName}`, canvas.width / 2, PADDING + titleFontSize * 2)
+
     ctx.fillStyle = '#6B7280'
-    ctx.fillText(`座席分布`, canvas.width / 2, PADDING + STATS_LINE_HEIGHT * 6)
+    ctx.fillText(`座席分布`, canvas.width / 2, PADDING + titleFontSize * 3)
 
     // 統計情報の表示
-    ctx.font = `${STATS_FONT_SIZE}px sans-serif`
+    ctx.font = `${normalFontSize}px sans-serif`
     ctx.textAlign = 'left'
     ctx.fillStyle = '#6B7280'
 
@@ -300,17 +311,21 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
     const now = new Date();
     const dateSting = `[${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}時点]`
     const outlierPercentage = ((stats.outliers / stats.totalTickets) * 100).toFixed(1)
-    ctx.fillText(`総チケット数: ${stats.totalTickets}件 ${dateSting}`, PADDING, PADDING + STATS_LINE_HEIGHT * 6 + OFFSET_Y_SIZE)
+    ctx.fillText(
+      `総チケット数: ${stats.totalTickets}件 ${dateSting}`,
+      PADDING,
+      PADDING + titleFontSize * 3.5
+    )
 
     // 描画開始位置の初期化
-    let yOffset = PADDING + STATS_LINE_HEIGHT * 8
+    let yOffset = PADDING + titleFontSize * 4
 
     // 本番では描画しない 除外情報
     if (process.env.NODE_ENV !== 'production') {
       ctx.fillText(
         `異常値として除外: ${processedData.outliers}件 (${outlierPercentage}%)`,
         PADDING,
-        PADDING + STATS_LINE_HEIGHT
+        PADDING + lineHeight
       )// 左上に配置
 
       // 除外されたチケットのリストを表示（1行あたり5件まで）
@@ -337,7 +352,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
 
           // 赤色のテキストを処理
           let xPos = PADDING
-          const yPos = PADDING + STATS_LINE_HEIGHT * (2 + Math.floor(i / ticketsPerLine))
+          const yPos = PADDING + lineHeight * (2 + Math.floor(i / ticketsPerLine))
 
           for (let j = 0; j < parts.length; j++) {
             const segments = parts[j].split(/(<red>.*?<\/red>)/)
@@ -366,7 +381,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
         // 統計情報の後に余白を追加
         yOffset = Math.max(
           yOffset,
-          PADDING + STATS_LINE_HEIGHT * (5 + Math.floor((stats.outlierTickets.length - 1) / ticketsPerLine))
+          PADDING + lineHeight * (5 + Math.floor((processedData.outlierTickets.length - 1) / ticketsPerLine))
         )
       }
     }
@@ -374,8 +389,9 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
     // SNSとURLを右下に表示
     ctx.textAlign = 'right'
     ctx.fillStyle = '#6B7280'
-    ctx.fillText('X : @zasekiyosou_app', canvas.width - PADDING, STATS_LINE_HEIGHT)// 右上に配置
-    ctx.fillText('URL : zasekiyosou.com', canvas.width - PADDING, STATS_LINE_HEIGHT * 2)
+    ctx.font = `${normalFontSize * 0.8}px sans-serif`
+    ctx.fillText('X : @zasekiyosou_app', canvas.width - PADDING, lineHeight)
+    ctx.fillText('URL : zasekiyosou.com', canvas.width - PADDING, lineHeight * 2)
 
     // 描画設定を元に戻す
     ctx.font = `${FONT_SIZE}px sans-serif`
