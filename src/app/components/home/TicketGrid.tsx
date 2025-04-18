@@ -478,7 +478,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
         )}
       </div>
 
-      <div className="flex items-center gap-4 px-2">
+      <div className="flex items-center gap-4">
         <h3 className='text-sm'>AIによる外れ値補正 :</h3>
         <label className="flex items-center gap-2 cursor-pointer">
           <input
@@ -503,6 +503,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
       </div>
 
       {enableOutlierDetection && outlierStats.outlierTickets.length > 0 && (
+        // トゲがあるから非表示にしとく
         <div className="px-2 space-y-2 hidden">
           <span className="text-sm text-gray-600">
             除外されたチケット: {outlierStats.outliers}件　
