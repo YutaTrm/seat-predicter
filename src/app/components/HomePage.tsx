@@ -13,6 +13,7 @@ import TicketGrid from './home/TicketGrid'
 import Footer from './common/Footer'
 import AdmaxAds from './common/AdmaxAds'
 import Modal from '@/app/components/common/Modal'
+import CarouselAds from './common/CarouselAds'
 
 /**
  * ホームページコンポーネント
@@ -280,17 +281,7 @@ export default function HomePage({
 
       {/* 広告の表示 */}
       <section className="mt-4 mb-4 text-center">
-        {/* 飛行機 */}
-        <a className='inline-block mb-1' href="https://px.a8.net/svt/ejp?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP" rel="nofollow">
-          <img alt="当日便もOK" src="https://www28.a8.net/svt/bgt?aid=250417727655&wid=002&eno=01&mid=s00000022192001005000&mc=1"/>
-          <img width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP" alt=""/>
-        </a>
-
-        {/* バス */}
-        {/* <a className='inline-block' href="https://px.a8.net/svt/ejp?a8mat=453BJZ+ABIJ16+2O7M+64JTD" rel="nofollow">
-          <img alt="" src="https://www25.a8.net/svt/bgt?aid=250417727624&wid=002&eno=01&mid=s00000012469001029000&mc=1"/>
-          <img width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=453BJZ+ABIJ16+2O7M+64JTD" alt=""/>
-        </a> */}
+        <CarouselAds />
 
         <AdmaxAds code="6320491eb1d6b1456841a6bf9a04cb19"/>
       </section>
