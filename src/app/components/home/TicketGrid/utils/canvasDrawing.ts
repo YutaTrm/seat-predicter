@@ -108,9 +108,13 @@ export const drawBlock = (
     height * CELL_SIZE
   )
 
+  // テキスト描画の基本設定
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+
   // ラベル
   ctx.fillStyle = '#F43F5E'
-  ctx.fillText(blockKey, xOffset + (width * CELL_SIZE) / 2 + 12, yOffset + 12)
+  ctx.fillText(blockKey, xOffset + (width * CELL_SIZE) / 2, yOffset + LABEL_HEIGHT / 2)
 
   // セル
   for (let row = 1; row <= height; row++) {
@@ -132,21 +136,23 @@ export const drawBlock = (
 
   // 行番号（右端）
   ctx.fillStyle = '#6B7280'
+  ctx.textAlign = 'left'
   for (let row = 1; row <= height; row++) {
     const y = yOffset + LABEL_HEIGHT + (row - 1) * CELL_SIZE + CELL_SIZE / 2
-    ctx.fillText(`${row}`, xOffset + width * CELL_SIZE + 8, y)
+    ctx.fillText(`${row}`, xOffset + width * CELL_SIZE + 4, y)
   }
 
   // 列番号（下端）
+  ctx.textAlign = 'center'
   for (let col = 1; col <= width; col++) {
     const x = xOffset + (col - 1) * CELL_SIZE + CELL_SIZE / 2
-    ctx.fillText(`${col}`, x, yOffset + LABEL_HEIGHT + height * CELL_SIZE + 16)
+    ctx.fillText(`${col}`, x, yOffset + LABEL_HEIGHT + height * CELL_SIZE + 12)
   }
 
   // チケット数
   ctx.fillText(
     `[${count}枚]`,
-    xOffset + (width * CELL_SIZE) / 2 + 18,
-    yOffset + LABEL_HEIGHT + height * CELL_SIZE + 36
+    xOffset + (width * CELL_SIZE) / 2,
+    yOffset + LABEL_HEIGHT + height * CELL_SIZE + 32
   )
 }

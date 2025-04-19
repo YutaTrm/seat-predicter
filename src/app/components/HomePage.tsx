@@ -238,7 +238,7 @@ export default function HomePage({
                   分布について
                 </button>
               </div>
-              {tickets.length >= 20 ? (
+              {tickets.length >= 30 ? (
                 <TicketGrid
                   tickets={tickets}
                   artistName={selectedArtistName || ''}
@@ -246,7 +246,7 @@ export default function HomePage({
                 />
               ) : (
                 <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">
-                  20件以上登録されると分布図が生成されます
+                  30件以上登録されると分布図が生成されます
                 </p>
               )}
             </div>
@@ -265,10 +265,10 @@ export default function HomePage({
                   画像は長押しで保存できます。画像は転載OKです。
                 </p>
                 <p>
-                  ブロックは同じアルファベットを横一列に並べて、各ブロックのサイズは登録されたチケットから自動で計算しています。
+                  ブロックは同じアルファベットを横一列に並べて、横方向左に寄せで配置しています。各ブロックのサイズは登録されたチケットから自動で計算しています。
                 </p>
                 <p>
-                  ブロック全体は横方向左に寄せで配置しています。
+                  AIによる外れ値補正は、チケット数が少ないと精度が低下します。参考程度にご活用ください。
                 </p>
               </div>
             </Modal>
