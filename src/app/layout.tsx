@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { M_PLUS_1p } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { GoogleAdsense } from './components/common/GoogleAdsense'
+// import { GoogleAdsense } from './components/common/GoogleAdsense'
 import './globals.css'
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
@@ -78,7 +78,7 @@ export default function RootLayout({
         {gaId && (
           <GoogleAnalytics gaId={gaId} />
         )}
-        <GoogleAdsense />
+        {/* <GoogleAdsense /> */}
       </body>
     </html>
   )
