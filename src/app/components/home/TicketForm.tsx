@@ -130,7 +130,7 @@ export default function TicketForm({
           onArtistChange(value || null)
           updateUrlParams(router, value || null, null)
         }}
-        className="w-full p-2 border rounded bg-white"
+        className="w-full p-1 border rounded bg-white"
       >
         <option value="">アーティストを選択</option>
         {artists.map(artist => (
@@ -148,7 +148,7 @@ export default function TicketForm({
           updateUrlParams(router, selectedArtist, value || null)
         }}
         disabled={!selectedArtist}
-        className="w-full p-2 border rounded bg-white"
+        className="w-full p-1 border rounded bg-white"
       >
         <option value="">ツアーを選択</option>
         {tours.map(tour => (
@@ -165,7 +165,7 @@ export default function TicketForm({
           onLotterySlotChange(value || null)
         }}
         disabled={!selectedArtist}
-        className="w-full p-2 border rounded  bg-white"
+        className="w-full p-1 border rounded  bg-white"
       >
         <option value="">抽選枠</option>
         {lotterySlots.map(slot => (
@@ -179,7 +179,7 @@ export default function TicketForm({
         <select
           value={block}
           onChange={(e) => setBlock(e.target.value)}
-          className="p-2 border rounded bg-white text-right w-2/6"
+          className="p-1 border rounded bg-white text-right w-2/6"
         >
           <option value="">ブロック</option>
           {Array.from({ length: 12 }, (_, i) => { //全アルファベットじゃなくて Lまで
@@ -196,7 +196,7 @@ export default function TicketForm({
             setBlockNumber(value >= 0 && value <= MAX_BLOCK_NUMBER ? value : null);
           }}
           placeholder="ブロック番号"
-          className="p-2 border rounded bg-white text-right w-2/6"
+          className="p-1 px-2 border rounded bg-white text-right w-2/6"
           step="1"
           min="0"
           max="20"
@@ -210,7 +210,7 @@ export default function TicketForm({
             setColumn(value >= 0 && value <= MAX_COLUMN_NUMBER ? value : null);
           }}
           placeholder="列"
-          className="p-2 border rounded bg-white text-right w-1/6"
+          className="p-1 px-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
           max="30"
@@ -224,7 +224,7 @@ export default function TicketForm({
             setSeatNumber(value >= 0 && value <= MAX_SEAT_NUMBER ? value : null);
           }}
           placeholder="席"
-          className="p-2 border rounded bg-white text-right w-1/6"
+          className="p-1 px-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
           max="20"
