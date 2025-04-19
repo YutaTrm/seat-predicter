@@ -41,13 +41,13 @@ const CarouselAds = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % ads.length)
-    }, 3000)
+    }, 3500)
 
     return () => clearInterval(timer)
   }, [])
 
   return (
-    <div className="relative w-full overflow-hidden mb-4">
+    <div className="relative w-full overflow-hidden text-center mb-4">
       {/* カルーセル本体 */}
       <div
         className="flex transition-transform duration-500 ease-in-out mb-2"

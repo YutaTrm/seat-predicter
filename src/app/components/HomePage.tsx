@@ -172,9 +172,13 @@ export default function HomePage({
         <AdmaxAds code='3e6bd2d29e9a3eacb2b94ce7200c3c3a'/>
       </section> */}
 
-      <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
-      <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
+      {/* ヘッダー */}
+      <section className="">
+        <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
+        <p className="text-xs text-rose-300 text-center">みんなのチケット情報を集計して座席構成を予想しよう</p>
+      </section>
 
+      {/* フォーム */}
       <section className="mt-8">
         <div className="flex items-center gap-2">
           <h2 className="text-lg text-gray-600 font-bold mb-1">チケット情報入力</h2>
@@ -207,6 +211,7 @@ export default function HomePage({
         />
       </section>
 
+      {/* テーブル */}
       <section className="mt-8">
         <div className="flex justify-between items-center mb-1">
           <h2 className="text-lg text-gray-600 font-bold">チケット一覧 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
@@ -279,14 +284,20 @@ export default function HomePage({
 
       </section>
 
-      {/* 広告の表示 */}
-      <section className="mt-4 mb-4 text-center">
+      {/* アフィリエイト */}
+      <section className="mt-4 md:w-[480px] md:mx-auto">
         <CarouselAds />
+      </section>
 
+      {/* 忍者 */}
+      <section className="mt-4 text-center">
         <AdmaxAds code="6320491eb1d6b1456841a6bf9a04cb19"/>
       </section>
 
-      <Footer />
+      {/* フッター */}
+      <section className="mt-4">
+        <Footer />
+      </section>
     </main>
   )
 }
