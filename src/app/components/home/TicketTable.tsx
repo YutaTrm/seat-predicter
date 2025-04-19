@@ -89,6 +89,15 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
     return acc
   }, {} as Record<string, number>)
 
+  /**
+   * 抽選枠ごとのチケット数を集計する
+   */
+  const lotterySlotCounts = tickets.reduce((acc, ticket) => {
+    const slotName = ticket.lottery_slots_name || '未設定'
+    acc[slotName] = (acc[slotName] || 0) + 1
+    return acc
+  }, {} as Record<string, number>)
+
   const sortedTickets = sortTickets(tickets)
 
   return (
@@ -130,18 +139,43 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
           </tbody>
         </table>
       </div>
-
-      {/* ブロックごとのレコード数を表示 */}
-      <h3 className="text-gray-600 font-bold mb-2">ブロックごとの集計数</h3>
-      <table className="">
-        <tbody>
-          {Object.entries(blockCounts).map(([block, count]) => (
-            <tr key={block} className="text-sm p-2 rounded">
-              <td className="font-bold">{block}ブロック:{count}件</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* 集計数の表示 */}
+      <div className="flex gap-8">
+        <div className="flex-1">
+          <h3 className="text-gray-600 font-bold mb-2">ブロックごとの集計</h3>
+          <table className="">
+            <tbody>
+              {Object.entries(blockCounts).map(([block, count]) => (
+                <tr key={block} className="text-sm p-2 rounded">
+                  <td className="">
+                    {block}ブロック
+                  </td>
+                  <td className="text-right w-[4em]">
+                    <span className='text-rose-500'>{count}</span>件
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex-1">
+          <h3 className="text-gray-600 font-bold mb-2">抽選枠ごとの集計</h3>
+          <table className="">
+            <tbody>
+              {Object.entries(lotterySlotCounts).map(([slot, count]) => (
+                <tr key={slot} className="text-sm p-2 rounded">
+                  <td className="text-xs">
+                    {slot}
+                  </td>
+                  <td className="text-right w-[3.5em]">
+                    <span className='text-rose-500'>{count}</span>件
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
