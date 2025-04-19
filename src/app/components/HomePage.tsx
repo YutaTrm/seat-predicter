@@ -165,17 +165,18 @@ export default function HomePage({
   }, [searchParams, artists, tours, setSelectedArtist, setSelectedTour, setSelectedLotterySlot])
 
   return (
-    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 lg:width-[100%]">
-      {/* <div className='mb-3 text-center'>
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 lg:width-[100%]">
+
+      {/* <section className='mb-4 text-center'>
         <AdmaxAds code='3e6bd2d29e9a3eacb2b94ce7200c3c3a'/>
-      </div> */}
+      </section> */}
 
       <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
       <p className="text-xs text-rose-300 text-center mb-8">みんなのチケット情報を集計して座席構成を予想しよう</p>
 
-      <section className="mt-10">
+      <section className="mt-8">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl text-gray-600 font-bold mb-2">チケット情報入力</h2>
+          <h2 className="text-lg text-gray-600 font-bold mb-1">チケット情報入力</h2>
           {/* ローディング状態の表示 */}
           {(isLoadingArtists || isLoadingTours || isLoadingLotterySlots) && (
             <span className="inline-block animate-spin rounded-full h-[1em] w-[1em] border-4 border-rose-500 border-t-transparent -mt-2" />
@@ -205,9 +206,9 @@ export default function HomePage({
         />
       </section>
 
-      <section className="mt-10">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xl text-gray-600 font-bold">チケット一覧 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
+      <section className="mt-8">
+        <div className="flex justify-between items-center mb-1">
+          <h2 className="text-lg text-gray-600 font-bold">チケット一覧 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
           {selectedArtist && selectedTour && (
             <button
               onClick={postToX}
@@ -230,7 +231,7 @@ export default function HomePage({
           <>
             <div className="mt-8">
               <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl text-gray-600 font-bold">座席分布</h2>
+                <h2 className="text-lg text-gray-600 font-bold">座席分布</h2>
                 <button
                   onClick={() => setShowGridHelp(true)}
                   className="text-sm text-rose-500 hover:text-rose-700"
@@ -275,24 +276,25 @@ export default function HomePage({
           </>
         )}
 
-        {/* 広告の表示 */}
-        <div className="mt-4 mb-3 text-center">
-          {/* 飛行機 */}
-          <a className='inline-block mb-1' href="https://px.a8.net/svt/ejp?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP" rel="nofollow">
-            <img alt="当日便もOK" src="https://www28.a8.net/svt/bgt?aid=250417727655&wid=002&eno=01&mid=s00000022192001005000&mc=1"/>
-            <img width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP" alt=""/>
-          </a>
-
-          {/* バス */}
-          {/* <a className='inline-block' href="https://px.a8.net/svt/ejp?a8mat=453BJZ+ABIJ16+2O7M+64JTD" rel="nofollow">
-            <img alt="" src="https://www25.a8.net/svt/bgt?aid=250417727624&wid=002&eno=01&mid=s00000012469001029000&mc=1"/>
-            <img width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=453BJZ+ABIJ16+2O7M+64JTD" alt=""/>
-          </a> */}
-
-          <AdmaxAds code="6320491eb1d6b1456841a6bf9a04cb19"/>
-        </div>
-
       </section>
+
+      {/* 広告の表示 */}
+      <section className="mt-4 mb-4 text-center">
+        {/* 飛行機 */}
+        <a className='inline-block mb-1' href="https://px.a8.net/svt/ejp?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP" rel="nofollow">
+          <img alt="当日便もOK" src="https://www28.a8.net/svt/bgt?aid=250417727655&wid=002&eno=01&mid=s00000022192001005000&mc=1"/>
+          <img width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP" alt=""/>
+        </a>
+
+        {/* バス */}
+        {/* <a className='inline-block' href="https://px.a8.net/svt/ejp?a8mat=453BJZ+ABIJ16+2O7M+64JTD" rel="nofollow">
+          <img alt="" src="https://www25.a8.net/svt/bgt?aid=250417727624&wid=002&eno=01&mid=s00000012469001029000&mc=1"/>
+          <img width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=453BJZ+ABIJ16+2O7M+64JTD" alt=""/>
+        </a> */}
+
+        <AdmaxAds code="6320491eb1d6b1456841a6bf9a04cb19"/>
+      </section>
+
       <Footer />
     </main>
   )
