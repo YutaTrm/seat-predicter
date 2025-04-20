@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: '座席予想掲示板',
     short_name: '座席予想',
-    description: '座席予想掲示板は、チケット番号を登録/一覧化しブロックの情報を可視化するアプリです。',
+    description: 'チケット情報を集計して可視化！みんなで座席構成を予想しよう',
     start_url: '/',
     display: 'standalone',
     background_color: '#fff1f2',
