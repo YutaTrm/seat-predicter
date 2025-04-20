@@ -21,7 +21,7 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
 
   if (!showTickets) {
     return (
-      <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">
+      <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2 md:py-24">
         「一覧」を押すかチケット登録をすると一覧が表示されます
       </p>
     )
@@ -29,7 +29,7 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
 
   if (tickets.length === 0) {
     return (
-      <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">
+      <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2 md:py-24">
         登録されているチケットはありません
       </p>
     )
@@ -102,7 +102,7 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
 
   return (
     <div className="flex flex-col">
-      <div className="max-h-[80vh] overflow-auto mb-4">
+      <div className="max-h-[75vh] overflow-auto mb-4 md:max-h-[50vh]">
         <table className="min-w-full bg-white border relative">
           <thead className="sticky top-0 bg-gray-600">
             <tr className="text-gray-100 text-xs">

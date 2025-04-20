@@ -166,20 +166,20 @@ export default function HomePage({
   }, [searchParams, artists, tours, setSelectedArtist, setSelectedTour, setSelectedLotterySlot])
 
   return (
-    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 lg:width-[100%]">
+    <main className="container mx-auto px-4 py-6 md:grid md:grid-cols-3 md:auto-rows-max md:gap-4">
 
       {/* <section className='mb-4 text-center'>
         <AdmaxAds code='3e6bd2d29e9a3eacb2b94ce7200c3c3a'/>
       </section> */}
 
       {/* ヘッダー */}
-      <section className="">
+      <section className=" md:col-span-3 md:mb-12">
         <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
         <p className="text-xs text-rose-300 text-center">みんなのチケット情報を集計して座席構成を予想しよう</p>
       </section>
 
       {/* フォーム */}
-      <section className="mt-8">
+      <section className="mt-8 md:col-span-1 md:mt-0">
         <div className="flex items-center gap-2">
           <h2 className="text-lg text-gray-600 font-bold mb-1">チケット情報入力</h2>
           {/* ローディング状態の表示 */}
@@ -212,15 +212,15 @@ export default function HomePage({
       </section>
 
       {/* テーブル */}
-      <section className="mt-8">
+      <section className="mt-8 md:col-span-2 md:mt-0">
         <div className="flex justify-between items-center mb-1">
           <h2 className="text-lg text-gray-600 font-bold">チケット一覧 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
           {selectedArtist && selectedTour && (
             <button
               onClick={postToX}
-              className="bg-gray-900 hover:bg-gray-700 text-white px-2 py-1 rounded text-sm flex items-center"
+              className="bg-gray-900 hover:bg-gray-700 text-white px-2 py-[2px] rounded text-sm flex items-center"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
               でシェア
@@ -285,17 +285,20 @@ export default function HomePage({
       </section>
 
       {/* アフィリエイト */}
-      <section className="mt-4 md:w-[480px] md:mx-auto">
+      <section className="mt-4 md:col-span-3 md:w-[480px] md:mt-0 md:mx-auto">
         <CarouselAds />
       </section>
 
       {/* 忍者 */}
-      <section className="mt-4 text-center">
+      <section className="mt-4 md:col-span-3 text-center md:mt-0">
+        {/* スマホ */}
         <AdmaxAds code="6320491eb1d6b1456841a6bf9a04cb19"/>
+        {/* :md以上 */}
+        <AdmaxAds code="651eb013de35c59b186cf3dd5fca1f8d"/>
       </section>
 
       {/* フッター */}
-      <section className="mt-4">
+      <section className="mt-4 md:col-span-3">
         <Footer />
       </section>
     </main>
