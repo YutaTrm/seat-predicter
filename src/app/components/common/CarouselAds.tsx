@@ -12,6 +12,18 @@ const CarouselAds = () => {
   // 広告データの配列
   const ads = [
     {
+      href: "https://px.a8.net/svt/ejp?a8mat=453CBS+IGHAY+51XQ+614CX",
+      imgSrc: "https://www26.a8.net/svt/bgt?aid=250418728031&wid=002&eno=01&mid=s00000023579001013000&mc=1",
+      trackingImg: "https://www10.a8.net/0.gif?a8mat=453CBS+IGHAY+51XQ+614CX",
+      alt: "韓国語オンラインスクール 入会金今なら0円"
+    },
+    {
+      href: "https://px.a8.net/svt/ejp?a8mat=453BJZ+9711WA+4X1W+5ZEMP",
+      imgSrc: "https://www20.a8.net/svt/bgt?aid=250417727556&wid=002&eno=01&mid=s00000022946001005000&mc=1",
+      trackingImg: "https://www12.a8.net/0.gif?a8mat=453BJZ+9711WA+4X1W+5ZEMP",
+      alt: "アゴダでお得に旅しよう"
+    },
+    {
       href: "https://px.a8.net/svt/ejp?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP",
       imgSrc: "https://www28.a8.net/svt/bgt?aid=250417727655&wid=002&eno=01&mid=s00000022192001005000&mc=1",
       trackingImg: "https://www18.a8.net/0.gif?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP",
@@ -23,18 +35,18 @@ const CarouselAds = () => {
       trackingImg: "https://www16.a8.net/0.gif?a8mat=453D3W+BWPNE+AD2+3H2BC1",
       alt: "エアトリバス 最安値2000円台"
     },
-    {
-      href: "https://px.a8.net/svt/ejp?a8mat=453BJZ+ALMWBE+1OK+6OP4H",
-      imgSrc: "https://www27.a8.net/svt/bgt?aid=250417727641&wid=002&eno=01&mid=s00000000218001123000&mc=1",
-      trackingImg: "https://www13.a8.net/0.gif?a8mat=453BJZ+ALMWBE+1OK+6OP4H",
-      alt: "一休 ビジネスホテル予約"
-    },
-    {
-      href: "https://px.a8.net/svt/ejp?a8mat=453CBR+GI6NA2+4GDM+601S1",
-      imgSrc: "https://www24.a8.net/svt/bgt?aid=250418727998&wid=002&eno=01&mid=s00000020785001008000&mc=1",
-      trackingImg: "https://www18.a8.net/0.gif?a8mat=453CBR+GI6NA2+4GDM+601S1",
-      alt: "K Village Tokyo 「日本最大級」の韓国語教室"
-    }
+    // {
+    //   href: "https://px.a8.net/svt/ejp?a8mat=453BJZ+ALMWBE+1OK+6OP4H",
+    //   imgSrc: "https://www27.a8.net/svt/bgt?aid=250417727641&wid=002&eno=01&mid=s00000000218001123000&mc=1",
+    //   trackingImg: "https://www13.a8.net/0.gif?a8mat=453BJZ+ALMWBE+1OK+6OP4H",
+    //   alt: "一休 ビジネスホテル予約"
+    // },
+    // {
+    //   href: "https://px.a8.net/svt/ejp?a8mat=453CBR+GI6NA2+4GDM+601S1",
+    //   imgSrc: "https://www24.a8.net/svt/bgt?aid=250418727998&wid=002&eno=01&mid=s00000020785001008000&mc=1",
+    //   trackingImg: "https://www18.a8.net/0.gif?a8mat=453CBR+GI6NA2+4GDM+601S1",
+    //   alt: "K Village Tokyo 「日本最大級」の韓国語教室"
+    // }
   ]
 
   // 自動スライド用のタイマー
