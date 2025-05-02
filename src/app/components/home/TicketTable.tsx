@@ -162,16 +162,18 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
           <h3 className="text-gray-600 font-bold mb-2">抽選枠ごとの集計</h3>
           <table className="">
             <tbody>
-              {Object.entries(lotterySlotCounts).map(([slot, count]) => (
-                <tr key={slot} className="text-sm p-2 rounded">
-                  <td className="text-xs">
-                    {slot}
-                  </td>
-                  <td className="text-right w-[3.5em]">
-                    <span className='text-rose-500'>{count}</span>件
-                  </td>
-                </tr>
-              ))}
+              {Object.entries(lotterySlotCounts)
+                .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                .map(([slot, count]) => (
+                  <tr key={slot} className="text-sm p-2 rounded">
+                    <td className="text-xs">
+                      {slot}
+                    </td>
+                    <td className="text-right w-[3.5em]">
+                      <span className='text-rose-500'>{count}</span>件
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

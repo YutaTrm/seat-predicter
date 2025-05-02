@@ -1,5 +1,99 @@
 import { CELL_SIZE, LABEL_HEIGHT, PADDING } from '@/constants/ticketGrid'
 import { BlockSize } from '../types'
+import { Ticket } from '@/types/ticket'
+
+/**
+ * 均等な色相分布の色を生成
+ * @param totalColors 生成する色の総数
+ * @returns 色の配列（HSL形式の文字列）
+ */
+export const generateUniqueColors = (totalColors: number): string[] => {
+  const colors: string[] = []
+  for (let i = 0; i < totalColors; i++) {
+    const hue = (i * (360 / totalColors)) % 360
+    colors.push(`hsl(${hue}, 80%, 70%)`)
+  }
+  return colors
+}
+
+/**
+ * チケット種別ごとの色マッピングを生成
+ * @param tickets チケットの配列
+ * @returns 種別IDと色のマップ
+ */
+export const createLotterySlotColorMap = (tickets: Ticket[]): Map<number, string> => {
+  const uniqueLotterySlotIds = Array.from(new Set(tickets.map(t => t.lottery_slots_id)))
+  const colors = generateUniqueColors(uniqueLotterySlotIds.length)
+
+  const colorMap = new Map<number, string>()
+  uniqueLotterySlotIds.forEach((id, index) => {
+    colorMap.set(id, colors[index])
+  })
+
+  return colorMap
+}
+
+/**
+ * 凡例を描画
+ * @param ctx キャンバスコンテキスト
+ * @param tickets チケットの配列
+ * @param canvasWidth キャンバスの幅
+ * @param yOffset 描画開始のY座標
+ * @param normalFontSize フォントサイズ
+ * @returns 凡例の高さ
+ */
+export const drawLegend = (
+  ctx: CanvasRenderingContext2D,
+  tickets: Ticket[],
+  canvasWidth: number,
+  yOffset: number,
+  normalFontSize: number
+): number => {
+  const colorMap = createLotterySlotColorMap(tickets)
+  const legendSpacing = normalFontSize * 0.5
+  const legendHeight = normalFontSize * 1.2
+  const sampleSize = normalFontSize
+
+  ctx.textAlign = 'left'
+  ctx.textBaseline = 'middle'
+  ctx.font = `${normalFontSize}px sans-serif`
+  ctx.fillStyle = '#6B7280'
+
+  let currentX = PADDING
+  let currentY = yOffset
+  let maxRowHeight = 0
+
+  // 「チケット種別」のラベルを描画
+  ctx.fillText('チケット種別:', currentX, currentY)
+  currentX += ctx.measureText('チケット種別:').width + legendSpacing * 2
+
+  // lottery_slots_idの昇順でソート
+  Array.from(colorMap.entries())
+    .sort(([a], [b]) => a - b)
+    .forEach(([lotterySlotId, color]) => {
+      const lotterySlotName = tickets.find(t => t.lottery_slots_id === lotterySlotId)?.lottery_slots_name || `種別 ${lotterySlotId}`
+      const textWidth = ctx.measureText(lotterySlotName).width + sampleSize + legendSpacing * 3
+
+      // 次の行に移動する判定
+      if (currentX + textWidth > canvasWidth - PADDING) {
+        currentX = PADDING
+        currentY += legendHeight + legendSpacing
+        maxRowHeight = Math.max(maxRowHeight, legendHeight)
+      }
+
+    // 色のサンプル
+    ctx.fillStyle = color
+    ctx.fillRect(currentX, currentY - sampleSize/2, sampleSize, sampleSize)
+
+    // テキスト
+    ctx.fillStyle = '#6B7280'
+    ctx.fillText(lotterySlotName, currentX + sampleSize + legendSpacing, currentY)
+
+    currentX += textWidth + legendSpacing
+  })
+
+  return (currentY - yOffset) + legendHeight + legendSpacing
+}
 
 type FontSizes = {
   titleFontSize: number
@@ -95,9 +189,13 @@ export const drawBlock = (
   blockSize: BlockSize,
   ticketSet: Set<string>,
   xOffset: number,
-  yOffset: number
+  yOffset: number,
+  tickets: Ticket[]
 ) => {
   const { width, height, count } = blockSize
+
+  // チケット種別ごとの色マップを生成
+  const colorMap = createLotterySlotColorMap(tickets)
 
   // ブロック全体を囲む枠線
   ctx.strokeStyle = '#9CA3AF'
@@ -122,10 +220,25 @@ export const drawBlock = (
       const x = xOffset + (col - 1) * CELL_SIZE
       const y = yOffset + LABEL_HEIGHT + (row - 1) * CELL_SIZE
 
-      const has = ticketSet.has(`${row}-${col}`)
+      const cellKey = `${row}-${col}`
+      const hasTicket = ticketSet.has(cellKey)
 
       // セルの背景色
-      ctx.fillStyle = has ? '#F43F5E' : '#F3F4F6'
+      if (hasTicket) {
+        const ticket = tickets.find(t =>
+          t.block === blockKey[0] &&
+          t.block_number === parseInt(blockKey.slice(1)) &&
+          t.column === row &&
+          t.number === col
+        )
+
+        ctx.fillStyle = ticket ?
+          colorMap.get(ticket.lottery_slots_id) || '#F43F5E' :
+          '#F43F5E'
+      } else {
+        ctx.fillStyle = '#F3F4F6'
+      }
+
       ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE)
 
       // セルの枠線

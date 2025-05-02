@@ -1,9 +1,59 @@
 import { useEffect, RefObject } from 'react'
 import { Ticket } from '@/types/ticket'
 import { CELL_SIZE, BLOCK_SPACING_X, BLOCK_SPACING_Y, PADDING } from '@/constants/ticketGrid'
-import { calculateFontSizes, drawHeader, drawStats, drawSocialInfo, drawBlock } from '../utils/canvasDrawing'
-import { groupTickets, getBlockLetters, getMaxBlockNumbers, getAllBlockKeys, calculateBlockNumberMaxWidths, calculateBlockMaxHeights, calculateBlockSizes } from '../utils/blockCalculations'
+import {
+  calculateFontSizes,
+  drawHeader,
+  drawStats,
+  drawSocialInfo,
+  drawBlock,
+  drawLegend,
+  createLotterySlotColorMap
+} from '../utils/canvasDrawing'
+import {
+  groupTickets,
+  getBlockLetters,
+  getMaxBlockNumbers,
+  getAllBlockKeys,
+  calculateBlockNumberMaxWidths,
+  calculateBlockMaxHeights,
+  calculateBlockSizes
+} from '../utils/blockCalculations'
 import { ProcessedData } from '../types'
+
+// 凡例の高さを計算する関数
+const calculateLegendHeight = (
+  ctx: CanvasRenderingContext2D,
+  tickets: Ticket[],
+  canvasWidth: number,
+  normalFontSize: number
+): number => {
+  const colorMap = createLotterySlotColorMap(tickets)
+  const legendSpacing = 10
+  const legendHeight = normalFontSize * 1.5
+
+  ctx.font = `${normalFontSize}px sans-serif`
+
+  let currentX = PADDING
+  let currentY = 0
+  let maxRowHeight = 0
+
+  colorMap.forEach((color, lotterySlotId) => {
+    const lotterySlotName = tickets.find(t => t.lottery_slots_id === lotterySlotId)?.lottery_slots_name || `種別 ${lotterySlotId}`
+    const textWidth = ctx.measureText(lotterySlotName).width
+
+    currentX += textWidth + legendHeight + legendSpacing * 2
+
+    // 次の行に移動する判定
+    if (currentX > canvasWidth - PADDING) {
+      currentX = PADDING
+      currentY += legendHeight + legendSpacing
+      maxRowHeight = Math.max(maxRowHeight, legendHeight)
+    }
+  })
+
+  return currentY + legendHeight + legendSpacing
+}
 
 export const useCanvasDrawing = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
@@ -61,9 +111,14 @@ export const useCanvasDrawing = (
     const tempCanvasHeight = totalCanvasHeight + PADDING * 2
     const fontSizes = calculateFontSizes(tempCanvasWidth, tempCanvasHeight)
 
-    // キャンバスサイズの設定
+    // 凡例の高さを計算
+    const legendColorMap = createLotterySlotColorMap(tickets)
+    const additionalLegendHeight = legendColorMap.size > 0
+      ? calculateLegendHeight(ctx, tickets, canvas.width, fontSizes.normalFontSize)
+      : 0
+
     canvas.width = maxCanvasWidth + PADDING * 2
-    canvas.height = totalCanvasHeight + PADDING * 2 + fontSizes.titleFontSize * 2
+    canvas.height = totalCanvasHeight + PADDING * 2 + fontSizes.titleFontSize * 2 + additionalLegendHeight
 
     // 背景を白で塗りつぶす
     ctx.fillStyle = '#FFFFFF'
@@ -75,11 +130,20 @@ export const useCanvasDrawing = (
     // 統計情報の描画
     drawStats(ctx, tickets.length, fontSizes, fontSizes.titleFontSize)
 
+    // 凡例を描画（統計情報の下）
+    const drawnLegendHeight = drawLegend(
+      ctx,
+      tickets,
+      canvas.width,
+      PADDING + fontSizes.titleFontSize * 3.5 + fontSizes.normalFontSize,
+      fontSizes.normalFontSize
+    )
+
     // SNSとURL情報の描画
     drawSocialInfo(ctx, canvas.width, fontSizes)
 
     // ブロックの描画
-    let yOffset = PADDING + fontSizes.titleFontSize * 4
+    let yOffset = PADDING + fontSizes.titleFontSize * 4 + drawnLegendHeight
 
     for (const letter of blockLetters) {
       const blockKeys = allBlockKeys.filter(k => k.startsWith(letter))
@@ -91,7 +155,7 @@ export const useCanvasDrawing = (
         const blockSize = blockSizes[blockKey]
         const ticketSet = new Set(blockTickets.map(t => `${t.column}-${t.number}`))
 
-        drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset)
+        drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, tickets)
         xOffset += blockSize.width * CELL_SIZE + BLOCK_SPACING_X
       }
 

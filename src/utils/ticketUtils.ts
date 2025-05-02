@@ -38,6 +38,7 @@ export const fetchTickets = async (
     `)
     .eq('artist_id', selectedArtist)
     .eq('tour_id', selectedTour)
+    .order('lottery_slots_id')
     .order('block')
     .order('block_number')
 
