@@ -111,9 +111,9 @@ export const useCanvasDrawing = (
     const tempCanvasHeight = totalCanvasHeight + PADDING * 2
     const fontSizes = calculateFontSizes(tempCanvasWidth, tempCanvasHeight)
 
-    // 凡例の高さを計算
-    const legendColorMap = createLotterySlotColorMap(tickets)
-    const additionalLegendHeight = legendColorMap.size > 0
+    // チケット種別ごとの色マップを生成（一度だけ）
+    const colorMap = createLotterySlotColorMap(tickets)
+    const additionalLegendHeight = colorMap.size > 0
       ? calculateLegendHeight(ctx, tickets, canvas.width, fontSizes.normalFontSize)
       : 0
 
@@ -136,7 +136,8 @@ export const useCanvasDrawing = (
       tickets,
       canvas.width,
       PADDING + fontSizes.titleFontSize * 3.5 + fontSizes.normalFontSize,
-      fontSizes.normalFontSize
+      fontSizes.normalFontSize,
+      colorMap
     )
 
     // SNSとURL情報の描画
@@ -155,7 +156,7 @@ export const useCanvasDrawing = (
         const blockSize = blockSizes[blockKey]
         const ticketSet = new Set(blockTickets.map(t => `${t.column}-${t.number}`))
 
-        drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, filteredTickets)
+        drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, filteredTickets, colorMap)
         xOffset += blockSize.width * CELL_SIZE + BLOCK_SPACING_X
       }
 

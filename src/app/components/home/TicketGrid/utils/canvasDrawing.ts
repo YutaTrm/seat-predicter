@@ -47,9 +47,9 @@ export const drawLegend = (
   tickets: Ticket[],
   canvasWidth: number,
   yOffset: number,
-  normalFontSize: number
+  normalFontSize: number,
+  colorMap: Map<number, string>
 ): number => {
-  const colorMap = createLotterySlotColorMap(tickets)
   const legendSpacing = normalFontSize * 0.5
   const legendHeight = normalFontSize * 1.2
   const sampleSize = normalFontSize
@@ -190,12 +190,10 @@ export const drawBlock = (
   ticketSet: Set<string>,
   xOffset: number,
   yOffset: number,
-  tickets: Ticket[]
+  tickets: Ticket[],
+  colorMap: Map<number, string>
 ) => {
   const { width, height, count } = blockSize
-
-  // チケット種別ごとの色マップを生成
-  const colorMap = createLotterySlotColorMap(tickets)
 
   // ブロック全体を囲む枠線
   ctx.strokeStyle = '#9CA3AF'
