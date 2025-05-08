@@ -6,12 +6,17 @@ import { BlockSize } from '../types'
  * ブロックレターとブロック番号でチケットをグループ化
  */
 export const groupTickets = (tickets: Ticket[]): Record<string, Ticket[]> => {
-  return tickets.reduce<Record<string, Ticket[]>>((acc, t) => {
-    const key = `${t.block}${t.block_number}`
-    acc[key] = acc[key] || []
+  const grouped = tickets.reduce<Record<string, Ticket[]>>((acc, t) => {
+    // ブロックレターとナンバーを正規化
+    const key = `${t.block.toUpperCase()}${t.block_number}`
+    if (!acc[key]) {
+      acc[key] = []
+    }
     acc[key].push(t)
     return acc
   }, {})
+
+  return grouped
 }
 
 /**
@@ -24,9 +29,18 @@ export const getBlockLetters = (tickets: Ticket[]): string[] => {
 /**
  * ブロックレターごとの最大ブロック番号を取得
  */
+/**
+ * ブロックレターごとの最大ブロック番号を取得
+ */
 export const getMaxBlockNumbers = (tickets: Ticket[], blockLetters: string[]): Record<string, number> => {
   return blockLetters.reduce<Record<string, number>>((acc, letter) => {
-    acc[letter] = Math.max(...tickets.filter(t => t.block === letter).map(t => t.block_number))
+    // 大文字に正規化してから比較
+    const letterTickets = tickets.filter(t => t.block.toUpperCase() === letter.toUpperCase())
+    if (letterTickets.length > 0) {
+      acc[letter] = Math.max(...letterTickets.map(t => t.block_number))
+    } else {
+      acc[letter] = DEFAULT_SIZE
+    }
     return acc
   }, {})
 }
@@ -36,6 +50,7 @@ export const getMaxBlockNumbers = (tickets: Ticket[], blockLetters: string[]): R
  */
 export const getAllBlockKeys = (blockLetters: string[], maxBlockNumbers: Record<string, number>): string[] => {
   return blockLetters.flatMap(letter => {
+    // 1からmaxBlockNumbersまでの全てのブロックを生成
     return Array.from({ length: maxBlockNumbers[letter] }, (_, i) => `${letter}${i + 1}`)
   })
 }
@@ -44,12 +59,22 @@ export const getAllBlockKeys = (blockLetters: string[], maxBlockNumbers: Record<
  * ブロック番号ごとの最大幅を計算
  */
 export const calculateBlockNumberMaxWidths = (tickets: Ticket[]): Record<string, number> => {
-  const uniqueBlockNumbers = Array.from(new Set(tickets.map(t => t.block_number)))
-  return uniqueBlockNumbers.reduce<Record<string, number>>((acc, blockNumber) => {
-    const sameNumberTickets = tickets.filter(t => t.block_number === blockNumber)
-    acc[blockNumber] = Math.max(...sameNumberTickets.map(t => t.number)) || DEFAULT_SIZE
-    return acc
-  }, {})
+  // 全てのブロック番号に対してデフォルトサイズを設定
+  const maxBlockNumber = Math.max(...tickets.map(t => t.block_number), 0)
+  const result: Record<string, number> = {}
+
+  // 1からmaxBlockNumberまでの全てのブロック番号に対してデフォルトサイズを設定
+  for (let i = 1; i <= maxBlockNumber; i++) {
+    result[i] = DEFAULT_SIZE
+  }
+
+  // 実際のチケットデータで上書き
+  tickets.forEach(ticket => {
+    const currentMax = result[ticket.block_number] || DEFAULT_SIZE
+    result[ticket.block_number] = Math.max(currentMax, ticket.number)
+  })
+
+  return result
 }
 
 /**
@@ -57,8 +82,13 @@ export const calculateBlockNumberMaxWidths = (tickets: Ticket[]): Record<string,
  */
 export const calculateBlockMaxHeights = (tickets: Ticket[], blockLetters: string[]): Record<string, number> => {
   return blockLetters.reduce<Record<string, number>>((acc, letter) => {
-    const letterTickets = tickets.filter(t => t.block === letter)
-    acc[letter] = Math.max(...letterTickets.map(t => t.column)) || DEFAULT_SIZE
+    // 大文字に正規化してから比較
+    const letterTickets = tickets.filter(t => t.block.toUpperCase() === letter.toUpperCase())
+    if (letterTickets.length > 0) {
+      acc[letter] = Math.max(...letterTickets.map(t => t.column))
+    } else {
+      acc[letter] = DEFAULT_SIZE
+    }
     return acc
   }, {})
 }
@@ -74,12 +104,18 @@ export const calculateBlockSizes = (
 ): Record<string, BlockSize> => {
   return allBlockKeys.reduce<Record<string, BlockSize>>((acc, blockKey) => {
     const blockTickets = grouped[blockKey] || []
-    const letter = blockKey[0]
-    const blockNumber = parseInt(blockKey.slice(1))
+    const match = blockKey.match(/([A-Z]+)(\d+)/)
+    if (!match) {
+      console.warn(`Invalid block key format: ${blockKey}`)
+      return acc
+    }
+
+    const [, letter, blockNumberStr] = match
+    const blockNumber = parseInt(blockNumberStr)
 
     acc[blockKey] = {
-      width: blockNumberMaxWidths[blockNumber],
-      height: blockMaxHeights[letter],
+      width: blockNumberMaxWidths[blockNumber] || DEFAULT_SIZE,
+      height: blockMaxHeights[letter] || DEFAULT_SIZE,
       count: blockTickets.length
     }
     return acc

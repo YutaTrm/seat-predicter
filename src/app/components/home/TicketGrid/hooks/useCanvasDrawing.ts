@@ -13,11 +13,11 @@ import {
 import {
   groupTickets,
   getBlockLetters,
-  getMaxBlockNumbers,
   getAllBlockKeys,
   calculateBlockNumberMaxWidths,
   calculateBlockMaxHeights,
-  calculateBlockSizes
+  calculateBlockSizes,
+  getMaxBlockNumbers
 } from '../utils/blockCalculations'
 import { ProcessedData } from '../types'
 
@@ -155,7 +155,7 @@ export const useCanvasDrawing = (
         const blockSize = blockSizes[blockKey]
         const ticketSet = new Set(blockTickets.map(t => `${t.column}-${t.number}`))
 
-        drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, tickets)
+        drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, filteredTickets)
         xOffset += blockSize.width * CELL_SIZE + BLOCK_SPACING_X
       }
 

@@ -225,9 +225,16 @@ export const drawBlock = (
 
       // セルの背景色
       if (hasTicket) {
+        // ブロックレターとナンバーを正しく分離
+        const match = blockKey.match(/([A-Z]+)(\d+)/)
+        if (!match) continue
+
+        const [, blockLetter, blockNumberStr] = match
+        const blockNumber = parseInt(blockNumberStr)
+
         const ticket = tickets.find(t =>
-          t.block === blockKey[0] &&
-          t.block_number === parseInt(blockKey.slice(1)) &&
+          t.block === blockLetter &&
+          t.block_number === blockNumber &&
           t.column === row &&
           t.number === col
         )
