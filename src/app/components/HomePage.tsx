@@ -245,7 +245,7 @@ export default function HomePage({
                   分布について
                 </button>
               </div>
-              {tickets.length >= 30 ? (
+              {tickets.length >= 15 ? (
                 <TicketGrid
                   tickets={tickets}
                   artistName={selectedArtistName || ''}
@@ -253,7 +253,7 @@ export default function HomePage({
                 />
               ) : (
                 <p className="text-sm text-center bg-yellow-50 text-yellow-600 rounded-lg p-2">
-                  30件以上登録されると分布図が生成されます
+                  15件以上登録されると分布図が生成されます
                 </p>
               )}
             </div>
