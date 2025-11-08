@@ -155,7 +155,17 @@ export default function AdminPage({
     <div className="min-h-screen bg-gray-100">
       <div className="p-4 lg:p-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">管理画面</h1>
+          <div>
+            <h1 className="text-2xl font-bold">管理画面</h1>
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => router.push('/admin/user')}
+                className="text-sm text-gray-500 hover:text-rose-700 transition-colors"
+              >
+                ユーザー管理 →
+              </button>
+            </div>
+          </div>
           <div className="flex gap-2 items-center">
             {selectedArtistId && selectedTourId && (
               <button
