@@ -262,7 +262,7 @@ export default function MyPage() {
                     <button
                       onClick={() => handleDeleteClick(ticket)}
                       disabled={isDeleting}
-                      className="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition-colors gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="text-red-500 hover:text-red-600 transition-colors gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isDeleting ? (
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
