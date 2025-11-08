@@ -39,6 +39,7 @@ type TicketFormProps = {
   onSubmit: (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number) => Promise<SubmitResult>
   onReset: () => void
   onShowTickets: () => void
+  isLoggedIn: boolean
 }
 
 /**
@@ -56,7 +57,8 @@ export default function TicketForm({
   onLotterySlotChange,
   onSubmit,
   onReset,
-  onShowTickets
+  onShowTickets,
+  isLoggedIn
 }: TicketFormProps) {
   const router = useRouter()
   const [block, setBlock] = useState<string>('')
@@ -258,9 +260,9 @@ export default function TicketForm({
 
         <button
           type="submit"
-          disabled={!isPrintable}
+          disabled={!isPrintable || !isLoggedIn}
           className={`w-1/3 p-2 text-white rounded ${
-            isPrintable
+            isPrintable && isLoggedIn
               ? 'bg-rose-500 hover:bg-rose-600'
               : 'bg-gray-300 cursor-not-allowed'
           }`}
@@ -268,6 +270,12 @@ export default function TicketForm({
           登録
         </button>
       </div>
+
+      {(!isLoggedIn && selectedTour && isPrintable &&
+        <p className='text-xs text-rose-500 text-right'>
+          ログインするとチケットを登録できます
+        </p>
+      )}
 
       {(!isPrintable && selectedTour &&
         <p className='text-xs text-rose-500 text-right'>

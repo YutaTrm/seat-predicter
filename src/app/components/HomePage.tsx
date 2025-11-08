@@ -7,6 +7,8 @@ import { useTourData } from '@/hooks/useTourData'
 import { useLotterySlotData } from '@/hooks/useLotterySlotData'
 import { Ticket, SubmitResult } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
+import { getSession } from '@/lib/supabase/auth'
+import type { Session } from '@supabase/supabase-js'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import TicketGrid from './home/TicketGrid'
@@ -27,6 +29,7 @@ export default function HomePage() {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [showTickets, setShowTickets] = useState<boolean>(false)
   const [showGridHelp, setShowGridHelp] = useState<boolean>(false)
+  const [session, setSession] = useState<Session | null>(null)
 
   const searchParams = useSearchParams()
 
@@ -158,17 +161,40 @@ export default function HomePage() {
     }
   }, [searchParams, artists, tours, setSelectedArtist, setSelectedTour, setSelectedLotterySlot])
 
-  // ページが表示されたときにセッションをチェック（認証後のリダイレクト対応）
+  // セッション状態を取得
   useEffect(() => {
-    const handleFocus = () => {
-      // ページにフォーカスが戻ったときの処理
-      console.log('Page focused, checking auth state...')
+    let mounted = true
+
+    const loadSession = async () => {
+      try {
+        const currentSession = await getSession()
+        if (mounted) {
+          setSession(currentSession)
+        }
+      } catch (error) {
+        console.error('セッション取得エラー:', error)
+      }
     }
 
-    window.addEventListener('focus', handleFocus)
+    loadSession()
+
+    // 認証状態の変更を監視
+    const setupAuthListener = async () => {
+      const { getSupabaseClient } = await import('@/lib/supabase/auth')
+      const supabase = getSupabaseClient()
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (mounted) {
+          setSession(session)
+        }
+      })
+      return subscription
+    }
+
+    const subscriptionPromise = setupAuthListener()
 
     return () => {
-      window.removeEventListener('focus', handleFocus)
+      mounted = false
+      subscriptionPromise.then(subscription => subscription.unsubscribe())
     }
   }, [])
 
@@ -222,6 +248,7 @@ export default function HomePage() {
           onSubmit={handleSubmitTicket}
           onReset={handleReset}
           onShowTickets={handleShowTickets}
+          isLoggedIn={!!session}
         />
       </section>
 

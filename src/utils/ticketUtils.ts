@@ -84,6 +84,14 @@ export const submitTicket = async (
   console.log('ユーザー情報:', user)
   console.log('ユーザーID:', user?.id)
 
+  // ログインチェック
+  if (!user) {
+    return {
+      success: false,
+      error: 'ログインが必要です'
+    }
+  }
+
   const ticketData = {
     artist_id: selectedArtist,
     tour_id: selectedTour,
@@ -92,7 +100,7 @@ export const submitTicket = async (
     block_number: blockNumber,
     column,
     number: seatNumber,
-    user_id: user?.id || null  // ユーザーIDを保存
+    user_id: user.id  // ユーザーIDを保存
   }
 
   console.log('保存するチケットデータ:', ticketData)
