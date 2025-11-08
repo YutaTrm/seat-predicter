@@ -10,9 +10,13 @@ import SectionHeader from '../components/common/SectionHeader'
 /**
  * マイページコンポーネント
  */
+type SortOption = 'created_at_desc' | 'created_at_asc' | 'artist_name_asc' | 'artist_name_desc'
+
 export default function MyPage() {
   const [session, setSession] = useState<Session | null>(null)
   const [tickets, setTickets] = useState<UserTicket[]>([])
+  const [sortedTickets, setSortedTickets] = useState<UserTicket[]>([])
+  const [sortOption, setSortOption] = useState<SortOption>('created_at_desc')
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
   const router = useRouter()
@@ -55,6 +59,28 @@ export default function MyPage() {
       mounted = false
     }
   }, [router])
+
+  // チケット一覧をソート
+  useEffect(() => {
+    let sorted = [...tickets]
+
+    switch (sortOption) {
+      case 'created_at_desc':
+        sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        break
+      case 'created_at_asc':
+        sorted.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+        break
+      case 'artist_name_asc':
+        sorted.sort((a, b) => a.artist_name.localeCompare(b.artist_name, 'ja'))
+        break
+      case 'artist_name_desc':
+        sorted.sort((a, b) => b.artist_name.localeCompare(a.artist_name, 'ja'))
+        break
+    }
+
+    setSortedTickets(sorted)
+  }, [tickets, sortOption])
 
   // ログアウト処理
   const handleSignOut = async () => {
@@ -183,6 +209,22 @@ export default function MyPage() {
           <h2 className="text-lg text-gray-700 font-bold">
             投稿したチケット <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span>
           </h2>
+
+          {tickets.length > 0 && (
+            <div className="flex items-center gap-2">
+              <select
+                id="sort-select"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value as SortOption)}
+                className="px-1 py-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white"
+              >
+                <option value="created_at_desc">投稿日(新しい順)</option>
+                <option value="created_at_asc">投稿日(古い順)</option>
+                <option value="artist_name_asc">アーティスト名(昇順)</option>
+                <option value="artist_name_desc">アーティスト名(降順)</option>
+              </select>
+            </div>
+          )}
         </div>
 
         {tickets.length === 0 ? (
@@ -197,7 +239,7 @@ export default function MyPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tickets.map((ticket) => (
+            {sortedTickets.map((ticket) => (
               <div
                 key={ticket.id}
                 className="relative rounded-lg shadow-md overflow-hidden bg-white border-rose-200"
