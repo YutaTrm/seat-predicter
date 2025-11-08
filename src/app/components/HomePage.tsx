@@ -181,10 +181,10 @@ export default function HomePage() {
 
       {/* ヘッダー */}
       <section className="md:col-span-3 md:mb-8">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center">
           <div className="flex-1">
-            <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
-            <p className="text-xs text-rose-300 text-center">みんなのチケット情報を集計して座席構成を予想しよう</p>
+            <h1 className="text-2xl text-rose-500 font-bold">座席予想掲示板</h1>
+            <p className="text-xs text-rose-300">みんなのチケット情報を集計して<br/>座席構成を予想しよう</p>
           </div>
           <div className="ml-4">
             <UserMenu />

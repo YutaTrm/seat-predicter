@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { getSession, signOut } from '@/lib/supabase/auth'
 import { fetchUserTickets, deleteUserTicket, UserTicket } from '@/utils/myPageUtils'
 import type { Session } from '@supabase/supabase-js'
-import Modal from '@/app/components/common/Modal'
+import SectionHeader from '../components/common/SectionHeader'
 
 /**
  * マイページコンポーネント
@@ -15,8 +15,6 @@ export default function MyPage() {
   const [tickets, setTickets] = useState<UserTicket[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const router = useRouter()
 
   // セッションとチケット一覧を取得
@@ -69,26 +67,23 @@ export default function MyPage() {
     }
   }
 
-  // 削除確認ダイアログを表示
-  const handleDeleteClick = (ticketId: number) => {
-    setDeleteTargetId(ticketId)
-    setShowDeleteConfirm(true)
-  }
-
   // チケット削除処理
-  const handleDeleteConfirm = async () => {
-    if (!deleteTargetId || !session) return
+  const handleDeleteClick = async (ticket: UserTicket) => {
+    if (!session) return
+
+    // 確認ダイアログ（ツアー名と座席情報を表示）
+    const message = `以下のチケットを削除してもよろしいですか？\n\n【${ticket.artist_name}】\n${ticket.tour_name}\n座席: ${ticket.block}${ticket.block_number}ブロック ${ticket.column}列 ${ticket.number}番\n\nこの操作は取り消せません。`
+    const confirmed = confirm(message)
+    if (!confirmed) return
 
     setIsDeleting(true)
     try {
-      const result = await deleteUserTicket(deleteTargetId, session.user.id)
+      const result = await deleteUserTicket(ticket.id, session.user.id)
 
       if (result.success) {
         // 削除成功したらチケット一覧を更新
         const updatedTickets = await fetchUserTickets(session.user.id)
         setTickets(updatedTickets)
-        setShowDeleteConfirm(false)
-        setDeleteTargetId(null)
       } else {
         alert(result.error || 'チケットの削除に失敗しました')
       }
@@ -98,12 +93,6 @@ export default function MyPage() {
     } finally {
       setIsDeleting(false)
     }
-  }
-
-  // 削除キャンセル
-  const handleDeleteCancel = () => {
-    setShowDeleteConfirm(false)
-    setDeleteTargetId(null)
   }
 
   // ローディング中
@@ -143,20 +132,19 @@ export default function MyPage() {
     userMetadata?.picture_url
 
   return (
-    <main className="container mx-auto px-4 py-6">
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 text-md">
       {/* ヘッダー */}
+      <SectionHeader title="マイページ" />
       <div className="mb-8">
-        <h1 className="text-2xl text-rose-500 font-bold text-center mb-6">マイページ</h1>
-
         {/* ユーザー情報カード */}
-        <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
+        <div className="bg-white rounded-lg p-4 max-w-2xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt={displayName}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
                     target.style.display = 'none'
@@ -173,34 +161,28 @@ export default function MyPage() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-800">{displayName}</h2>
+                <h2 className="font-bold text-gray-600">{displayName}</h2>
                 {user.email && (
                   <p className="text-sm text-gray-500">{user.email}</p>
                 )}
               </div>
             </div>
-            <button
-              onClick={handleSignOut}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors"
-            >
-              ログアウト
-            </button>
           </div>
+          <button
+            onClick={handleSignOut}
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 mt-2 w-full rounded transition-colors"
+          >
+            ログアウト
+          </button>
         </div>
       </div>
 
       {/* チケット一覧 */}
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl text-gray-700 font-bold">
-            投稿したチケット <span className="text-rose-500">({tickets.length}件)</span>
+          <h2 className="text-lg text-gray-700 font-bold">
+            投稿したチケット <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span>
           </h2>
-          <button
-            onClick={() => router.push('/')}
-            className="text-sm text-rose-500 hover:text-rose-700 transition-colors"
-          >
-            ← ホームに戻る
-          </button>
         </div>
 
         {tickets.length === 0 ? (
@@ -214,118 +196,96 @@ export default function MyPage() {
             </button>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      アーティスト
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      ツアー
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      抽選枠
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      ブロック
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      列
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      番号
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      投稿日時
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      操作
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {tickets.map((ticket) => (
-                    <tr key={ticket.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        {ticket.artist_name}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        {ticket.tour_name}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        {ticket.lottery_slots_name}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        {ticket.block}-{ticket.block_number}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        {ticket.column}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        {ticket.number}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-500">
-                        {new Date(ticket.created_at).toLocaleDateString('ja-JP', {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={() => handleDeleteClick(ticket.id)}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
-                        >
-                          削除
-                        </button>
-                      </td>
-                    </tr>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tickets.map((ticket) => (
+              <div
+                key={ticket.id}
+                className="relative rounded-lg shadow-md overflow-hidden bg-white border-rose-200"
+              >
+                {/* チケット上部の飾り */}
+                <div className="absolute top-0 left-0 right-0 h-2 from-rose-400 via-pink-400 to-rose-400"></div>
+
+                {/* チケット内容 */}
+                <div className="p-4 pt-5">
+                  {/* アーティスト名 */}
+                  <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">
+                    {ticket.artist_name}
+                  </h3>
+
+                  {/* ツアー名 */}
+                  <p className="text-sm text-gray-600 mb-3 truncate">
+                    {ticket.tour_name}
+                  </p>
+
+                  {/* 区切り線 */}
+                  <div className="border-t-2 border-dashed border-rose-200 my-3"></div>
+
+                  {/* 座席情報 */}
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500">抽選枠</span>
+                      <span className="font-medium text-gray-800">{ticket.lottery_slots_name}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-sm">座席</span>
+                      <div className="flex items-center gap-1">
+                        <span className="font-bold text-rose-600 text-xl">
+                          {ticket.block}{ticket.block_number}
+                        </span>
+                        <span className="text-gray-400 text-sm">ブロック</span>
+                        <span className="font-bold text-rose-600 text-xl">
+                          {ticket.column}
+                        </span>
+                        <span className="text-gray-400 text-sm">列</span>
+                        <span className="font-bold text-rose-600 text-xl">
+                          {ticket.number}
+                        </span>
+                        <span className="text-gray-400 text-sm">番</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 区切り線 */}
+                  <div className="border-t-2 border-dashed border-rose-200 my-3"></div>
+
+                  {/* 投稿日時と削除ボタン */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-400">
+                      投稿日:
+                      {new Date(ticket.created_at).toLocaleDateString('ja-JP', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                      })}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteClick(ticket)}
+                      disabled={isDeleting}
+                      className="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition-colors gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isDeleting ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* チケット右側の切り取り線風装飾 */}
+                <div className="absolute right-0 top-0 bottom-0 w-4 flex flex-col justify-around items-center bg-white">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="w-1 h-1 bg-gray-300 rounded-full"></div>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
-
-      {/* 削除確認モーダル */}
-      <Modal
-        isOpen={showDeleteConfirm}
-        onClose={handleDeleteCancel}
-        title="チケット削除確認"
-      >
-        <div className="space-y-4">
-          <p className="text-gray-700">
-            このチケットを削除してもよろしいですか？
-          </p>
-          <p className="text-sm text-gray-500">
-            この操作は取り消せません。
-          </p>
-          <div className="flex gap-3 justify-end pt-4">
-            <button
-              onClick={handleDeleteCancel}
-              disabled={isDeleting}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              キャンセル
-            </button>
-            <button
-              onClick={handleDeleteConfirm}
-              disabled={isDeleting}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center gap-2"
-            >
-              {isDeleting && (
-                <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-              )}
-              削除する
-            </button>
-          </div>
-        </div>
-      </Modal>
     </main>
   )
 }
