@@ -4,14 +4,12 @@ import { Tour } from '@/types/ticket'
 
 /**
  * ツアーデータを取得・キャッシュするカスタムフック
- * @param supabaseUrl - SupabaseのURL
- * @param supabaseKey - SupabaseのAPIキー
  * @param artistId - アーティストID
  * @returns ツアーデータと読み込み状態
  */
-export const useTourData = (supabaseUrl: string, supabaseKey: string, artistId: number | null) => {
+export const useTourData = (artistId: number | null) => {
   // Supabaseクライアントを初期化
-  const supabase = createSupabaseClient(supabaseUrl, supabaseKey)
+  const supabase = createSupabaseClient()
 
   // ツアーデータを取得する関数
   const fetchTours = async (): Promise<Tour[]> => {

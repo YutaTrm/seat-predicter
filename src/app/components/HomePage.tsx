@@ -14,19 +14,12 @@ import Footer from './common/Footer'
 import AdmaxAds from './common/AdmaxAds'
 import Modal from '@/app/components/common/Modal'
 import CarouselAds from './common/CarouselAds'
+import UserMenu from './common/UserMenu'
 
 /**
  * ホームページコンポーネント
  */
-interface HomePageProps {
-  supabaseUrl: string;
-  supabaseKey: string;
-}
-
-export default function HomePage({
-  supabaseUrl,
-  supabaseKey
-}: HomePageProps) {
+export default function HomePage() {
   // 状態管理
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
   const [selectedTour, setSelectedTour] = useState<number | null>(null)
@@ -38,9 +31,9 @@ export default function HomePage({
   const searchParams = useSearchParams()
 
   // データを取得
-  const { artists, isLoading: isLoadingArtists, error: artistsError } = useArtistData(supabaseUrl, supabaseKey)
-  const { tours, isLoading: isLoadingTours, error: toursError } = useTourData(supabaseUrl, supabaseKey, selectedArtist)
-  const { lotterySlots, isLoading: isLoadingLotterySlots, error: lotterySlotsError } = useLotterySlotData(supabaseUrl, supabaseKey, selectedArtist)
+  const { artists, isLoading: isLoadingArtists, error: artistsError } = useArtistData()
+  const { tours, isLoading: isLoadingTours, error: toursError } = useTourData(selectedArtist)
+  const { lotterySlots, isLoading: isLoadingLotterySlots, error: lotterySlotsError } = useLotterySlotData(selectedArtist)
 
   // 選択中のアーティストとツアーの名前を取得
   const selectedArtistName = selectedArtist
@@ -165,6 +158,20 @@ export default function HomePage({
     }
   }, [searchParams, artists, tours, setSelectedArtist, setSelectedTour, setSelectedLotterySlot])
 
+  // ページが表示されたときにセッションをチェック（認証後のリダイレクト対応）
+  useEffect(() => {
+    const handleFocus = () => {
+      // ページにフォーカスが戻ったときの処理
+      console.log('Page focused, checking auth state...')
+    }
+
+    window.addEventListener('focus', handleFocus)
+
+    return () => {
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [])
+
   return (
     <main className="container mx-auto px-4 py-6 md:grid md:grid-cols-3 md:auto-rows-max md:gap-4">
 
@@ -173,9 +180,16 @@ export default function HomePage({
       </section> */}
 
       {/* ヘッダー */}
-      <section className=" md:col-span-3 md:mb-12">
-        <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
-        <p className="text-xs text-rose-300 text-center">みんなのチケット情報を集計して座席構成を予想しよう</p>
+      <section className="md:col-span-3 md:mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex-1">
+            <h1 className="text-2xl text-rose-500 font-bold text-center">座席予想掲示板</h1>
+            <p className="text-xs text-rose-300 text-center">みんなのチケット情報を集計して座席構成を予想しよう</p>
+          </div>
+          <div className="ml-4">
+            <UserMenu />
+          </div>
+        </div>
       </section>
 
       {/* フォーム */}

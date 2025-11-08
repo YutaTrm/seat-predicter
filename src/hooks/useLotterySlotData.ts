@@ -4,14 +4,12 @@ import { LotterySlot } from '@/types/ticket'
 
 /**
  * 抽選枠データを取得・キャッシュするカスタムフック
- * @param supabaseUrl - SupabaseのURL
- * @param supabaseKey - SupabaseのAPIキー
  * @param artistId - アーティストID
  * @returns 抽選枠データと読み込み状態
  */
-export const useLotterySlotData = (supabaseUrl: string, supabaseKey: string, artistId: number | null) => {
+export const useLotterySlotData = (artistId: number | null) => {
   // Supabaseクライアントを初期化
-  const supabase = createSupabaseClient(supabaseUrl, supabaseKey)
+  const supabase = createSupabaseClient()
 
   // 抽選枠データを取得する関数
   const fetchLotterySlots = async (): Promise<LotterySlot[]> => {

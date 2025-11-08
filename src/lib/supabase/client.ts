@@ -1,25 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from '@/types/database.types'
 
-// シングルトンインスタンスを保持する変数
-let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null
-
 /**
- * クライアントサイドのSupabaseクライアントを作成（シングルトンパターン）
+ * クライアントサイドのSupabaseクライアントを作成
+ * 認証セッションのクッキーを自動的に読み取ります
  */
-export const createSupabaseClient = (url?: string, key?: string) => {
-  if (supabaseInstance) {
-    return supabaseInstance
-  }
-
-  // サーバーサイドから渡された値を使用
-  const supabaseUrl = url
-  const supabaseAnonKey = key
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Supabase credentials are required')
-  }
-
-  supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey)
-  return supabaseInstance
+export const createSupabaseClient = () => {
+  return createClientComponentClient<Database>()
 }

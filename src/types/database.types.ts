@@ -85,8 +85,10 @@ export type Database = {
           tour_id: number
           lottery_slots_id: number
           block: string
+          block_number: number
           column: number
           number: number
+          user_id: string | null
           created_at: string
           updated_at: string
         }
@@ -96,8 +98,10 @@ export type Database = {
           tour_id: number
           lottery_slots_id: number
           block: string
+          block_number: number
           column: number
           number: number
+          user_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -107,8 +111,10 @@ export type Database = {
           tour_id?: number
           lottery_slots_id?: number
           block?: string
+          block_number?: number
           column?: number
           number?: number
+          user_id?: string | null
           created_at?: string
           updated_at?: string
         }
