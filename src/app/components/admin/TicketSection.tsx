@@ -27,11 +27,11 @@ export default function TicketSection({
       <h2 className="text-xl font-semibold mb-4">
         {selectedTourId ? (
           <>
-            {tours.find(t => t.id === Number(selectedTourId))?.name}のチケット一覧{' '}
+            {tours.find(t => t.id === Number(selectedTourId))?.name}の登録済み座席{' '}
             <span className="text-gray-500 text-sm">({filteredTickets.length}件)</span>
           </>
         ) : (
-          'チケット一覧'
+          '登録済み座席'
         )}
       </h2>
       {selectedArtistId ? (

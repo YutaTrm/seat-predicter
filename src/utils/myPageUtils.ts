@@ -17,6 +17,7 @@ export interface UserTicket {
   block_number: number
   column: number
   number: number
+  day: number | null
   created_at: string
 }
 
@@ -60,6 +61,7 @@ export const fetchUserTickets = async (userId: string): Promise<UserTicket[]> =>
     block_number: ticket.block_number,
     column: ticket.column,
     number: ticket.number,
+    day: ticket.day,
     created_at: ticket.created_at
   }))
 }

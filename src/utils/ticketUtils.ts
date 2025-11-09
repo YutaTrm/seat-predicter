@@ -21,6 +21,7 @@ export const updateUrlParams = (
 
 /**
  * チケット一覧を取得する関数
+ * dayを区別せず、同じ座席（tour_id, block, block_number, column, number）なら1件として返す
  */
 export const fetchTickets = async (
   selectedArtist: number,
@@ -47,7 +48,23 @@ export const fetchTickets = async (
     return []
   }
 
-  return tickets.map(ticket => ({
+  // dayを区別せず、同じ座席を1件にまとめる
+  const seatMap = new Map<string, any>()
+
+  tickets.forEach(ticket => {
+    // tour_id, block, block_number, column, numberで一意のキーを作成
+    const key = `${ticket.tour_id}-${ticket.block}-${ticket.block_number}-${ticket.column}-${ticket.number}`
+
+    // 既に同じ座席が存在しない場合のみ追加
+    if (!seatMap.has(key)) {
+      seatMap.set(key, ticket)
+    }
+  })
+
+  // Map から配列に変換
+  const uniqueTickets = Array.from(seatMap.values())
+
+  return uniqueTickets.map(ticket => ({
     ...ticket,
     lottery_slots_name: ticket.lottery_slots?.name || null
   }))
@@ -63,7 +80,8 @@ export const submitTicket = async (
   block: string,
   blockNumber: number,
   column: number,
-  seatNumber: number
+  seatNumber: number,
+  day: number
 ) => {
   // 投稿制限チェック
   const { success: canPost } = checkPostLimit()
@@ -100,6 +118,7 @@ export const submitTicket = async (
     block_number: blockNumber,
     column,
     number: seatNumber,
+    day,
     user_id: user.id  // ユーザーIDを保存
   }
 

@@ -100,7 +100,7 @@ export default function HomePage() {
   /**
    * チケットを登録する関数
    */
-  const handleSubmitTicket = async (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number): Promise<SubmitResult> => {
+  const handleSubmitTicket = async (block: string, blockNumber: number, column: number, seatNumber: number, day: number, lotterySlotId: number): Promise<SubmitResult> => {
     if (!selectedArtist || !selectedTour) {
       return { success: false, error: 'アーティストとツアーを選択してください' }
     }
@@ -112,7 +112,8 @@ export default function HomePage() {
       block,
       blockNumber,
       column,
-      seatNumber
+      seatNumber,
+      day
     )
 
     if (result.success) {
@@ -255,7 +256,7 @@ export default function HomePage() {
       {/* テーブル */}
       <section className="mt-8 md:col-span-2 md:mt-0">
         <div className="flex justify-between items-center mb-1">
-          <h2 className="text-lg text-gray-600 font-bold">チケット一覧 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
+          <h2 className="text-lg text-gray-600 font-bold">登録済み座席 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
           {selectedArtist && selectedTour && (
             <button
               onClick={postToX}

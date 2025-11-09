@@ -269,6 +269,13 @@ export default function MyPage() {
                       <span className="font-medium text-gray-800">{ticket.lottery_slots_name}</span>
                     </div>
 
+                    {ticket.day && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500">公演日</span>
+                        <span className="font-medium text-gray-800">day{ticket.day}</span>
+                      </div>
+                    )}
+
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500 text-sm">座席</span>
                       <div className="flex items-center gap-1">

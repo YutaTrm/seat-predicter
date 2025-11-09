@@ -88,6 +88,7 @@ export type Database = {
           block_number: number
           column: number
           number: number
+          day: number | null
           user_id: string | null
           created_at: string
           updated_at: string
@@ -101,6 +102,7 @@ export type Database = {
           block_number: number
           column: number
           number: number
+          day?: number | null
           user_id?: string | null
           created_at?: string
           updated_at?: string
@@ -114,6 +116,7 @@ export type Database = {
           block_number?: number
           column?: number
           number?: number
+          day?: number | null
           user_id?: string | null
           created_at?: string
           updated_at?: string

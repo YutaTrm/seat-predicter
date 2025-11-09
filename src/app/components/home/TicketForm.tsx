@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 const MAX_BLOCK_NUMBER = 20
 const MAX_COLUMN_NUMBER = 30
 const MAX_SEAT_NUMBER = 20
+const MAX_DAY = 4
 
 /**
  * チケット発券可能かどうかを判定する関数
@@ -36,7 +37,7 @@ type TicketFormProps = {
   onArtistChange: (artistId: number | null) => void
   onTourChange: (tourId: number | null) => void
   onLotterySlotChange: (lotterySlotId: number | null) => void
-  onSubmit: (block: string, blockNumber: number, column: number, seatNumber: number, lotterySlotId: number) => Promise<SubmitResult>
+  onSubmit: (block: string, blockNumber: number, column: number, seatNumber: number, day: number, lotterySlotId: number) => Promise<SubmitResult>
   onReset: () => void
   onShowTickets: () => void
   isLoggedIn: boolean
@@ -65,6 +66,7 @@ export default function TicketForm({
   const [blockNumber, setBlockNumber] = useState<number | null>(null)
   const [column, setColumn] = useState<number | null>(null)
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
+  const [day, setDay] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   // 選択されたツアーの情報を取得（メモ化）
@@ -84,26 +86,27 @@ export default function TicketForm({
       e.preventDefault()
       setError(null)
 
-      if (!block || !blockNumber || !column || !seatNumber || !selectedLotterySlot) {
+      if (!block || !blockNumber || !column || !seatNumber || !day || !selectedLotterySlot) {
         setError('すべての情報を入力してください')
         return
       }
 
-      const confirmed = confirm(`【${block}${blockNumber}ブロック ${column}列 ${seatNumber}番】を登録します。お間違いありませんか？`)
+      const confirmed = confirm(`【day${day} ${block}${blockNumber}ブロック ${column}列 ${seatNumber}番】を登録します。お間違いありませんか？`)
       if (confirmed) {
-        const result = await onSubmit(block, blockNumber, column, seatNumber, selectedLotterySlot)
+        const result = await onSubmit(block, blockNumber, column, seatNumber, day, selectedLotterySlot)
         if (result.success) {
           // 連続いたずら登録防止
           // setBlock('')
           // setBlockNumber(null)
           // setColumn(null)
           setSeatNumber(null)
+          setDay(null)
         } else if (result.error) {
           setError(result.error)
         }
       }
     },
-    [block, blockNumber, column, seatNumber, selectedLotterySlot, onSubmit, setError, setBlock, setBlockNumber, setColumn, setSeatNumber]
+    [block, blockNumber, column, seatNumber, day, selectedLotterySlot, onSubmit, setError, setBlock, setBlockNumber, setColumn, setSeatNumber, setDay]
   )
 
   const handleReset = useCallback(
@@ -114,13 +117,14 @@ export default function TicketForm({
           setBlockNumber(null)
           setColumn(null)
           setSeatNumber(null)
+          setDay(null)
           onReset()
           resolve()
         }),
         router.replace("/")
       ])
     },
-    [router, setBlock, setBlockNumber, setColumn, setSeatNumber, onReset]
+    [router, setBlock, setBlockNumber, setColumn, setSeatNumber, setDay, onReset]
   )
 
   return (
@@ -173,6 +177,23 @@ export default function TicketForm({
         {lotterySlots.map(slot => (
           <option key={slot.id} value={slot.id}>
             {slot.name}
+          </option>
+        ))}
+      </select>
+
+      <select
+        value={day || ''}
+        onChange={(e) => {
+          const value = Number(e.target.value)
+          setDay(value || null)
+        }}
+        disabled={!selectedTour}
+        className="w-full p-1 border rounded bg-white"
+      >
+        <option value="">公演日</option>
+        {Array.from({ length: MAX_DAY }, (_, i) => i + 1).map(dayNum => (
+          <option key={dayNum} value={dayNum}>
+            day{dayNum}
           </option>
         ))}
       </select>
