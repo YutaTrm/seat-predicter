@@ -101,12 +101,7 @@ export const submitTicket = async (
   const supabase = createSupabaseClient()
 
   // 現在のユーザーを取得
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-
-  console.log('=== チケット登録デバッグ ===')
-  console.log('ユーザー取得エラー:', userError)
-  console.log('ユーザー情報:', user)
-  console.log('ユーザーID:', user?.id)
+  const { data: { user } } = await supabase.auth.getUser()
 
   // ログインチェック
   if (!user) {
@@ -125,17 +120,14 @@ export const submitTicket = async (
     column,
     number: seatNumber,
     day,
-    user_id: user.id  // ユーザーIDを保存
+    user_id: user.id
   }
-
-  console.log('保存するチケットデータ:', ticketData)
 
   const { error } = await supabase
     .from('tickets')
     .insert(ticketData)
 
   if (error) {
-    console.error('チケット登録エラー:', error)
     return { success: false, error: 'チケットの登録に失敗しました' }
   }
 

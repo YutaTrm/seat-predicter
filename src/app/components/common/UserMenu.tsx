@@ -21,7 +21,6 @@ export default function UserMenu() {
     const loadSession = async () => {
       try {
         const currentSession = await getSession()
-        console.log('Initial session load:', currentSession ? 'Found' : 'Not found')
         if (mounted) {
           setSession(currentSession)
           setIsLoading(false)
@@ -41,14 +40,12 @@ export default function UserMenu() {
       const { getSupabaseClient } = await import('@/lib/supabase/auth')
       const supabase = getSupabaseClient()
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event, session ? 'Session exists' : 'No session')
         if (mounted) {
           setSession(session)
           setIsLoading(false)
 
           // サインインイベントの場合、少し待ってから再度セッションを取得
           if (event === 'SIGNED_IN') {
-            console.log('User signed in, refreshing...')
             setTimeout(() => {
               router.refresh()
               loadSession()
@@ -64,7 +61,6 @@ export default function UserMenu() {
     // ページが表示されたときにセッションを再取得（ブラウザバック対応）
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        console.log('Page visible, reloading session...')
         loadSession()
       }
     }

@@ -22,10 +22,6 @@ export const signInWithTwitter = async (redirectTo?: string) => {
   const finalRedirectUrl = redirectTo || window.location.origin
   const callbackUrl = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(finalRedirectUrl)}`
 
-  console.log('=== Starting Twitter OAuth ===')
-  console.log('Final redirect URL:', finalRedirectUrl)
-  console.log('Callback URL:', callbackUrl)
-
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'twitter',
     options: {
@@ -39,9 +35,6 @@ export const signInWithTwitter = async (redirectTo?: string) => {
     console.error('Twitter sign in error:', error)
     throw error
   }
-
-  console.log('OAuth URL:', data.url)
-  console.log('=== Twitter OAuth initiated ===')
 
   return data
 }

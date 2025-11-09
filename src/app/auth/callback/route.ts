@@ -11,12 +11,6 @@ export async function GET(request: NextRequest) {
   const error_description = requestUrl.searchParams.get('error_description')
   const next = requestUrl.searchParams.get('redirect') || '/'
 
-  console.log('=== Auth Callback ===')
-  console.log('URL:', requestUrl.toString())
-  console.log('Code:', code ? 'present' : 'missing')
-  console.log('Error:', error)
-  console.log('Error Description:', error_description)
-
   // OAuthプロバイダーからのエラー
   if (error) {
     console.error('OAuth provider error:', error, error_description)
@@ -30,7 +24,6 @@ export async function GET(request: NextRequest) {
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
 
     try {
-      console.log('Exchanging code for session...')
       const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
       if (exchangeError) {
@@ -45,12 +38,7 @@ export async function GET(request: NextRequest) {
       }
 
       // セッションが正常に確立されたか確認
-      if (data.session) {
-        console.log('✓ Session established successfully')
-        console.log('User ID:', data.user?.id)
-        console.log('User Email:', data.user?.email)
-        console.log('User Metadata:', data.user?.user_metadata)
-      } else {
+      if (!data.session) {
         console.error('✗ No session created')
         return NextResponse.redirect(
           new URL('/auth/login?error=no_session_created', request.url)
@@ -72,9 +60,6 @@ export async function GET(request: NextRequest) {
   // 認証成功後のリダイレクト先
   // 相対パスの場合は絶対URLに変換
   const redirectUrl = next.startsWith('http') ? next : new URL(next, requestUrl.origin).toString()
-
-  console.log('Redirecting to:', redirectUrl)
-  console.log('=== End Auth Callback ===')
 
   // リダイレクトレスポンスを作成
   const response = NextResponse.redirect(redirectUrl)
