@@ -250,13 +250,16 @@ export default function MyPage() {
                 {/* チケット内容 */}
                 <div className="p-4 pt-5">
                   {/* アーティスト名 */}
-                  <h3 className="text-lg font-bold text-gray-800 mb-1 truncate">
+                  <h3 className="text-lg font-bold text-rose-600 mb-1 truncate">
                     {ticket.artist_name}
                   </h3>
 
-                  {/* ツアー名 */}
+                  {/* ツアー名とday*/}
                   <p className="text-sm text-gray-600 mb-3 truncate">
                     {ticket.tour_name}
+                    {ticket.day && (
+                      <span className="font-medium text-gray-400"> (day{ticket.day})</span>
+                    )}
                   </p>
 
                   {/* 区切り線 */}
@@ -266,15 +269,8 @@ export default function MyPage() {
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-500">抽選枠</span>
-                      <span className="font-medium text-gray-800">{ticket.lottery_slots_name}</span>
+                      <span className="text-gray-600">{ticket.lottery_slots_name}</span>
                     </div>
-
-                    {ticket.day && (
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-500">公演日</span>
-                        <span className="font-medium text-gray-800">day{ticket.day}</span>
-                      </div>
-                    )}
 
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500 text-sm">座席</span>
