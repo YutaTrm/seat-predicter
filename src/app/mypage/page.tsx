@@ -163,7 +163,7 @@ export default function MyPage() {
       <SectionHeader title="マイページ" />
       <div className="mb-8">
         {/* ユーザー情報カード */}
-        <div className="bg-white rounded-lg p-4 max-w-2xl mx-auto">
+        <div className="bg-white border rounded-lg p-4 max-w-2xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               {avatarUrl ? (
@@ -242,7 +242,7 @@ export default function MyPage() {
             {sortedTickets.map((ticket) => (
               <div
                 key={ticket.id}
-                className="relative rounded-lg shadow-md overflow-hidden bg-white border-rose-200"
+                className="relative border rounded-lg overflow-hidden bg-white"
               >
                 {/* チケット上部の飾り */}
                 <div className="absolute top-0 left-0 right-0 h-2 from-rose-400 via-pink-400 to-rose-400"></div>
