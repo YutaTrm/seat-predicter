@@ -26,7 +26,7 @@ export const updateUrlParams = (
 export const fetchTickets = async (
   selectedArtist: number,
   selectedTour: number
-): Promise<Ticket[]> => {
+): Promise<{ tickets: Ticket[], totalCount: number }> => {
   const supabase = createSupabaseClient()
 
   const { data: tickets, error } = await supabase
@@ -45,8 +45,11 @@ export const fetchTickets = async (
 
   if (error) {
     console.error('チケット取得エラー:', error)
-    return []
+    return { tickets: [], totalCount: 0 }
   }
+
+  // 総チケット数を保存
+  const totalCount = tickets.length
 
   // dayを区別せず、同じ座席を1件にまとめる
   const seatMap = new Map<string, any>()
@@ -64,10 +67,13 @@ export const fetchTickets = async (
   // Map から配列に変換
   const uniqueTickets = Array.from(seatMap.values())
 
-  return uniqueTickets.map(ticket => ({
-    ...ticket,
-    lottery_slots_name: ticket.lottery_slots?.name || null
-  }))
+  return {
+    tickets: uniqueTickets.map(ticket => ({
+      ...ticket,
+      lottery_slots_name: ticket.lottery_slots?.name || null
+    })),
+    totalCount
+  }
 }
 
 /**

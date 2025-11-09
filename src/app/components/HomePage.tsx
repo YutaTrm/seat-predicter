@@ -27,6 +27,7 @@ export default function HomePage() {
   const [selectedTour, setSelectedTour] = useState<number | null>(null)
   const [selectedLotterySlot, setSelectedLotterySlot] = useState<number | null>(null)
   const [tickets, setTickets] = useState<Ticket[]>([])
+  const [totalTicketCount, setTotalTicketCount] = useState<number>(0)
   const [showTickets, setShowTickets] = useState<boolean>(false)
   const [showGridHelp, setShowGridHelp] = useState<boolean>(false)
   const [session, setSession] = useState<Session | null>(null)
@@ -75,6 +76,7 @@ export default function HomePage() {
         setSelectedTour(null)
         setSelectedLotterySlot(null)
         setTickets([])
+        setTotalTicketCount(0)
         setShowTickets(false)
         resolve()
       })
@@ -91,8 +93,9 @@ export default function HomePage() {
    */
   const handleShowTickets = async () => {
     if (selectedArtist && selectedTour) {
-      const newTickets = await fetchTickets(selectedArtist, selectedTour)
+      const { tickets: newTickets, totalCount } = await fetchTickets(selectedArtist, selectedTour)
       setTickets(newTickets)
+      setTotalTicketCount(totalCount)
       setShowTickets(true)
     }
   }
@@ -118,8 +121,9 @@ export default function HomePage() {
 
     if (result.success) {
       // チケット登録後に一覧を更新
-      const updatedTickets = await fetchTickets(selectedArtist, selectedTour)
+      const { tickets: updatedTickets, totalCount } = await fetchTickets(selectedArtist, selectedTour)
       setTickets(updatedTickets)
+      setTotalTicketCount(totalCount)
       setShowTickets(true)
     }
 
@@ -256,7 +260,10 @@ export default function HomePage() {
       {/* テーブル */}
       <section className="mt-8 md:col-span-2 md:mt-0">
         <div className="flex justify-between items-center mb-1">
-          <h2 className="text-lg text-gray-600 font-bold">登録済み座席 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span></h2>
+          <h2 className="text-lg text-gray-600 font-bold">
+            登録済み座席 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span>
+            <span className='text-sm text-gray-500 ml-3'>チケット <span className='text-rose-500'>{totalTicketCount}</span>件</span>
+          </h2>
           {selectedArtist && selectedTour && (
             <button
               onClick={postToX}
