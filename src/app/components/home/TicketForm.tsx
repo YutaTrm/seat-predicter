@@ -164,40 +164,6 @@ export default function TicketForm({
         ))}
       </select>
 
-      <select
-        value={selectedLotterySlot || ''}
-        onChange={(e) => {
-          const value = Number(e.target.value)
-          onLotterySlotChange(value || null)
-        }}
-        disabled={!selectedArtist}
-        className="w-full p-1 border rounded  bg-white"
-      >
-        <option value="">抽選枠</option>
-        {lotterySlots.map(slot => (
-          <option key={slot.id} value={slot.id}>
-            {slot.name}
-          </option>
-        ))}
-      </select>
-
-      <select
-        value={day || ''}
-        onChange={(e) => {
-          const value = Number(e.target.value)
-          setDay(value || null)
-        }}
-        disabled={!selectedTour}
-        className="w-full p-1 border rounded bg-white"
-      >
-        <option value="">公演日</option>
-        {Array.from({ length: MAX_DAY }, (_, i) => i + 1).map(dayNum => (
-          <option key={dayNum} value={dayNum}>
-            day{dayNum}
-          </option>
-        ))}
-      </select>
-
       <div className="flex gap-1">
         <select
           value={block}
@@ -255,6 +221,42 @@ export default function TicketForm({
           min="0"
           max="20"
         />
+      </div>
+
+      <div className="flex gap-1">
+        <select
+          value={selectedLotterySlot || ''}
+          onChange={(e) => {
+            const value = Number(e.target.value)
+            onLotterySlotChange(value || null)
+          }}
+          disabled={!selectedArtist}
+          className="w-full p-1 border rounded  bg-white"
+        >
+          <option value="">抽選枠</option>
+          {lotterySlots.map(slot => (
+            <option key={slot.id} value={slot.id}>
+              {slot.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={day || ''}
+          onChange={(e) => {
+            const value = Number(e.target.value)
+            setDay(value || null)
+          }}
+          disabled={!selectedTour}
+          className="w-full p-1 border rounded bg-white"
+        >
+          <option value="">公演日</option>
+          {Array.from({ length: MAX_DAY }, (_, i) => i + 1).map(dayNum => (
+            <option key={dayNum} value={dayNum}>
+              day{dayNum}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="flex space-x-2 text-sm">
