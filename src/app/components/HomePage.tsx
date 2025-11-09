@@ -261,8 +261,8 @@ export default function HomePage() {
       <section className="mt-8 md:col-span-2 md:mt-0">
         <div className="flex justify-between items-center mb-1">
           <h2 className="text-lg text-gray-600 font-bold">
-            登録済み座席 <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span>
-            <span className='text-sm text-gray-500 ml-3'>チケット <span className='text-rose-500'>{totalTicketCount}</span>件</span>
+            登録済み座席<span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span>
+            <span className='text-sm text-gray-500 ml-1'>チケット<span className='text-rose-500'>{totalTicketCount}</span>件</span>
           </h2>
           {selectedArtist && selectedTour && (
             <button

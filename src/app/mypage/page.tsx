@@ -248,14 +248,14 @@ export default function MyPage() {
                 <div className="absolute top-0 left-0 right-0 h-2 from-rose-400 via-pink-400 to-rose-400"></div>
 
                 {/* チケット内容 */}
-                <div className="p-4 pt-5">
+                <div className="p-4">
                   {/* アーティスト名 */}
                   <h3 className="text-lg font-bold text-rose-600 mb-1 truncate">
                     {ticket.artist_name}
                   </h3>
 
                   {/* ツアー名とday*/}
-                  <p className="text-sm text-gray-600 mb-3 truncate">
+                  <p className="text-sm text-gray-600 mb-2 truncate">
                     {ticket.tour_name}
                     {ticket.day && (
                       <span className="font-medium text-gray-400"> (day{ticket.day})</span>
@@ -263,10 +263,10 @@ export default function MyPage() {
                   </p>
 
                   {/* 区切り線 */}
-                  <div className="border-t-2 border-dashed border-rose-200 my-3"></div>
+                  <div className="border-t-2 border-dashed border-rose-200 my-2"></div>
 
                   {/* 座席情報 */}
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-2 mb-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-500">抽選枠</span>
                       <span className="text-gray-600">{ticket.lottery_slots_name}</span>
@@ -292,7 +292,7 @@ export default function MyPage() {
                   </div>
 
                   {/* 区切り線 */}
-                  <div className="border-t-2 border-dashed border-rose-200 my-3"></div>
+                  <div className="border-t-2 border-dashed border-rose-200 my-2"></div>
 
                   {/* 投稿日時と削除ボタン */}
                   <div className="flex items-center justify-between">
