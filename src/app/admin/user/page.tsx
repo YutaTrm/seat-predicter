@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
 import { fetchAllUsers, AdminUser } from '@/utils/adminUtils'
 import { fetchUserTickets, UserTicket } from '@/utils/myPageUtils'
@@ -15,6 +15,9 @@ type SortKey = 'name' | 'email' | 'created_at' | 'last_sign_in_at' | 'ticket_cou
 type SortOrder = 'asc' | 'desc'
 
 export default function AdminUserPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const [session, setSession] = useState<Session | null>(null)
   const [users, setUsers] = useState<AdminUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<AdminUser[]>([])
@@ -23,10 +26,9 @@ export default function AdminUserPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingTickets, setIsLoadingTickets] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [sortKey, setSortKey] = useState<SortKey>('created_at')
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '')
+  const [sortKey, setSortKey] = useState<SortKey>((searchParams.get('sort') as SortKey) || 'created_at')
+  const [sortOrder, setSortOrder] = useState<SortOrder>((searchParams.get('order') as SortOrder) || 'desc')
 
   // セッションとユーザー一覧を取得
   useEffect(() => {
@@ -130,6 +132,30 @@ export default function AdminUserPage() {
     setFilteredUsers(result)
   }, [users, searchQuery, sortKey, sortOrder])
 
+  // URLパラメータを更新
+  const updateUrlParams = (params: Record<string, string>) => {
+    const newParams = new URLSearchParams(searchParams.toString())
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        newParams.set(key, value)
+      } else {
+        newParams.delete(key)
+      }
+    })
+
+    router.push(`/admin/user?${newParams.toString()}`, { scroll: false })
+  }
+
+  // URLパラメータ同期
+  useEffect(() => {
+    updateUrlParams({
+      search: searchQuery,
+      sort: sortKey,
+      order: sortOrder
+    })
+  }, [searchQuery, sortKey, sortOrder])
+
   // ソートハンドラー
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -177,7 +203,7 @@ export default function AdminUserPage() {
   }
 
   return (
-    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
+    <main className="mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
       {/* ヘッダー */}
       <h1 className="text-2xl font-bold">ユーザー一覧</h1>
 

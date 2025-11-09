@@ -157,12 +157,18 @@ export default function AdminPage({
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold">管理画面</h1>
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-4 mt-2">
               <button
                 onClick={() => router.push('/admin/user')}
                 className="text-sm text-gray-500 hover:text-rose-700 transition-colors"
               >
                 ユーザー管理 →
+              </button>
+              <button
+                onClick={() => router.push('/admin/ticket')}
+                className="text-sm text-gray-500 hover:text-rose-700 transition-colors"
+              >
+                チケット管理 →
               </button>
             </div>
           </div>
