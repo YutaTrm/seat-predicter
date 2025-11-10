@@ -38,6 +38,10 @@ images:
   - 'gcr.io/$PROJECT_ID/seat-predicter:$COMMIT_SHA'
   - 'gcr.io/$PROJECT_ID/seat-predicter:latest'
 
+# ログ設定
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 # ビルド時の置換変数
 substitutions:
   _SUPABASE_URL: 'https://ltzbcuzqiphuekfnnxhd.supabase.co'
