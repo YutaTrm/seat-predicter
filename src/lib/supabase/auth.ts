@@ -17,8 +17,11 @@ export const getSupabaseClient = () => {
 export const signInWithTwitter = async (redirectTo?: string) => {
   const supabase = getSupabaseClient()
 
-  // 本番環境のURLを取得（環境変数から、なければwindow.location.originを使用）
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+  // 本番環境のURLを取得
+  // localhost以外（本番環境）では常にhttps://zasekiyosou.comを使用
+  const isLocalhost = typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  const siteUrl = isLocalhost ? window.location.origin : 'https://zasekiyosou.com'
 
   // リダイレクト先のURLを構築（コールバック後の最終的な遷移先）
   const finalRedirectUrl = redirectTo || siteUrl
