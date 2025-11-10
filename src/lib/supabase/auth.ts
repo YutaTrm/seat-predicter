@@ -21,7 +21,8 @@ export const signInWithTwitter = async (redirectTo?: string) => {
   // localhost以外（本番環境）では常にhttps://zasekiyosou.comを使用
   const isLocalhost = typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  const siteUrl = isLocalhost ? window.location.origin : 'https://zasekiyosou.com'
+  // const siteUrl = isLocalhost ? window.location.origin : 'https://zasekiyosou.com'
+  const siteUrl = 'https://zasekiyosou.com'
 
   // リダイレクト先のURLを構築（コールバック後の最終的な遷移先）
   const finalRedirectUrl = redirectTo || siteUrl
