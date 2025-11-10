@@ -1,7 +1,6 @@
 'use client'
 
 import { createSupabaseClient } from './client'
-import type { Database } from '@/types/database.types'
 
 /**
  * クライアントサイドのSupabase認証ヘルパー関数
