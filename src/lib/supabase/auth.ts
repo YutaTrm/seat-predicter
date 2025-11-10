@@ -18,9 +18,12 @@ export const getSupabaseClient = () => {
 export const signInWithTwitter = async (redirectTo?: string) => {
   const supabase = getSupabaseClient()
 
+  // 本番環境のURLを取得（環境変数から、なければwindow.location.originを使用）
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+
   // リダイレクト先のURLを構築（コールバック後の最終的な遷移先）
-  const finalRedirectUrl = redirectTo || window.location.origin
-  const callbackUrl = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(finalRedirectUrl)}`
+  const finalRedirectUrl = redirectTo || siteUrl
+  const callbackUrl = `${siteUrl}/auth/callback?redirect=${encodeURIComponent(finalRedirectUrl)}`
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'twitter',
