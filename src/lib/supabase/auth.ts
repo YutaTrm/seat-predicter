@@ -33,7 +33,10 @@ export const signInWithTwitter = async (redirectTo?: string) => {
     options: {
       redirectTo: callbackUrl,
       // X OAuth 2.0のスコープを明示的に指定
-      scopes: 'tweet.read users.read offline.access'
+      scopes: 'tweet.read users.read offline.access',
+      queryParams: {
+        prompt: 'login',
+      },
     }
   })
 
