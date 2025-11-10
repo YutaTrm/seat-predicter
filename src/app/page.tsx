@@ -5,6 +5,10 @@ import { Suspense } from 'react'
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
+  // サーバーサイドで環境変数を取得
+  const supabaseUrl = process.env.SUPABASE_URL || ''
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || ''
+
   // JSON-LDの定義
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -27,7 +31,7 @@ export default async function Page() {
           </div>
         </div>
       }>
-        <HomePage />
+        <HomePage supabaseUrl={supabaseUrl} supabaseKey={supabaseKey} />
       </Suspense>
     </>
   )

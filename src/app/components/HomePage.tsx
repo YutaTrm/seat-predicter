@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { setSupabaseCredentials } from '@/lib/supabase/client'
 import { useArtistData } from '@/hooks/useArtistData'
 import { useTourData } from '@/hooks/useTourData'
 import { useLotterySlotData } from '@/hooks/useLotterySlotData'
@@ -18,10 +19,25 @@ import Modal from '@/app/components/common/Modal'
 import CarouselAds from './common/CarouselAds'
 import UserMenu from './common/UserMenu'
 
+interface HomePageProps {
+  supabaseUrl: string
+  supabaseKey: string
+}
+
 /**
  * ホームページコンポーネント
  */
-export default function HomePage() {
+export default function HomePage({ supabaseUrl, supabaseKey }: HomePageProps) {
+  // Supabaseクレデンシャルの初期化
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useEffect(() => {
+    if (supabaseUrl && supabaseKey) {
+      setSupabaseCredentials(supabaseUrl, supabaseKey)
+      setIsInitialized(true)
+    }
+  }, [supabaseUrl, supabaseKey])
+
   // 状態管理
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
   const [selectedTour, setSelectedTour] = useState<number | null>(null)
@@ -202,6 +218,17 @@ export default function HomePage() {
       subscriptionPromise.then(subscription => subscription.unsubscribe())
     }
   }, [])
+
+  // 初期化完了まで待機
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen px-4 py-8">
+        <div className="container mx-auto">
+          <h1 className="text-2xl text-rose-500 font-bold text-center mb-4">読み込み中...</h1>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <main className="container mx-auto px-4 py-6 md:grid md:grid-cols-3 md:auto-rows-max md:gap-4">
