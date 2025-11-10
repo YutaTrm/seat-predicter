@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createSupabaseClient } from '@/lib/supabase/client'
 import { Artist, Tour, Ticket, LotterySlot, AdminPageProps } from '../../types/admin'
 import { fetchArtistTours } from '../../utils/tourUtils'
 import { ARTIST_XSHARE_WORDS } from '@/constants/artist'
@@ -144,7 +144,7 @@ export default function AdminPage({
   }
 
   const router = useRouter()
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseClient()
 
   const handleLogout = async () => {
     await supabase.auth.signOut()

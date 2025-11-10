@@ -1,6 +1,6 @@
 'use client'
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createSupabaseClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 
@@ -11,7 +11,7 @@ function AdminLoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseClient()
 
   // セッションをチェックして、既にログインしている場合はリダイレクト
   useEffect(() => {

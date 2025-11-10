@@ -1,6 +1,6 @@
 'use client'
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createSupabaseClient } from './client'
 import type { Database } from '@/types/database.types'
 
 /**
@@ -9,7 +9,7 @@ import type { Database } from '@/types/database.types'
 
 // Supabaseクライアントを取得
 export const getSupabaseClient = () => {
-  return createClientComponentClient<Database>()
+  return createSupabaseClient()
 }
 
 /**

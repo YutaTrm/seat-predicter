@@ -1,4 +1,4 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
@@ -20,8 +20,31 @@ export async function GET(request: NextRequest) {
   }
 
   if (code) {
-    const cookieStore = cookies()
-    const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
+    const supabaseUrl = process.env.SUPABASE_URL
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Supabase credentials not found in callback route')
+      return NextResponse.redirect(new URL('/auth/login?error=config_error', request.url))
+    }
+
+    const cookieStore = await cookies()
+    const redirectUrl = next.startsWith('http') ? next : new URL(next, requestUrl.origin).toString()
+    const response = NextResponse.redirect(redirectUrl)
+
+    const supabase = createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+        set(name: string, value: string, options) {
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options) {
+          response.cookies.delete({ name, ...options })
+        }
+      }
+    })
 
     try {
       const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
@@ -44,30 +67,22 @@ export async function GET(request: NextRequest) {
           new URL('/auth/login?error=no_session_created', request.url)
         )
       }
+
+      // キャッシュを無効化してセッション情報を確実に更新
+      response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+      response.headers.set('Pragma', 'no-cache')
+      response.headers.set('Expires', '0')
+
+      return response
     } catch (error) {
       console.error('Unexpected error in callback:', error)
       return NextResponse.redirect(
         new URL('/auth/login?error=unexpected_error', request.url)
       )
     }
-  } else {
-    console.error('No code provided in callback')
-    return NextResponse.redirect(
-      new URL('/auth/login?error=no_code', request.url)
-    )
   }
 
-  // 認証成功後のリダイレクト先
-  // 相対パスの場合は絶対URLに変換
-  const redirectUrl = next.startsWith('http') ? next : new URL(next, requestUrl.origin).toString()
-
-  // リダイレクトレスポンスを作成
-  const response = NextResponse.redirect(redirectUrl)
-
-  // キャッシュを無効化してセッション情報を確実に更新
-  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
-  response.headers.set('Pragma', 'no-cache')
-  response.headers.set('Expires', '0')
-
-  return response
+  return NextResponse.redirect(
+    new URL('/auth/login?error=no_code', request.url)
+  )
 }
