@@ -9,13 +9,6 @@ export default async function Page() {
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || ''
   const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-  console.log('Server env check:', {
-    hasSupabaseUrl: !!supabaseUrl,
-    hasSupabaseKey: !!supabaseKey,
-    urlLength: supabaseUrl.length,
-    keyLength: supabaseKey.length
-  })
-
   // JSON-LDの定義
   const jsonLd = {
     '@context': 'https://schema.org',
