@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { M_PLUS_1p } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { GoogleAdsense } from './components/common/GoogleAdsense'
+import SupabaseProvider from './components/SupabaseProvider'
 import './globals.css'
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
@@ -71,10 +72,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // サーバーサイドで環境変数を取得（開発・本番両対応）
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+
   return (
     <html lang="ja">
       <body className={mplus.className}>
-        {children}
+        <SupabaseProvider supabaseUrl={supabaseUrl} supabaseKey={supabaseKey}>
+          {children}
+        </SupabaseProvider>
         {gaId && (
           <GoogleAnalytics gaId={gaId} />
         )}
