@@ -43,7 +43,7 @@ export const fetchAllUsers = async (): Promise<AdminUser[]> => {
 
   // 各ユーザーのチケット数を取得
   const usersWithTicketCount = await Promise.all(
-    authUsers.map(async (user: any) => {
+    authUsers.map(async (user: { id: string; email: string | null; created_at: string; last_sign_in_at: string | null; raw_user_meta_data: Record<string, unknown> }) => {
       const { count, error: countError } = await supabase
         .from('tickets')
         .select('*', { count: 'exact', head: true })

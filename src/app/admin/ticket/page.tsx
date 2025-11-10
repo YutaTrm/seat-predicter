@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
 import { fetchAllTicketsWithUsers, fetchAllArtistsAndTours, deleteTicket, AdminTicket } from '@/utils/adminTicketUtils'
@@ -13,7 +13,7 @@ const ITEMS_PER_PAGE = 100
 /**
  * 管理者用チケット一覧ページ
  */
-export default function AdminTicketPage() {
+function AdminTicketPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -108,7 +108,8 @@ export default function AdminTicketPage() {
 
     // ソート
     result.sort((a, b) => {
-      let aValue: any, bValue: any
+      let aValue: string | number
+      let bValue: string | number
 
       switch (sortKey) {
         case 'artist_name':
@@ -131,6 +132,9 @@ export default function AdminTicketPage() {
           aValue = new Date(a.ticket_created_at).getTime()
           bValue = new Date(b.ticket_created_at).getTime()
           break
+        default:
+          aValue = ''
+          bValue = ''
       }
 
       if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1
@@ -611,5 +615,13 @@ export default function AdminTicketPage() {
         </div>
       )}
     </main>
+  )
+}
+
+export default function AdminTicketPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><div className="flex items-center justify-center min-h-[50vh]"><div className="text-center"><div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-rose-500 border-t-transparent"></div><p className="mt-4 text-gray-600">読み込み中...</p></div></div></div>}>
+      <AdminTicketPageContent />
+    </Suspense>
   )
 }

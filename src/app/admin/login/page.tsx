@@ -45,14 +45,15 @@ function AdminLoginForm() {
         const redirectUrl = searchParams.get('redirect') || '/admin'
         router.push(redirectUrl)
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error)
 
       // レート制限エラーの場合
-      if (error.status === 429 || error.message?.includes('rate limit')) {
+      const errorObj = error as { status?: number; message?: string }
+      if (errorObj.status === 429 || errorObj.message?.includes('rate limit')) {
         setError('ログイン試行回数が多すぎます。しばらく時間を置いてから再度お試しください。（約1時間後）')
       } else {
-        setError(`ログインに失敗しました: ${error.message || 'メールアドレスとパスワードを確認してください。'}`)
+        setError(`ログインに失敗しました: ${errorObj.message || 'メールアドレスとパスワードを確認してください。'}`)
       }
     } finally {
       setIsLoading(false)

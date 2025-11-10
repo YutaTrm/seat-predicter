@@ -103,7 +103,7 @@ export const getUser = async () => {
 /**
  * 認証状態の変更を監視
  */
-export const onAuthStateChange = (callback: (event: string, session: any) => void) => {
+export const onAuthStateChange = (callback: (event: string, session: { access_token: string; refresh_token: string } | null) => void) => {
   const supabase = getSupabaseClient()
   return supabase.auth.onAuthStateChange(callback)
 }

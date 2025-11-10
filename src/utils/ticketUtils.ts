@@ -52,7 +52,9 @@ export const fetchTickets = async (
   const totalCount = tickets.length
 
   // dayを区別せず、同じ座席を1件にまとめる
-  const seatMap = new Map<string, any>()
+  // Supabaseのレスポンスには lottery_slots が含まれるため、型拡張
+  type TicketWithLotterySlots = Ticket & { lottery_slots?: { name: string } | null }
+  const seatMap = new Map<string, TicketWithLotterySlots>()
 
   tickets.forEach(ticket => {
     // tour_id, block, block_number, column, numberで一意のキーを作成
@@ -60,7 +62,7 @@ export const fetchTickets = async (
 
     // 既に同じ座席が存在しない場合のみ追加
     if (!seatMap.has(key)) {
-      seatMap.set(key, ticket)
+      seatMap.set(key, ticket as TicketWithLotterySlots)
     }
   })
 
@@ -70,7 +72,7 @@ export const fetchTickets = async (
   return {
     tickets: uniqueTickets.map(ticket => ({
       ...ticket,
-      lottery_slots_name: ticket.lottery_slots?.name || null
+      lottery_slots_name: ticket.lottery_slots?.name || undefined
     })),
     totalCount
   }

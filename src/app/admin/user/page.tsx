@@ -1,12 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
 import { fetchAllUsers, AdminUser } from '@/utils/adminUtils'
 import { fetchUserTickets, UserTicket } from '@/utils/myPageUtils'
 import type { Session } from '@supabase/supabase-js'
-import SectionHeader from '../../components/common/SectionHeader'
 
 /**
  * 管理者用ユーザー管理ページ
@@ -14,7 +13,7 @@ import SectionHeader from '../../components/common/SectionHeader'
 type SortKey = 'name' | 'email' | 'created_at' | 'last_sign_in_at' | 'ticket_count'
 type SortOrder = 'asc' | 'desc'
 
-export default function AdminUserPage() {
+function AdminUserPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -98,8 +97,8 @@ export default function AdminUserPage() {
 
     // ソート
     result.sort((a, b) => {
-      let aValue: any
-      let bValue: any
+      let aValue: string | number
+      let bValue: string | number
 
       switch (sortKey) {
         case 'name':
@@ -122,6 +121,9 @@ export default function AdminUserPage() {
           aValue = a.ticket_count
           bValue = b.ticket_count
           break
+        default:
+          aValue = ''
+          bValue = ''
       }
 
       if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1
@@ -478,5 +480,13 @@ export default function AdminUserPage() {
         )}
       </div>
     </main>
+  )
+}
+
+export default function AdminUserPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><div className="flex items-center justify-center min-h-[50vh]"><div className="text-center"><div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-rose-500 border-t-transparent"></div><p className="mt-4 text-gray-600">読み込み中...</p></div></div></div>}>
+      <AdminUserPageContent />
+    </Suspense>
   )
 }

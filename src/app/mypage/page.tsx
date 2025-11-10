@@ -62,7 +62,7 @@ export default function MyPage() {
 
   // チケット一覧をソート
   useEffect(() => {
-    let sorted = [...tickets]
+    const sorted = [...tickets]
 
     switch (sortOption) {
       case 'created_at_desc':

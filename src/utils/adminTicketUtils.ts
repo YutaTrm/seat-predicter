@@ -49,10 +49,13 @@ export const fetchAllTicketsWithUsers = async (): Promise<AdminTicket[]> => {
     return []
   }
 
+  // 型アサーションを使用してチケットの型を明示
+  const typedTickets = tickets as AdminTicket[]
+
   // アーティスト、ツアー、抽選枠の名前を取得
-  const artistIds = [...new Set(tickets.map((t: any) => t.artist_id))]
-  const tourIds = [...new Set(tickets.map((t: any) => t.tour_id))]
-  const lotterySlotIds = [...new Set(tickets.map((t: any) => t.lottery_slots_id))]
+  const artistIds = [...new Set(typedTickets.map((t) => t.artist_id))]
+  const tourIds = [...new Set(typedTickets.map((t) => t.tour_id))]
+  const lotterySlotIds = [...new Set(typedTickets.map((t) => t.lottery_slots_id))]
 
   // 並列で名前を取得
   const [artistsData, toursData, lotterySlotsData] = await Promise.all([
@@ -61,12 +64,12 @@ export const fetchAllTicketsWithUsers = async (): Promise<AdminTicket[]> => {
     supabase.from('lottery_slots').select('id, name').in('id', lotterySlotIds)
   ])
 
-  const artistsMap = new Map(artistsData.data?.map((a: any) => [a.id, a.name]) || [])
-  const toursMap = new Map(toursData.data?.map((t: any) => [t.id, t.name]) || [])
-  const lotterySlotsMap = new Map(lotterySlotsData.data?.map((l: any) => [l.id, l.name]) || [])
+  const artistsMap = new Map(artistsData.data?.map((a) => [a.id, a.name]) || [])
+  const toursMap = new Map(toursData.data?.map((t) => [t.id, t.name]) || [])
+  const lotterySlotsMap = new Map(lotterySlotsData.data?.map((l) => [l.id, l.name]) || [])
 
   // 名前を追加
-  return tickets.map((ticket: any) => ({
+  return typedTickets.map((ticket) => ({
     ...ticket,
     artist_name: artistsMap.get(ticket.artist_id) || '',
     tour_name: toursMap.get(ticket.tour_id) || '',
