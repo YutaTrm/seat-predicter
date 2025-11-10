@@ -28,15 +28,14 @@ interface HomePageProps {
  * ホームページコンポーネント
  */
 export default function HomePage({ supabaseUrl, supabaseKey }: HomePageProps) {
-  // Supabaseクレデンシャルの初期化
-  const [isInitialized, setIsInitialized] = useState(false)
-
-  useEffect(() => {
+  // Supabaseクレデンシャルの初期化（useState初期値で同期的に実行）
+  const [isInitialized] = useState(() => {
     if (supabaseUrl && supabaseKey) {
       setSupabaseCredentials(supabaseUrl, supabaseKey)
-      setIsInitialized(true)
+      return true
     }
-  }, [supabaseUrl, supabaseKey])
+    return false
+  })
 
   // 状態管理
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
