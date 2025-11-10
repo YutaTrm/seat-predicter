@@ -29,7 +29,14 @@ export async function GET(request: NextRequest) {
     }
 
     const cookieStore = await cookies()
-    const redirectUrl = next.startsWith('http') ? next : new URL(next, requestUrl.origin).toString()
+
+    // 本番環境のベースURLを取得
+    // X-Forwarded-HostまたはHostヘッダーから取得し、なければデフォルトを使用
+    const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'zasekiyosou.com'
+    const protocol = request.headers.get('x-forwarded-proto') || 'https'
+    const baseUrl = `${protocol}://${host}`
+
+    const redirectUrl = next.startsWith('http') ? next : new URL(next, baseUrl).toString()
     const response = NextResponse.redirect(redirectUrl)
 
     const supabase = createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
