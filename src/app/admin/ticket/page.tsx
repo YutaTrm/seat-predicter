@@ -359,7 +359,7 @@ export default function AdminTicketPage() {
         </div>
       )}
 
-      {/* 検索ボックス */}
+      {/* 検索ボックスとフィルター */}
       <div className="mb-4 bg-white rounded-lg shadow-md p-4">
         <div className="relative">
           <input
@@ -378,11 +378,9 @@ export default function AdminTicketPage() {
             </button>
           )}
         </div>
-      </div>
 
-      {/* フィルター */}
-      <div className="mb-4 bg-white rounded-lg shadow-md p-4">
-        <div className="flex flex-wrap gap-2">
+        {/* フィルター */}
+        <div className="flex flex-wrap gap-2 mt-4">
           <select
             value={filterArtist}
             onChange={(e) => setFilterArtist(e.target.value)}
@@ -447,11 +445,6 @@ export default function AdminTicketPage() {
                     アーティスト
                     {sortKey === 'artist_name' && <span>{sortOrder === 'asc' ? '↑' : '↓'}</span>}
                   </div>
-                </th>
-                <th
-                  onClick={() => handleSort('tour_name')}
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
-                >
                   <div className="flex items-center gap-1">
                     ツアー
                     {sortKey === 'tour_name' && <span>{sortOrder === 'asc' ? '↑' : '↓'}</span>}
@@ -462,9 +455,12 @@ export default function AdminTicketPage() {
                   className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none"
                 >
                   <div className="flex items-center gap-1">
-                    座席
+                    座席(day)
                     {sortKey === 'block' && <span>{sortOrder === 'asc' ? '↑' : '↓'}</span>}
                   </div>
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  チケット種別
                 </th>
                 <th
                   onClick={() => handleSort('user_email')}
@@ -489,7 +485,7 @@ export default function AdminTicketPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedTickets.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                     {searchQuery || filterArtist || filterTour ? '検索結果がありません' : 'チケットがありません'}
                   </td>
                 </tr>
@@ -503,16 +499,17 @@ export default function AdminTicketPage() {
                     }`}
                   >
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{ticket.artist_name}</div>
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{ticket.tour_name}</div>
+                      <div className="text-sm font-medium text-rose-600">{ticket.artist_name}</div>
+                      <div className="text-xs text-gray-900">{ticket.tour_name}</div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {ticket.block}{ticket.block_number} {ticket.column}列 {ticket.number}番
                         {ticket.day && <span className="ml-1 text-xs text-gray-500">(day{ticket.day})</span>}
                       </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{ticket.lottery_slots_name}</div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2">

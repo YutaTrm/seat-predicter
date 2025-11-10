@@ -158,7 +158,7 @@ export default function MyPage() {
     userMetadata?.picture_url
 
   return (
-    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 text-md">
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
       {/* ヘッダー */}
       <SectionHeader title="マイページ" />
       <div className="mb-8">
