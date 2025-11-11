@@ -7,6 +7,7 @@ import { fetchUserTickets, deleteUserTicket, UserTicket } from '@/utils/myPageUt
 import type { Session } from '@supabase/supabase-js'
 import SectionHeader from '../components/common/SectionHeader'
 import Footer from '../components/common/Footer'
+import { useLanguage } from '@/contexts/LanguageContext'
 // import { GoogleAdsense } from '../components/common/GoogleAdsense'
 
 /**
@@ -15,6 +16,7 @@ import Footer from '../components/common/Footer'
 type SortOption = 'created_at_desc' | 'created_at_asc' | 'artist_name_asc' | 'artist_name_desc'
 
 export default function MyPage() {
+  const { t } = useLanguage()
   const [session, setSession] = useState<Session | null>(null)
   const [tickets, setTickets] = useState<UserTicket[]>([])
   const [sortedTickets, setSortedTickets] = useState<UserTicket[]>([])
@@ -100,7 +102,14 @@ export default function MyPage() {
     if (!session) return
 
     // 確認ダイアログ（ツアー名と座席情報を表示）
-    const message = `以下のチケットを削除してもよろしいですか？\n\n【${ticket.artist_name}】\n${ticket.tour_name}\n座席: ${ticket.block}${ticket.block_number}ブロック ${ticket.column}列 ${ticket.number}番\n\nこの操作は取り消せません。`
+    const message = t('mypage.deleteConfirm')
+      .replace('{artist}', ticket.artist_name)
+      .replace('{tour}', ticket.tour_name)
+      .replace('{block}', ticket.block)
+      .replace('{blockNumber}', String(ticket.block_number))
+      .replace('{column}', String(ticket.column))
+      .replace('{number}', String(ticket.number))
+
     const confirmed = confirm(message)
     if (!confirmed) return
 
@@ -113,11 +122,11 @@ export default function MyPage() {
         const updatedTickets = await fetchUserTickets(session.user.id)
         setTickets(updatedTickets)
       } else {
-        alert(result.error || 'チケットの削除に失敗しました')
+        alert(result.error || t('mypage.deleteError'))
       }
     } catch (error) {
       console.error('削除エラー:', error)
-      alert('チケットの削除に失敗しました')
+      alert(t('mypage.deleteError'))
     } finally {
       setIsDeleting(false)
     }
@@ -130,7 +139,7 @@ export default function MyPage() {
         <div className="flex items-center justify-center min-h-[50vh]">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-rose-500 border-t-transparent"></div>
-            <p className="mt-4 text-gray-600">読み込み中...</p>
+            <p className="mt-4 text-gray-600">{t('mypage.loading')}</p>
           </div>
         </div>
       </main>
@@ -151,7 +160,7 @@ export default function MyPage() {
     userMetadata?.user_name ||
     userMetadata?.preferred_username ||
     user.email?.split('@')[0] ||
-    'ユーザー'
+    t('mypage.user')
 
   const avatarUrl =
     userMetadata?.avatar_url ||
@@ -165,7 +174,7 @@ export default function MyPage() {
       {/* <GoogleAdsense /> */}
 
       {/* ヘッダー */}
-      <SectionHeader title="マイページ" />
+      <SectionHeader title={t('mypage.title')} />
       <div className="mb-8">
         {/* ユーザー情報カード */}
         <div className="bg-white border rounded-lg p-4 max-w-2xl mx-auto">
@@ -203,7 +212,7 @@ export default function MyPage() {
             onClick={handleSignOut}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 mt-2 w-full rounded transition-colors"
           >
-            ログアウト
+            {t('mypage.logout')}
           </button>
         </div>
       </div>
@@ -212,7 +221,7 @@ export default function MyPage() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg text-gray-700 font-bold">
-            投稿したチケット <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>件</span>
+            {t('mypage.myTickets')} <span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>{t('home.count')}</span>
           </h2>
 
           {tickets.length > 0 && (
@@ -223,10 +232,10 @@ export default function MyPage() {
                 onChange={(e) => setSortOption(e.target.value as SortOption)}
                 className="px-1 py-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white"
               >
-                <option value="created_at_desc">投稿日(新しい順)</option>
-                <option value="created_at_asc">投稿日(古い順)</option>
-                <option value="artist_name_asc">アーティスト名(昇順)</option>
-                <option value="artist_name_desc">アーティスト名(降順)</option>
+                <option value="created_at_desc">{t('mypage.sortNewest')}</option>
+                <option value="created_at_asc">{t('mypage.sortOldest')}</option>
+                <option value="artist_name_asc">{t('mypage.sortArtistAsc')}</option>
+                <option value="artist_name_desc">{t('mypage.sortArtistDesc')}</option>
               </select>
             </div>
           )}
@@ -234,12 +243,12 @@ export default function MyPage() {
 
         {tickets.length === 0 ? (
           <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <p className="text-gray-600">まだチケットを投稿していません</p>
+            <p className="text-gray-600">{t('mypage.noTickets')}</p>
             <button
               onClick={() => router.push('/')}
               className="mt-4 bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded transition-colors"
             >
-              チケットを投稿する
+              {t('mypage.postTicket')}
             </button>
           </div>
         ) : (
@@ -273,25 +282,25 @@ export default function MyPage() {
                   {/* 座席情報 */}
                   <div className="space-y-2 mb-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">抽選枠</span>
+                      <span className="text-gray-500">{t('mypage.lotterySlot')}</span>
                       <span className="text-gray-600">{ticket.lottery_slots_name}</span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-500 text-sm">座席</span>
+                      <span className="text-gray-500 text-sm">{t('mypage.seat')}</span>
                       <div className="flex items-center gap-1">
                         <span className="font-bold text-rose-600 text-xl">
                           {ticket.block}{ticket.block_number}
                         </span>
-                        <span className="text-gray-400 text-sm">ブロック</span>
+                        <span className="text-gray-400 text-sm">{t('mypage.block')}</span>
                         <span className="font-bold text-rose-600 text-xl">
                           {ticket.column}
                         </span>
-                        <span className="text-gray-400 text-sm">列</span>
+                        <span className="text-gray-400 text-sm">{t('mypage.row')}</span>
                         <span className="font-bold text-rose-600 text-xl">
                           {ticket.number}
                         </span>
-                        <span className="text-gray-400 text-sm">番</span>
+                        <span className="text-gray-400 text-sm">{t('mypage.number')}</span>
                       </div>
                     </div>
                   </div>
@@ -302,7 +311,7 @@ export default function MyPage() {
                   {/* 投稿日時と削除ボタン */}
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-400">
-                      投稿日:
+                      {t('mypage.postedOn')}:
                       {new Date(ticket.created_at).toLocaleDateString('ja-JP', {
                         year: 'numeric',
                         month: '2-digit',

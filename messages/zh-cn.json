@@ -1,0 +1,281 @@
+{
+  "home": {
+    "title": "座位预测留言板",
+    "subtitle": "汇总大家的门票信息\n预测座位配置",
+    "ticketInput": "门票信息输入",
+    "dataLoadError": "获取数据失败。请刷新页面。",
+    "registeredSeats": "已登记座位",
+    "tickets": "门票",
+    "count": "件",
+    "shareOnX": "在X上分享",
+    "seatDistribution": "座位分布",
+    "distributionAbout": "关于分布",
+    "distributionNote": "登记15件以上后会生成分布图",
+    "actualConfiguration": "实际配置",
+    "showTickets": "显示门票列表",
+    "reset": "重置",
+    "register": "登记",
+    "artist": "艺人",
+    "tour": "巡演",
+    "lotterySlot": "抽选区分",
+    "day": "日程",
+    "block": "区块",
+    "row": "排",
+    "seat": "座位号",
+    "login": "登录",
+    "logout": "退出",
+    "mypage": "我的页面",
+    "distributionModal": {
+      "title": "关于分布",
+      "note1": "这是根据已登记门票计算的分布，并非配置预测，请注意。",
+      "note2": "图片可长按保存。允许转载图片。",
+      "note3": "区块按相同字母横向排列，靠左对齐。各区块大小根据已登记门票自动计算。",
+      "note4": "AI异常值修正在门票数量较少时精度会降低。请作为参考使用。"
+    }
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "submit": "提交",
+    "cancel": "取消",
+    "close": "关闭"
+  },
+  "form": {
+    "selectArtist": "选择艺人",
+    "selectTour": "选择巡演",
+    "block": "区块",
+    "blockNumber": "区块号",
+    "row": "排",
+    "seat": "座位",
+    "lotterySlot": "抽选区分",
+    "showDate": "演出日",
+    "reset": "重置",
+    "list": "列表",
+    "register": "登记",
+    "loginToRegister": "登录后可以登记门票",
+    "availableAfterPrint": "门票打印日起可以使用",
+    "fillAllFields": "请输入所有信息",
+    "confirmRegister": "【day{day} {block}{blockNumber}区块 {column}排 {seatNumber}号】将被登记。确认无误吗？"
+  },
+  "table": {
+    "showListMessage": "点击（列表）或登记门票后会显示列表",
+    "noTickets": "没有已登记的门票",
+    "block": "区块",
+    "row": "排",
+    "seat": "座位",
+    "lotterySlot": "抽选区分",
+    "blockSummary": "按区块统计",
+    "lotterySlotSummary": "按抽选区分统计",
+    "count": "件"
+  },
+  "userMenu": {
+    "loginWithX": "登录",
+    "myPage": "我的页面",
+    "user": "用户"
+  },
+  "footer": {
+    "about": "关于应用",
+    "contact": "联系我们",
+    "terms": "使用条款",
+    "privacy": "隐私政策",
+    "license": "许可证",
+    "copyright": "©2025 座位预测留言板"
+  },
+  "about": {
+    "title": "关于座位预测留言板",
+    "overview": "应用概述",
+    "overviewText": "座位预测留言板是一个登记/列表化演唱会门票号码并可视化区块信息的应用。",
+    "howToUse": "使用方法",
+    "howToUseList1": "选择艺人和巡演后点击（列表）按钮，可以查看数据库中登记的门票信息列表。",
+    "howToUseList2": "输入门票信息并点击（登记）按钮可以登记到数据库。\n※登记后的门票信息无法删除。",
+    "howToUseList3": "显示的列表是其他人已登记的信息。点击表格上方项目名的箭头可以对列进行排序。",
+    "howToUseList4": "艺人和巡演由管理员登记。希望添加的用户请从这里提交请求。如能提供以下格式的信息将有助于登记。",
+    "requestFormat": "艺人名\n　┗巡演名[举办地区]\n　┗门票类型(◯◯会员/◯◯手机/附注等)",
+    "management": "本应用运营",
+    "managementList1": "以任何人都能轻松免费使用为理念。",
+    "managementList2": "运营需要服务器设置费、URL取得费、数据库月费等，为了支付这些费用而设置了广告。",
+    "managementList3": "本应用的许可证信息请查看许可证。",
+    "notes": "注意事项",
+    "notesText": "如对本应用有改进建议或要求，请从这里联系我们。",
+    "here": "这里"
+  },
+  "mypage": {
+    "title": "我的页面",
+    "loading": "加载中...",
+    "logout": "退出",
+    "myTickets": "已登记的门票",
+    "sortNewest": "登记日(最新)",
+    "sortOldest": "登记日(最旧)",
+    "sortArtistAsc": "艺人名(升序)",
+    "sortArtistDesc": "艺人名(降序)",
+    "noTickets": "还没有登记门票",
+    "postTicket": "登记门票",
+    "lotterySlot": "抽选区分",
+    "seat": "座位",
+    "block": "区块",
+    "row": "排",
+    "number": "号",
+    "postedOn": "登记日",
+    "deleteConfirm": "确定要删除以下门票吗？\n\n【{artist}】\n{tour}\n座位: {block}{blockNumber}区块 {column}排 {number}号\n\n此操作无法撤销。",
+    "deleteError": "门票删除失败",
+    "user": "用户"
+  },
+  "terms": {
+    "title": "使用条款",
+    "intro": "本使用条款(以下简称（本条款）)规定了本网站提供的服务(以下简称（本服务）)的使用条件。使用前请确认本条款。",
+    "section1": {
+      "title": "1.使用目的",
+      "content": "本服务旨在共享演唱会等门票座位信息,作为配置预测等的参考。"
+    },
+    "section2": {
+      "title": "2.账户注册・登录",
+      "content": "使用本服务的部分功能(我的页面、帖子管理等)需要使用X(Twitter)账户登录。",
+      "item1": "登录使用X(Twitter)的认证服务",
+      "item2": "登录时视为同意X(Twitter)的使用条款及隐私政策",
+      "item3": "登录即视为同意本条款及隐私政策",
+      "item4": "不登录也可以浏览或发布门票信息"
+    },
+    "section3": {
+      "title": "3.禁止事项",
+      "content": "用户不得进行以下行为。",
+      "item1": "包含他人个人信息的发布",
+      "item2": "发布虚假或误导性信息",
+      "item3": "侵犯版权、肖像权等他人权利的行为",
+      "item4": "违反公序良俗的行为",
+      "item5": "非法访问、垃圾邮件等行为",
+      "item6": "非法使用他人账户的行为",
+      "item7": "向第三方转让或出借账户信息的行为",
+      "item8": "通过创建多个账户进行非法使用"
+    },
+    "section4": {
+      "title": "4.账户管理责任",
+      "content": "用户应对自己的账户信息管理负责。",
+      "item1": "对于账户被非法使用造成的损害,本网站概不负责",
+      "item2": "如发现第三方非法使用账户,请立即联系本网站"
+    },
+    "section5": {
+      "title": "5.发布信息的处理",
+      "content": "请注意,用户发布的座位信息等数据可能会在本网站上公开。发布内容的责任归发布者所有。",
+      "item1": "登录用户可以从我的页面删除自己的帖子",
+      "item2": "已删除的帖子无法恢复,请注意"
+    },
+    "section6": {
+      "title": "6.账户删除・停用",
+      "content": "在以下情况下,本网站可能会删除或停用用户账户。",
+      "item1": "违反本条款时",
+      "item2": "长期未使用时",
+      "item3": "本网站认为不适当的其他情况",
+      "item4": "如用户希望删除账户,请通过联系我们页面联系"
+    },
+    "section7": {
+      "title": "7.第三方服务的使用",
+      "content": "本服务使用以下第三方服务。",
+      "item1": "X(Twitter): 登录认证",
+      "item2": "Supabase: 用户认证及数据管理",
+      "item3": "您需要遵守这些服务的使用条款和隐私政策。"
+    },
+    "section8": {
+      "title": "8.服务内容的变更・中止",
+      "content": "本服务可能会在不事先通知的情况下变更内容,或停止・终止服务。"
+    },
+    "section9": {
+      "title": "9.免责声明",
+      "content": "对于使用本服务而产生的任何损害,本网站概不负责。"
+    },
+    "section10": {
+      "title": "10.本条款的变更",
+      "content": "本条款可能会在不事先通知的情况下变更。最新内容将在本页面发布。"
+    },
+    "contact": {
+      "title": "联系方式",
+      "content": "关于本条款的咨询,请从这里联系我们。"
+    }
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "intro": "为了让用户安心使用,本网站将按照以下规定处理个人信息。",
+    "section1": {
+      "title": "1.收集的信息",
+      "content": "本网站收集以下信息。",
+      "posting": {
+        "title": "发布座位信息时:",
+        "content": "艺人名、巡演名、抽选区分、座位信息(区块、排、号)"
+      },
+      "login": {
+        "title": "X(Twitter)登录时:",
+        "item1": "电子邮件地址",
+        "item2": "用户名(显示名)",
+        "item3": "个人资料图片URL",
+        "item4": "X的用户账户信息"
+      },
+      "auto": {
+        "title": "自动收集的信息:",
+        "item1": "登录日期时间",
+        "item2": "账户创建日期时间"
+      }
+    },
+    "section2": {
+      "title": "2.信息的使用目的",
+      "content": "收集的信息将用于以下目的。",
+      "item1": "用户账户的管理・认证",
+      "item2": "座位信息的共享・显示",
+      "item3": "提供我的页面功能(显示・删除发布历史)",
+      "item4": "回复咨询",
+      "item5": "分析使用情况・改进服务"
+    },
+    "section3": {
+      "title": "3.向第三方服务提供信息",
+      "content": "本网站使用以下第三方服务,并向这些服务提供信息。",
+      "twitter": {
+        "title": "X(Twitter):",
+        "item1": "为了登录认证,使用X的认证服务",
+        "item2": "信息按照X的隐私政策进行处理"
+      },
+      "supabase": {
+        "title": "Supabase:",
+        "item1": "用于用户认证和数据库管理",
+        "item2": "收集的个人信息在适当的安全措施下保管"
+      }
+    },
+    "section4": {
+      "title": "4.个人信息的保存期限和管理",
+      "item1": "账户信息将保存到用户删除账户为止",
+      "item2": "发布的门票信息用户可以从我的页面自行删除",
+      "item3": "对于长期未使用的账户,可能会在不事先通知的情况下删除"
+    },
+    "section5": {
+      "title": "5.安全措施",
+      "content": "为了保护个人信息,本网站实施以下安全措施。",
+      "item1": "使用SSL/TLS加密通信",
+      "item2": "防止第三方非法访问",
+      "item3": "适当管理认证信息"
+    },
+    "section6": {
+      "title": "6.用户的权利",
+      "content": "用户对自己的个人信息拥有以下权利。",
+      "item1": "请求公开、更正、删除个人信息",
+      "item2": "删除发布的门票信息(可从我的页面执行)",
+      "item3": "删除账户(请通过联系我们页面联系)"
+    },
+    "section7": {
+      "title": "7.关于广告",
+      "content": "本网站计划使用第三方广告服务。广告发布商可能会使用Cookie来显示符合用户兴趣的广告。"
+    },
+    "section8": {
+      "title": "8.关于访问分析工具",
+      "content": "本网站可能会使用Google Analytics等访问分析工具。通过这些工具收集的数据是匿名的,不会识别个人身份。"
+    },
+    "section9": {
+      "title": "9.免责声明",
+      "content": "对于本网站发布的信息导致的损害等,概不负责。虽然我们对信息的准确性和安全性给予充分注意,但使用请自行判断。"
+    },
+    "section10": {
+      "title": "10.隐私政策的变更",
+      "content": "本政策的内容可能会在不事先通知的情况下变更。变更后的内容将在本页面发布。"
+    },
+    "contact": {
+      "title": "联系方式",
+      "content": "关于本条款的咨询,请从这里联系我们。"
+    }
+  }
+}
