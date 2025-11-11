@@ -22,6 +22,7 @@ export type Tour = {
   name: string
   end_date: string
   print_start_date: string | null
+  result_post_url: string | null
 }
 
 export type LotterySlot = {

@@ -18,6 +18,7 @@ import Modal from '@/app/components/common/Modal'
 import CarouselAds from './common/CarouselAds'
 import UserMenu from './common/UserMenu'
 import { GoogleAdsense } from './common/GoogleAdsense'
+import XEmbed from './common/XEmbed'
 
 /**
  * ホームページコンポーネント
@@ -47,6 +48,11 @@ export default function HomePage() {
   const selectedTourName = selectedTour
     ? tours.find(t => t.id === selectedTour)?.name
     : ''
+
+  // 選択中のツアーのresult_post_urlを取得
+  const selectedTourResultPostUrl = selectedTour
+    ? tours.find(t => t.id === selectedTour)?.result_post_url
+    : null
 
   /**
    * Xにポストする文字列を生成する関数
@@ -308,6 +314,14 @@ export default function HomePage() {
                 </p>
               )}
             </div>
+
+            {/* 実際の構成（result_post_urlがある場合のみ表示） */}
+            {selectedTourResultPostUrl && (
+              <div className="mt-8 mb-2">
+                <h2 className="text-lg text-gray-600 font-bold">実際の構成</h2>
+                <XEmbed key={selectedTourResultPostUrl} url={selectedTourResultPostUrl} />
+              </div>
+            )}
 
             {/* モーダル要素 */}
             <Modal
