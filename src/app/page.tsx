@@ -21,11 +21,11 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Suspense fallback={
-        <div className="min-h-screen px-4 py-8">
-          <div className="container mx-auto">
+        <main className="container mx-automin-h-screen px-4 py-6">
+          <div className="">
             <h1 className="text-2xl text-rose-500 font-bold text-center mb-4">読み込み中...</h1>
           </div>
-        </div>
+        </main>
       }>
         <HomePage />
       </Suspense>

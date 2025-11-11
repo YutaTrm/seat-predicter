@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function LicensePage() {
     return (
-      <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 text-md">
+      <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
         <SectionHeader title="Licenses and Attributions" />
 
         <p className="text-gray-600 leading-relaxed mb-4">

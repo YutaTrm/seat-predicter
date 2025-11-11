@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
     return (
-      <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 text-md">
+      <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
         <SectionHeader title="利用規約" />
 
         <p className="text-gray-600 leading-relaxed mb-8">

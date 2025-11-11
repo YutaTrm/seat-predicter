@@ -6,6 +6,7 @@ import { getSession, signOut } from '@/lib/supabase/auth'
 import { fetchUserTickets, deleteUserTicket, UserTicket } from '@/utils/myPageUtils'
 import type { Session } from '@supabase/supabase-js'
 import SectionHeader from '../components/common/SectionHeader'
+import Footer from '../components/common/Footer'
 
 /**
  * マイページコンポーネント
@@ -330,6 +331,11 @@ export default function MyPage() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* フッター */}
+      <div className="mt-12 mb-8">
+        <Footer />
       </div>
     </main>
   )

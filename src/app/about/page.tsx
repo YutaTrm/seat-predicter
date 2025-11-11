@@ -5,7 +5,7 @@ import Footer from '../components/common/Footer';
 
 export default function AboutPage() {
   return (
-    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8 text-md">
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
       <SectionHeader title="座席予想掲示板について" />
 
       <section className="mb-8">
