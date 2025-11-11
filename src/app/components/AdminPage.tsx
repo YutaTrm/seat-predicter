@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Artist, Tour, Ticket, LotterySlot, AdminPageProps } from '../../types/admin'
 import { fetchArtistTours } from '../../utils/tourUtils'
 import { ARTIST_XSHARE_WORDS } from '@/constants/artist'
@@ -142,8 +141,6 @@ export default function AdminPage({
   const handleLotterySlotDelete = (id: number) => {
     setLotterySlots(lotterySlots.filter(slot => slot.id !== id))
   }
-
-  const router = useRouter()
 
   return (
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">

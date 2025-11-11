@@ -1,6 +1,7 @@
 'use client'
 
 import { createSupabaseClient } from './client'
+import type { Session } from '@supabase/supabase-js'
 
 /**
  * クライアントサイドのSupabase認証ヘルパー関数
@@ -82,7 +83,33 @@ export const signOut = async () => {
 /**
  * 現在のセッションを取得
  */
-export const getSession = async () => {
+export const getSession = async (): Promise<Session | null> => {
+  // 開発モード: ダミーセッションを返す（本番環境では実行されない）
+  if (process.env.NEXT_PUBLIC_DEV_MODE === 'true') {
+    const devSession: Session = {
+      user: {
+        id: 'dev-user-id',
+        email: 'dev@example.com',
+        app_metadata: {},
+        user_metadata: {
+          name: '開発太郎',
+          avatar_url: null,
+        },
+        aud: 'authenticated',
+        created_at: new Date().toISOString(),
+        role: 'authenticated',
+        updated_at: new Date().toISOString(),
+      },
+      access_token: 'dev-token',
+      refresh_token: 'dev-refresh-token',
+      expires_at: Math.floor(Date.now() / 1000) + 3600,
+      expires_in: 3600,
+      token_type: 'bearer',
+    }
+    return devSession
+  }
+
+  // 本番環境の既存コード
   const supabase = getSupabaseClient()
   const { data: { session }, error } = await supabase.auth.getSession()
 

@@ -35,7 +35,14 @@ export default function UserMenu() {
 
     loadSession()
 
-    // 認証状態の変更を監視
+    // 開発モードの場合は認証状態の監視をスキップ（本番環境では実行される）
+    if (process.env.NEXT_PUBLIC_DEV_MODE === 'true') {
+      return () => {
+        mounted = false
+      }
+    }
+
+    // 認証状態の変更を監視（本番環境の既存コード）
     const setupAuthListener = async () => {
       const { getSupabaseClient } = await import('@/lib/supabase/auth')
       const supabase = getSupabaseClient()
