@@ -32,6 +32,7 @@ export default function HomePage() {
   const [totalTicketCount, setTotalTicketCount] = useState<number>(0)
   const [showTickets, setShowTickets] = useState<boolean>(false)
   const [showGridHelp, setShowGridHelp] = useState<boolean>(false)
+  const [showActualConfig, setShowActualConfig] = useState<boolean>(false)
   const [session, setSession] = useState<Session | null>(null)
 
   const searchParams = useSearchParams()
@@ -215,6 +216,7 @@ export default function HomePage() {
     setTickets([])
     setTotalTicketCount(0)
     setShowTickets(false)
+    setShowActualConfig(false)
   }, [selectedArtist, selectedTour])
 
   return (
@@ -325,8 +327,25 @@ export default function HomePage() {
             {/* 実際の構成（result_post_urlがある場合のみ表示） */}
             {selectedTourResultPostUrl && (
               <div className="mt-8 mb-2">
-                <h2 className="text-lg text-gray-600 font-bold">実際の構成</h2>
-                <XEmbed key={selectedTourResultPostUrl} url={selectedTourResultPostUrl} />
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg text-gray-600 font-bold">実際の構成</h2>
+                  <button
+                    onClick={() => setShowActualConfig(!showActualConfig)}
+                    className="flex items-center"
+                  >
+                    <svg
+                      className={`w-5 h-5 text-rose-500 transition-transform ${showActualConfig ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+                <div className={`${showActualConfig ? '' : 'hidden'}`}>
+                  <XEmbed key={selectedTourResultPostUrl} url={selectedTourResultPostUrl} />
+                </div>
               </div>
             )}
 
