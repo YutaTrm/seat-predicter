@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { M_PLUS_1p } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { GoogleAdsense } from './components/common/GoogleAdsense'
 import SupabaseProvider from './components/SupabaseProvider'
 import './globals.css'
 
@@ -85,7 +84,6 @@ export default function RootLayout({
         {gaId && (
           <GoogleAnalytics gaId={gaId} />
         )}
-        <GoogleAdsense />
       </body>
     </html>
   )

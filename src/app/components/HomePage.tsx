@@ -17,6 +17,7 @@ import AdmaxAds from './common/AdmaxAds'
 import Modal from '@/app/components/common/Modal'
 import CarouselAds from './common/CarouselAds'
 import UserMenu from './common/UserMenu'
+import { GoogleAdsense } from './common/GoogleAdsense'
 
 /**
  * ホームページコンポーネント
@@ -205,6 +206,7 @@ export default function HomePage() {
 
   return (
     <main className="container mx-auto px-4 py-6 md:grid md:grid-cols-3 md:auto-rows-max md:gap-4">
+      <GoogleAdsense />
 
       {/* <section className='mb-4 text-center'>
         <AdmaxAds code='3e6bd2d29e9a3eacb2b94ce7200c3c3a'/>

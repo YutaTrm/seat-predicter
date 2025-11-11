@@ -2,6 +2,7 @@ import React from 'react';
 import SectionHeader from '../components/common/SectionHeader';
 import type { Metadata } from 'next';
 import Footer from '../components/common/Footer';
+import { GoogleAdsense } from '../components/common/GoogleAdsense';
 
 export const metadata: Metadata = {
   title: 'ライセンス情報 | 座席予想掲示板',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
     return (
       <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
+        <GoogleAdsense />
         <SectionHeader title="利用規約" />
 
         <p className="text-gray-600 leading-relaxed mb-8">

@@ -7,6 +7,7 @@ import { fetchUserTickets, deleteUserTicket, UserTicket } from '@/utils/myPageUt
 import type { Session } from '@supabase/supabase-js'
 import SectionHeader from '../components/common/SectionHeader'
 import Footer from '../components/common/Footer'
+// import { GoogleAdsense } from '../components/common/GoogleAdsense'
 
 /**
  * マイページコンポーネント
@@ -160,6 +161,9 @@ export default function MyPage() {
 
   return (
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
+      {/* 将来的に広告を表示する場合は下記のコメントを外してください */}
+      {/* <GoogleAdsense /> */}
+
       {/* ヘッダー */}
       <SectionHeader title="マイページ" />
       <div className="mb-8">

@@ -2,10 +2,12 @@ import React from 'react';
 import Link from 'next/link';
 import SectionHeader from '../components/common/SectionHeader';
 import Footer from '../components/common/Footer';
+import { GoogleAdsense } from '../components/common/GoogleAdsense';
 
 export default function AboutPage() {
   return (
     <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
+      <GoogleAdsense />
       <SectionHeader title="座席予想掲示板について" />
 
       <section className="mb-8">
