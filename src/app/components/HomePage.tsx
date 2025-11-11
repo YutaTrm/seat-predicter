@@ -210,6 +210,13 @@ export default function HomePage() {
     }
   }, [])
 
+  // アーティストまたはツアーが変更されたときにチケット情報をリセット
+  useEffect(() => {
+    setTickets([])
+    setTotalTicketCount(0)
+    setShowTickets(false)
+  }, [selectedArtist, selectedTour])
+
   return (
     <main className="container mx-auto px-4 py-6 md:grid md:grid-cols-3 md:auto-rows-max md:gap-4">
       <GoogleAdsense />
