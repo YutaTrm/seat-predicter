@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createSupabaseClient } from '@/lib/supabase/client'
 import { Artist, Tour, Ticket, LotterySlot, AdminPageProps } from '../../types/admin'
 import { fetchArtistTours } from '../../utils/tourUtils'
 import { ARTIST_XSHARE_WORDS } from '@/constants/artist'
@@ -10,6 +9,7 @@ import ArtistSection from './admin/ArtistSection'
 import TourSection from './admin/TourSection'
 import TicketSection from './admin/TicketSection'
 import LotterySlotSection from './admin/LotterySlotSection'
+import AdminHeader from './admin/AdminHeader'
 
 /**
  * 管理画面コンポーネント
@@ -144,66 +144,36 @@ export default function AdminPage({
   }
 
   const router = useRouter()
-  const supabase = createSupabaseClient()
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/auth/login')
-  }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="p-4 lg:p-6">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold">管理画面</h1>
-            <div className="flex gap-4 mt-2">
-              <button
-                onClick={() => router.push('/admin/user')}
-                className="text-sm text-gray-500 hover:text-rose-700 transition-colors"
-              >
-                ユーザー管理 →
-              </button>
-              <button
-                onClick={() => router.push('/admin/ticket')}
-                className="text-sm text-gray-500 hover:text-rose-700 transition-colors"
-              >
-                チケット管理 →
-              </button>
-            </div>
-          </div>
-          <div className="flex gap-2 items-center">
-            {selectedArtistId && selectedTourId && (
-              <button
-                onClick={() => {
-                  const url = `https://zasekiyosou.com/?artist=${selectedArtistId}&tour=${selectedTourId}`
-
-                  // アーティスト名、ツアー名、シェアワードを取得
-                  const artist = artists.find(a => a.id === parseInt(selectedArtistId))
-                  const tour = tours.find(t => t.id === parseInt(selectedTourId))
-                  const shareWords = ARTIST_XSHARE_WORDS[parseInt(selectedArtistId) - 7] || [] // セブチのアーティストIDが7だから
-
-                  // シェアテキストを生成
-                  const text = `${artist?.name} ${tour?.name} ${shareWords.join(' ')}\n${url}`
-
-                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
-                }}
-                className="bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded flex items-center gap-1"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-                でシェア
-              </button>
-            )}
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6 text-md">
+      <AdminHeader />
+      <div className="">
+        {selectedArtistId && selectedTourId && (
+          <div className="flex justify-end items-center mb-6">
             <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => {
+                const url = `https://zasekiyosou.com/?artist=${selectedArtistId}&tour=${selectedTourId}`
+
+                // アーティスト名、ツアー名、シェアワードを取得
+                const artist = artists.find(a => a.id === parseInt(selectedArtistId))
+                const tour = tours.find(t => t.id === parseInt(selectedTourId))
+                const shareWords = ARTIST_XSHARE_WORDS[parseInt(selectedArtistId) - 7] || [] // セブチのアーティストIDが7だから
+
+                // シェアテキストを生成
+                const text = `${artist?.name} ${tour?.name} ${shareWords.join(' ')}\n${url}`
+
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
+              }}
+              className="bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded flex items-center gap-1"
             >
-              ログアウト
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              でシェア
             </button>
           </div>
-        </div>
+        )}
 
         <div className="flex flex-col gap-2 text-sm lg:flex-row lg:gap-4">
           <ArtistSection
@@ -269,6 +239,6 @@ export default function AdminPage({
           />
         </div>
       </div>
-    </div>
+    </main>
   )
 }

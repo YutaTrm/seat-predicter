@@ -6,6 +6,7 @@ import { getSession } from '@/lib/supabase/auth'
 import { fetchAllUsers, AdminUser } from '@/utils/adminUtils'
 import { fetchUserTickets, UserTicket } from '@/utils/myPageUtils'
 import type { Session } from '@supabase/supabase-js'
+import AdminHeader from '@/app/components/admin/AdminHeader'
 
 /**
  * 管理者用ユーザー管理ページ
@@ -205,18 +206,8 @@ function AdminUserPageContent() {
   }
 
   return (
-    <main className="mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
-      {/* ヘッダー */}
-      <h1 className="text-2xl font-bold">ユーザー一覧</h1>
-
-      <div className="mb-4">
-        <button
-          onClick={() => router.push('/admin')}
-          className="text-sm text-rose-500 hover:text-rose-700 transition-colors"
-        >
-          ← 管理者ページに戻る
-        </button>
-      </div>
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-8">
+      <AdminHeader />
 
       {/* エラーメッセージ */}
       {error && (

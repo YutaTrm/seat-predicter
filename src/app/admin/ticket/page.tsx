@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
 import { fetchAllTicketsWithUsers, fetchAllArtistsAndTours, deleteTicket, AdminTicket } from '@/utils/adminTicketUtils'
+import AdminHeader from '@/app/components/admin/AdminHeader'
 
 type SortKey = 'artist_name' | 'tour_name' | 'user_email' | 'block' | 'ticket_created_at'
 type SortOrder = 'asc' | 'desc'
@@ -253,17 +254,8 @@ function AdminTicketPageContent() {
   }
 
   return (
-    <main className="mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6">
-      {/* ヘッダー */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">チケット一覧</h1>
-        <button
-          onClick={() => router.push('/admin')}
-          className="text-sm text-rose-500 hover:text-rose-700 underline"
-        >
-          ← 管理画面に戻る
-        </button>
-      </div>
+    <main className="container mx-auto h-screen overflow-y-auto min-h-screen px-4 py-6">
+      <AdminHeader />
 
       {/* エラーメッセージ */}
       {error && (
