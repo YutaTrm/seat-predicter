@@ -378,7 +378,31 @@ export default function HomePage() {
             </Modal>
           </>
         )}
+      </section>
 
+      {/* サイト説明セクション */}
+      <section className="mt-8 md:col-span-3">
+        <h2 className="text-lg text-gray-600 font-bold mb-2">{t('home.aboutSite.title')}</h2>
+        <div className="p-4 border rounded bg-white text-gray-600 text-sm leading-relaxed space-y-4">
+          <div>
+            <h3 className="font-bold text-rose-500 mb-1">{t('home.aboutSite.overview')}</h3>
+            <p>
+              {t('home.aboutSite.description')}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-rose-500 mb-1">{t('home.aboutSite.features')}</h3>
+            <p>
+              {t('home.aboutSite.howItHelps')}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-rose-500 mb-1">{t('home.aboutSite.usage')}</h3>
+            <p>
+              {t('home.aboutSite.howToUse')}
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* アフィリエイト */}
