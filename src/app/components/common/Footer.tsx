@@ -23,6 +23,14 @@ export default function Footer() {
         >
           {t('footer.contact')}
         </a>
+        <a
+          href="https://x.com/zasekiyosou_app"
+          className="hover:text-rose-600 transition-colors"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('footer.officialX')}
+        </a>
         <Link href="/terms" className="hover:text-rose-600 transition-colors">{t('footer.terms')}</Link>
         <Link href="/privacy" className="hover:text-rose-600 transition-colors">{t('footer.privacy')}</Link>
         <Link href="/license" className="hover:text-rose-600 transition-colors">{t('footer.license')}</Link>

@@ -392,8 +392,11 @@ export default function HomePage() {
           </div>
           <div>
             <h3 className="font-bold text-rose-500 mb-1">{t('home.aboutSite.features')}</h3>
-            <p>
+            <p className="mb-2">
               {t('home.aboutSite.howItHelps')}
+            </p>
+            <p>
+              {t('home.aboutSite.accountLink')}
             </p>
           </div>
           <div>
@@ -401,6 +404,23 @@ export default function HomePage() {
             <p>
               {t('home.aboutSite.howToUse')}
             </p>
+          </div>
+          <div>
+            <h3 className="font-bold text-rose-500 mb-1">{t('home.aboutSite.faq')}</h3>
+            <div className="space-y-3">
+              <div>
+                <p className="text-gray-700"><span className="font-bold text-rose-500">Q.</span> {t('home.aboutSite.faqQ1')}</p>
+                <p className=""><span className="font-bold text-rose-500">A.</span> {t('home.aboutSite.faqA1')}</p>
+              </div>
+              <div>
+                <p className="text-gray-700"><span className="font-bold text-rose-500">Q.</span> {t('home.aboutSite.faqQ2')}</p>
+                <p className=""><span className="font-bold text-rose-500">A.</span> {t('home.aboutSite.faqA2')}</p>
+              </div>
+              <div>
+                <p className="text-gray-700"><span className="font-bold text-rose-500">Q.</span> {t('home.aboutSite.faqQ3')}</p>
+                <p className=""><span className="font-bold text-rose-500">A.</span> {t('home.aboutSite.faqA3')}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
