@@ -31,6 +31,13 @@
       "note2": "图片可长按保存。允许转载图片。",
       "note3": "区块按相同字母横向排列，靠左对齐。各区块大小根据已登记门票自动计算。",
       "note4": "AI异常值修正在门票数量较少时精度会降低。请作为参考使用。"
+    },
+    "ticketGrid": {
+      "outlierDetection": "AI异常值校正",
+      "off": "OFF",
+      "on": "ON",
+      "excludedTickets": "已排除的票券",
+      "ticketsCount": "张"
     }
   },
   "common": {

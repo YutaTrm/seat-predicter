@@ -31,6 +31,13 @@
       "note2": "圖片可長按儲存。允許轉載圖片。",
       "note3": "區塊按相同字母橫向排列，靠左對齊。各區塊大小根據已登記門票自動計算。",
       "note4": "AI異常值修正在門票數量較少時精度會降低。請作為參考使用。"
+    },
+    "ticketGrid": {
+      "outlierDetection": "AI異常值校正",
+      "off": "OFF",
+      "on": "ON",
+      "excludedTickets": "已排除的票券",
+      "ticketsCount": "張"
     }
   },
   "common": {

@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import Image from 'next/image'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { TicketGridCanvasProps } from './TicketGrid/types'
 import { useOutlierDetection } from './TicketGrid/hooks/useOutlierDetection'
 import { useCanvasDrawing } from './TicketGrid/hooks/useCanvasDrawing'
@@ -39,6 +40,7 @@ import { useCanvasDrawing } from './TicketGrid/hooks/useCanvasDrawing'
  */
 const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { t } = useLanguage()
   const {
     enableOutlierDetection,
     setEnableOutlierDetection,
@@ -65,7 +67,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
       </div>
 
       <div className="flex items-center gap-4">
-        <h3 className='text-sm'>AIによる外れ値補正 :</h3>
+        <h3 className='text-sm'>{t('home.ticketGrid.outlierDetection')} :</h3>
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="radio"
@@ -74,7 +76,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
             onChange={() => setEnableOutlierDetection(false)}
             className="text-rose-500 focus:ring-rose-500 hidden"
           />
-          <span className={!enableOutlierDetection ? 'text-rose-500' : 'text-gray-600'}>OFF</span>
+          <span className={!enableOutlierDetection ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.off')}</span>
         </label>
         <label className="flex items-center gap-2 cursor-pointer">
           <input
@@ -84,7 +86,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
             onChange={() => setEnableOutlierDetection(true)}
             className="text-rose-500 focus:ring-rose-500 hidden"
           />
-          <span className={enableOutlierDetection ? 'text-rose-500' : 'text-gray-600'}>ON</span>
+          <span className={enableOutlierDetection ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.on')}</span>
         </label>
       </div>
 
@@ -92,7 +94,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
         // トゲがあるから非表示にしとく
         <div className="px-2 space-y-2 hidden">
           <span className="text-sm text-gray-600">
-            除外されたチケット: {outlierStats.outliers}件　
+            {t('home.ticketGrid.excludedTickets')}: {outlierStats.outliers}{t('home.ticketGrid.ticketsCount')}
           </span>
           <span className="text-sm text-gray-600 break-all">
             {outlierStats.outlierTickets.map((ticket, i) => (
