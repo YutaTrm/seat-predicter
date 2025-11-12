@@ -177,7 +177,8 @@ function AdminUserPageContent() {
     setIsLoadingTickets(true)
 
     try {
-      const tickets = await fetchUserTickets(user.id)
+      // 管理画面ではダミーデータを使用しない（skipDevMode = true）
+      const tickets = await fetchUserTickets(user.id, true)
       setUserTickets(tickets)
     } catch (error) {
       console.error('チケット取得エラー:', error)
@@ -298,24 +299,81 @@ function AdminUserPageContent() {
             ) : userTickets.length === 0 ? (
               <p className="text-gray-500 text-center py-4">チケットがありません</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {userTickets.map((ticket) => (
                   <div
                     key={ticket.id}
-                    className="bg-gray-50 rounded p-3 text-sm border border-gray-200"
+                    className="relative border rounded-lg overflow-hidden bg-white"
                   >
-                    <p className="font-bold text-gray-800 truncate">{ticket.artist_name}</p>
-                    <p className="text-xs text-gray-600 truncate mb-2">{ticket.tour_name}</p>
-                    <p className="text-gray-700">
-                      <span className="font-medium text-rose-600">
-                        {ticket.block}{ticket.block_number}
-                      </span>ブロック{' '}
-                      <span className="font-medium text-rose-600">{ticket.column}</span>列{' '}
-                      <span className="font-medium text-rose-600">{ticket.number}</span>番
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {new Date(ticket.created_at).toLocaleDateString('ja-JP')}
-                    </p>
+                    {/* チケット上部の飾り */}
+                    <div className="absolute top-0 left-0 right-0 h-2 from-rose-400 via-pink-400 to-rose-400"></div>
+
+                    {/* チケット内容 */}
+                    <div className="p-4">
+                      {/* アーティスト名 */}
+                      <h3 className="text-lg font-bold text-rose-600 mb-1 truncate">
+                        {ticket.artist_name}
+                      </h3>
+
+                      {/* ツアー名とday*/}
+                      <p className="text-sm text-gray-600 mb-2 truncate">
+                        {ticket.tour_name}
+                        {ticket.day && (
+                          <span className="font-medium text-gray-400"> (day{ticket.day})</span>
+                        )}
+                      </p>
+
+                      {/* 区切り線 */}
+                      <div className="border-t-2 border-dashed border-rose-200 my-2"></div>
+
+                      {/* 座席情報 */}
+                      <div className="space-y-2 mb-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-500">抽選枠</span>
+                          <span className="text-gray-600">{ticket.lottery_slots_name}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-500 text-sm">座席</span>
+                          <div className="flex items-center gap-1">
+                            <span className="font-bold text-rose-600 text-xl">
+                              {ticket.block}{ticket.block_number}
+                            </span>
+                            <span className="text-gray-400 text-sm">ブロック</span>
+                            <span className="font-bold text-rose-600 text-xl">
+                              {ticket.column}
+                            </span>
+                            <span className="text-gray-400 text-sm">列</span>
+                            <span className="font-bold text-rose-600 text-xl">
+                              {ticket.number}
+                            </span>
+                            <span className="text-gray-400 text-sm">番</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 区切り線 */}
+                      <div className="border-t-2 border-dashed border-rose-200 my-2"></div>
+
+                      {/* 投稿日時 */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">
+                          投稿日:
+                          {new Date(ticket.created_at).toLocaleDateString('ja-JP', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* チケット右側の切り取り線風装飾 */}
+                    <div className="absolute right-0 top-0 bottom-0 w-4 flex flex-col justify-around items-center bg-white">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>

@@ -23,10 +23,13 @@ export interface UserTicket {
 
 /**
  * ユーザーが投稿したチケット一覧を取得する関数
+ * @param userId - ユーザーID
+ * @param skipDevMode - 開発モードのダミーデータをスキップするかどうか（管理画面用）
  */
-export const fetchUserTickets = async (userId: string): Promise<UserTicket[]> => {
+export const fetchUserTickets = async (userId: string, skipDevMode: boolean = false): Promise<UserTicket[]> => {
   // 開発モード: ダミーチケットデータを返す（本番環境では実行されない）
-  if (process.env.NEXT_PUBLIC_DEV_MODE === 'true') {
+  // 管理画面から呼ばれた場合（skipDevMode = true）はダミーデータを使わない
+  if (process.env.NEXT_PUBLIC_DEV_MODE === 'true' && !skipDevMode) {
     return [
       {
         id: 1,
