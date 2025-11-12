@@ -1,0 +1,288 @@
+{
+  "home": {
+    "title": "座位預測留言板",
+    "subtitle": "匯總大家的門票資訊\n預測座位配置",
+    "ticketInput": "門票資訊輸入",
+    "dataLoadError": "取得資料失敗。請重新整理頁面。",
+    "registeredSeats": "已登記座位",
+    "tickets": "門票",
+    "count": "件",
+    "shareOnX": "在X上分享",
+    "seatDistribution": "座位分布",
+    "distributionAbout": "關於分布",
+    "distributionNote": "登記15件以上後會生成分布圖",
+    "actualConfiguration": "實際配置",
+    "showTickets": "顯示門票列表",
+    "reset": "重置",
+    "register": "登記",
+    "artist": "藝人",
+    "tour": "巡演",
+    "lotterySlot": "抽選區分",
+    "day": "日程",
+    "block": "區塊",
+    "row": "排",
+    "seat": "座位號",
+    "login": "登入",
+    "logout": "登出",
+    "mypage": "我的頁面",
+    "distributionModal": {
+      "title": "關於分布",
+      "note1": "這是根據已登記門票計算的分布，並非配置預測，請注意。",
+      "note2": "圖片可長按儲存。允許轉載圖片。",
+      "note3": "區塊按相同字母橫向排列，靠左對齊。各區塊大小根據已登記門票自動計算。",
+      "note4": "AI異常值修正在門票數量較少時精度會降低。請作為參考使用。"
+    },
+    "ticketGrid": {
+      "outlierDetection": "AI異常值校正",
+      "off": "OFF",
+      "on": "ON",
+      "excludedTickets": "已排除的票券",
+      "ticketsCount": "張"
+    }
+  },
+  "common": {
+    "loading": "載入中...",
+    "error": "發生錯誤",
+    "submit": "提交",
+    "cancel": "取消",
+    "close": "關閉"
+  },
+  "form": {
+    "selectArtist": "選擇藝人",
+    "selectTour": "選擇巡演",
+    "block": "區塊",
+    "blockNumber": "區塊號",
+    "row": "排",
+    "seat": "座位",
+    "lotterySlot": "抽選區分",
+    "showDate": "演出日",
+    "reset": "重置",
+    "list": "列表",
+    "register": "登記",
+    "loginToRegister": "登入後可以登記門票",
+    "availableAfterPrint": "門票列印日起可以使用",
+    "fillAllFields": "請輸入所有資訊",
+    "confirmRegister": "【day{day} {block}{blockNumber}區塊 {column}排 {seatNumber}號】將被登記。確認無誤嗎？"
+  },
+  "table": {
+    "showListMessage": "點擊（列表）或登記門票後會顯示列表",
+    "noTickets": "沒有已登記的門票",
+    "block": "區塊",
+    "row": "排",
+    "seat": "座位",
+    "lotterySlot": "抽選區分",
+    "blockSummary": "按區塊統計",
+    "lotterySlotSummary": "按抽選區分統計",
+    "count": "件"
+  },
+  "userMenu": {
+    "loginWithX": "登入",
+    "myPage": "我的頁面",
+    "user": "使用者"
+  },
+  "footer": {
+    "about": "關於應用",
+    "contact": "聯絡我們",
+    "terms": "使用條款",
+    "privacy": "隱私權政策",
+    "license": "授權條款",
+    "copyright": "©2025 座位預測留言板"
+  },
+  "about": {
+    "title": "關於座位預測留言板",
+    "overview": "應用概述",
+    "overviewText": "座位預測留言板是一個登記/列表化演唱會門票號碼並可視化區塊資訊的應用。",
+    "howToUse": "使用方法",
+    "howToUseList1": "選擇藝人和巡演後點擊（列表）按鈕，可以查看資料庫中登記的門票資訊列表。",
+    "howToUseList2": "輸入門票資訊並點擊（登記）按鈕可以登記到資料庫。\n※登記後的門票資訊無法刪除。",
+    "howToUseList3": "顯示的列表是其他人已登記的資訊。點擊表格上方項目名的箭頭可以對列進行排序。",
+    "howToUseList4": "藝人和巡演由管理員登記。希望新增的使用者請從這裡提交請求。如能提供以下格式的資訊將有助於登記。",
+    "requestFormat": "藝人名\n　┗巡演名[舉辦地區]\n　┗門票類型(◯◯會員/◯◯手機/附註等)",
+    "management": "本應用營運",
+    "managementList1": "以任何人都能輕鬆免費使用為理念。",
+    "managementList2": "營運需要伺服器設置費、URL取得費、資料庫月費等，為了支付這些費用而設置了廣告。",
+    "managementList3": "本應用的授權條款資訊請查看授權條款。",
+    "notes": "注意事項",
+    "notesText": "如對本應用有改進建議或要求，請從這裡聯絡我們。",
+    "here": "這裡"
+  },
+  "mypage": {
+    "title": "我的頁面",
+    "loading": "載入中...",
+    "logout": "登出",
+    "myTickets": "已登記的門票",
+    "sortNewest": "登記日(最新)",
+    "sortOldest": "登記日(最舊)",
+    "sortArtistAsc": "藝人名(升序)",
+    "sortArtistDesc": "藝人名(降序)",
+    "noTickets": "還沒有登記門票",
+    "postTicket": "登記門票",
+    "lotterySlot": "抽選區分",
+    "seat": "座位",
+    "block": "區塊",
+    "row": "排",
+    "number": "號",
+    "postedOn": "登記日",
+    "deleteConfirm": "確定要刪除以下門票嗎？\n\n【{artist}】\n{tour}\n座位: {block}{blockNumber}區塊 {column}排 {number}號\n\n此操作無法撤銷。",
+    "deleteError": "門票刪除失敗",
+    "user": "使用者"
+  },
+  "terms": {
+    "title": "使用條款",
+    "intro": "本使用條款(以下簡稱（本條款）)規定了本網站提供的服務(以下簡稱（本服務）)的使用條件。使用前請確認本條款。",
+    "section1": {
+      "title": "1.使用目的",
+      "content": "本服務旨在共享演唱會等門票座位資訊,作為配置預測等的參考。"
+    },
+    "section2": {
+      "title": "2.帳戶註冊・登入",
+      "content": "使用本服務的部分功能(我的頁面、貼文管理等)需要使用X(Twitter)帳戶登入。",
+      "item1": "登入使用X(Twitter)的認證服務",
+      "item2": "登入時視為同意X(Twitter)的使用條款及隱私權政策",
+      "item3": "登入即視為同意本條款及隱私權政策",
+      "item4": "不登入也可以瀏覽或發布門票資訊"
+    },
+    "section3": {
+      "title": "3.禁止事項",
+      "content": "使用者不得進行以下行為。",
+      "item1": "包含他人個人資訊的發布",
+      "item2": "發布虛假或誤導性資訊",
+      "item3": "侵犯版權、肖像權等他人權利的行為",
+      "item4": "違反公序良俗的行為",
+      "item5": "非法存取、垃圾郵件等行為",
+      "item6": "非法使用他人帳戶的行為",
+      "item7": "向第三方轉讓或出借帳戶資訊的行為",
+      "item8": "透過建立多個帳戶進行非法使用"
+    },
+    "section4": {
+      "title": "4.帳戶管理責任",
+      "content": "使用者應對自己的帳戶資訊管理負責。",
+      "item1": "對於帳戶被非法使用造成的損害,本網站概不負責",
+      "item2": "如發現第三方非法使用帳戶,請立即聯絡本網站"
+    },
+    "section5": {
+      "title": "5.發布資訊的處理",
+      "content": "請注意,使用者發布的座位資訊等資料可能會在本網站上公開。發布內容的責任歸發布者所有。",
+      "item1": "登入使用者可以從我的頁面刪除自己的貼文",
+      "item2": "已刪除的貼文無法復原,請注意"
+    },
+    "section6": {
+      "title": "6.帳戶刪除・停用",
+      "content": "在以下情況下,本網站可能會刪除或停用使用者帳戶。",
+      "item1": "違反本條款時",
+      "item2": "長期未使用時",
+      "item3": "本網站認為不適當的其他情況",
+      "item4": "如使用者希望刪除帳戶,請透過聯絡我們頁面聯絡"
+    },
+    "section7": {
+      "title": "7.第三方服務的使用",
+      "content": "本服務使用以下第三方服務。",
+      "item1": "X(Twitter): 登入認證",
+      "item2": "Supabase: 使用者認證及資料管理",
+      "item3": "您需要遵守這些服務的使用條款和隱私權政策。"
+    },
+    "section8": {
+      "title": "8.服務內容的變更・中止",
+      "content": "本服務可能會在不事先通知的情況下變更內容,或停止・終止服務。"
+    },
+    "section9": {
+      "title": "9.免責聲明",
+      "content": "對於使用本服務而產生的任何損害,本網站概不負責。"
+    },
+    "section10": {
+      "title": "10.本條款的變更",
+      "content": "本條款可能會在不事先通知的情況下變更。最新內容將在本頁面發布。"
+    },
+    "contact": {
+      "title": "聯絡方式",
+      "content": "關於本條款的諮詢,請從這裡聯絡我們。"
+    }
+  },
+  "privacy": {
+    "title": "隱私權政策",
+    "intro": "為了讓使用者安心使用,本網站將按照以下規定處理個人資訊。",
+    "section1": {
+      "title": "1.收集的資訊",
+      "content": "本網站收集以下資訊。",
+      "posting": {
+        "title": "發布座位資訊時:",
+        "content": "藝人名、巡演名、抽選區分、座位資訊(區塊、排、號)"
+      },
+      "login": {
+        "title": "X(Twitter)登入時:",
+        "item1": "電子郵件地址",
+        "item2": "使用者名稱(顯示名稱)",
+        "item3": "個人資料圖片URL",
+        "item4": "X的使用者帳戶資訊"
+      },
+      "auto": {
+        "title": "自動收集的資訊:",
+        "item1": "登入日期時間",
+        "item2": "帳戶建立日期時間"
+      }
+    },
+    "section2": {
+      "title": "2.資訊的使用目的",
+      "content": "收集的資訊將用於以下目的。",
+      "item1": "使用者帳戶的管理・認證",
+      "item2": "座位資訊的共享・顯示",
+      "item3": "提供我的頁面功能(顯示・刪除發布歷史)",
+      "item4": "回覆諮詢",
+      "item5": "分析使用情況・改進服務"
+    },
+    "section3": {
+      "title": "3.向第三方服務提供資訊",
+      "content": "本網站使用以下第三方服務,並向這些服務提供資訊。",
+      "twitter": {
+        "title": "X(Twitter):",
+        "item1": "為了登入認證,使用X的認證服務",
+        "item2": "資訊按照X的隱私權政策進行處理"
+      },
+      "supabase": {
+        "title": "Supabase:",
+        "item1": "用於使用者認證和資料庫管理",
+        "item2": "收集的個人資訊在適當的安全措施下保管"
+      }
+    },
+    "section4": {
+      "title": "4.個人資訊的保存期限和管理",
+      "item1": "帳戶資訊將保存到使用者刪除帳戶為止",
+      "item2": "發布的門票資訊使用者可以從我的頁面自行刪除",
+      "item3": "對於長期未使用的帳戶,可能會在不事先通知的情況下刪除"
+    },
+    "section5": {
+      "title": "5.安全措施",
+      "content": "為了保護個人資訊,本網站實施以下安全措施。",
+      "item1": "使用SSL/TLS加密通訊",
+      "item2": "防止第三方非法存取",
+      "item3": "適當管理認證資訊"
+    },
+    "section6": {
+      "title": "6.使用者的權利",
+      "content": "使用者對自己的個人資訊擁有以下權利。",
+      "item1": "請求公開、更正、刪除個人資訊",
+      "item2": "刪除發布的門票資訊(可從我的頁面執行)",
+      "item3": "刪除帳戶(請透過聯絡我們頁面聯絡)"
+    },
+    "section7": {
+      "title": "7.關於廣告",
+      "content": "本網站計畫使用第三方廣告服務。廣告發布商可能會使用Cookie來顯示符合使用者興趣的廣告。"
+    },
+    "section8": {
+      "title": "8.關於存取分析工具",
+      "content": "本網站可能會使用Google Analytics等存取分析工具。透過這些工具收集的資料是匿名的,不會識別個人身份。"
+    },
+    "section9": {
+      "title": "9.免責聲明",
+      "content": "對於本網站發布的資訊導致的損害等,概不負責。雖然我們對資訊的準確性和安全性給予充分注意,但使用請自行判斷。"
+    },
+    "section10": {
+      "title": "10.隱私權政策的變更",
+      "content": "本政策的內容可能會在不事先通知的情況下變更。變更後的內容將在本頁面發布。"
+    },
+    "contact": {
+      "title": "聯絡方式",
+      "content": "關於本條款的諮詢,請從這裡聯絡我們。"
+    }
+  }
+}

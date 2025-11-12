@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { M_PLUS_1p } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import SupabaseProvider from './components/SupabaseProvider'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
 
 const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
@@ -79,7 +80,9 @@ export default function RootLayout({
     <html lang="ja">
       <body className={mplus.className}>
         <SupabaseProvider supabaseUrl={supabaseUrl} supabaseKey={supabaseKey}>
-          {children}
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
         </SupabaseProvider>
         {gaId && (
           <GoogleAnalytics gaId={gaId} />

@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
 import type { Session } from '@supabase/supabase-js'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 /**
  * ユーザーメニューコンポーネント
  * ログイン状態を表示し、ログイン/ログアウトボタンを提供
  */
 export default function UserMenu() {
+  const { t } = useLanguage()
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
@@ -107,12 +109,12 @@ export default function UserMenu() {
       <button
         onClick={handleTwitterSignIn}
         className="bg-gray-900 hover:bg-gray-700 text-white px-2 py-[2px] rounded text-sm transition-colors flex items-center"
-        title="Xでログイン"
+        title={`X${t('userMenu.loginWithX')}`}
       >
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
         </svg>
-        でログイン
+        {t('userMenu.loginWithX')}
       </button>
     )
   }
@@ -128,7 +130,7 @@ export default function UserMenu() {
     userMetadata?.user_name ||
     userMetadata?.preferred_username ||
     user.email?.split('@')[0] ||
-    'ユーザー'
+    t('userMenu.user')
 
   // Xのプロフィール画像を取得（複数のフィールドを確認）
   const avatarUrl =
@@ -141,7 +143,7 @@ export default function UserMenu() {
     <button
       onClick={handleMyPageClick}
       className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-      title="マイページ"
+      title={t('userMenu.myPage')}
     >
       {avatarUrl ? (
         <img

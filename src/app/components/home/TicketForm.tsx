@@ -5,6 +5,7 @@ import { Artist, Tour, LotterySlot } from '../../../types/ticket'
 import { SubmitResult } from '../../../types/ticket'
 import { updateUrlParams } from '../../../utils/ticketUtils'
 import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 /**
  * 制限に使う定数
@@ -61,6 +62,7 @@ export default function TicketForm({
   onShowTickets,
   isLoggedIn
 }: TicketFormProps) {
+  const { t } = useLanguage()
   const router = useRouter()
   const [block, setBlock] = useState<string>('')
   const [blockNumber, setBlockNumber] = useState<number | null>(null)
@@ -87,11 +89,18 @@ export default function TicketForm({
       setError(null)
 
       if (!block || !blockNumber || !column || !seatNumber || !day || !selectedLotterySlot) {
-        setError('すべての情報を入力してください')
+        setError(t('form.fillAllFields'))
         return
       }
 
-      const confirmed = confirm(`【day${day} ${block}${blockNumber}ブロック ${column}列 ${seatNumber}番】を登録します。お間違いありませんか？`)
+      const confirmMessage = t('form.confirmRegister')
+        .replace('{day}', String(day))
+        .replace('{block}', block)
+        .replace('{blockNumber}', String(blockNumber))
+        .replace('{column}', String(column))
+        .replace('{seatNumber}', String(seatNumber))
+
+      const confirmed = confirm(confirmMessage)
       if (confirmed) {
         const result = await onSubmit(block, blockNumber, column, seatNumber, day, selectedLotterySlot)
         if (result.success) {
@@ -106,7 +115,7 @@ export default function TicketForm({
         }
       }
     },
-    [block, blockNumber, column, seatNumber, day, selectedLotterySlot, onSubmit, setError, setBlock, setBlockNumber, setColumn, setSeatNumber, setDay]
+    [block, blockNumber, column, seatNumber, day, selectedLotterySlot, onSubmit, setError, setBlock, setBlockNumber, setColumn, setSeatNumber, setDay, t]
   )
 
   const handleReset = useCallback(
@@ -138,7 +147,7 @@ export default function TicketForm({
         }}
         className="w-full p-1 border rounded bg-white"
       >
-        <option value="">アーティストを選択</option>
+        <option value="">{t('form.selectArtist')}</option>
         {artists.map(artist => (
           <option key={artist.id} value={artist.id}>
             {artist.name}
@@ -156,7 +165,7 @@ export default function TicketForm({
         disabled={!selectedArtist}
         className="w-full p-1 border rounded bg-white"
       >
-        <option value="">ツアーを選択</option>
+        <option value="">{t('form.selectTour')}</option>
         {tours.map(tour => (
           <option key={tour.id} value={tour.id}>
             {tour.name}
@@ -170,7 +179,7 @@ export default function TicketForm({
           onChange={(e) => setBlock(e.target.value)}
           className="p-1 border rounded bg-white text-right w-2/6"
         >
-          <option value="">ブロック</option>
+          <option value="">{t('form.block')}</option>
           {Array.from({ length: 12 }, (_, i) => { //全アルファベットじゃなくて Lまで
             const char = String.fromCharCode(65 + i);
             return <option key={char} value={char}>{char}</option>;
@@ -187,7 +196,7 @@ export default function TicketForm({
             const value = Math.floor(Number(e.target.value));
             setBlockNumber(value >= 0 && value <= MAX_BLOCK_NUMBER ? value : null);
           }}
-          placeholder="ブロック番号"
+          placeholder={t('form.blockNumber')}
           className="p-1 px-2 border rounded bg-white text-right w-2/6"
           step="1"
           min="0"
@@ -201,7 +210,7 @@ export default function TicketForm({
             const value = Math.floor(Number(e.target.value));
             setColumn(value >= 0 && value <= MAX_COLUMN_NUMBER ? value : null);
           }}
-          placeholder="列"
+          placeholder={t('form.row')}
           className="p-1 px-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
@@ -215,7 +224,7 @@ export default function TicketForm({
             const value = Math.floor(Number(e.target.value));
             setSeatNumber(value >= 0 && value <= MAX_SEAT_NUMBER ? value : null);
           }}
-          placeholder="席"
+          placeholder={t('form.seat')}
           className="p-1 px-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
@@ -233,7 +242,7 @@ export default function TicketForm({
           disabled={!selectedArtist}
           className="w-full p-1 border rounded  bg-white"
         >
-          <option value="">抽選枠</option>
+          <option value="">{t('form.lotterySlot')}</option>
           {lotterySlots.map(slot => (
             <option key={slot.id} value={slot.id}>
               {slot.name}
@@ -250,7 +259,7 @@ export default function TicketForm({
           disabled={!selectedTour}
           className="w-full p-1 border rounded bg-white"
         >
-          <option value="">公演日</option>
+          <option value="">{t('form.showDate')}</option>
           {Array.from({ length: MAX_DAY }, (_, i) => i + 1).map(dayNum => (
             <option key={dayNum} value={dayNum}>
               day{dayNum}
@@ -265,7 +274,7 @@ export default function TicketForm({
           onClick={handleReset}
           className="w-1/3 p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
         >
-          リセット
+          {t('form.reset')}
         </button>
 
         <button
@@ -278,7 +287,7 @@ export default function TicketForm({
               : 'bg-gray-300 cursor-not-allowed'
           }`}
         >
-          一覧
+          {t('form.list')}
         </button>
 
         <button
@@ -290,19 +299,19 @@ export default function TicketForm({
               : 'bg-gray-300 cursor-not-allowed'
           }`}
         >
-          登録
+          {t('form.register')}
         </button>
       </div>
 
       {(!isLoggedIn && selectedTour && isPrintable &&
         <p className='text-xs text-rose-500 text-right'>
-          ログインするとチケットを登録できます
+          {t('form.loginToRegister')}
         </p>
       )}
 
       {(!isPrintable && selectedTour &&
         <p className='text-xs text-rose-500 text-right'>
-          チケット発券日から押せるようになります
+          {t('form.availableAfterPrint')}
         </p>
       )}
 

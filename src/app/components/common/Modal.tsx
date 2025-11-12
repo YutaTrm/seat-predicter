@@ -1,5 +1,7 @@
 'use client'
 
+import { useLanguage } from '@/contexts/LanguageContext'
+
 type ModalProps = {
   isOpen: boolean
   onClose: () => void
@@ -11,6 +13,8 @@ type ModalProps = {
  * 汎用モーダルコンポーネント
  */
 export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+  const { t } = useLanguage()
+
   if (!isOpen) return null
 
   return (
@@ -26,7 +30,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
           onClick={onClose}
           className="mt-6 w-full bg-rose-500 text-white py-2 rounded hover:bg-rose-700"
         >
-          閉じる
+          {t('common.close')}
         </button>
       </div>
     </div>
