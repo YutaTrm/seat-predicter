@@ -35,8 +35,8 @@ export default function AboutSite() {
           <div className="space-y-3">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
               <div key={num}>
-                <p className="text-gray-700"><span className="font-bold text-rose-500">Q{num}.</span> {t(`home.aboutSite.faqQ${num}`).replace(/^Q\d+\.\s*/, '')}</p>
-                <p className=""><span className="font-bold text-rose-500">A{num}.</span> {t(`home.aboutSite.faqA${num}`)}</p>
+                <p className="text-gray-700 -indent-7 pl-7"><span className="font-bold text-rose-500">Q{num}.</span> {t(`home.aboutSite.faqQ${num}`).replace(/^Q\d+\.\s*/, '')}</p>
+                <p className="-indent-7 pl-7"><span className="font-bold text-rose-500">A{num}.</span> {t(`home.aboutSite.faqA${num}`)}</p>
               </div>
             ))}
           </div>
