@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { useArtistData } from '@/hooks/useArtistData'
 import { useTourData } from '@/hooks/useTourData'
 import { useLotterySlotData } from '@/hooks/useLotterySlotData'
+import { useVenueData } from '@/hooks/useVenueData'
 import { Ticket, SubmitResult } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import { getSession } from '@/lib/supabase/auth'
@@ -13,6 +14,7 @@ import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import TicketGrid from './home/TicketGrid'
 import AboutSite from './home/AboutSite'
+import VenueInfo from './home/VenueInfo'
 import Footer from './common/Footer'
 // import AdmaxAds from './common/AdmaxAds' // AdSense審査中のためコメントアウト
 import Modal from '@/app/components/common/Modal'
@@ -56,10 +58,16 @@ export default function HomePage() {
     ? tours.find(t => t.id === selectedTour)?.name
     : ''
 
-  // 選択中のツアーのresult_post_urlを取得
+  // 選択中のツアーのresult_post_urlとvenue_idを取得
   const selectedTourResultPostUrl = selectedTour
     ? tours.find(t => t.id === selectedTour)?.result_post_url
     : null
+  const selectedVenueId = selectedTour
+    ? tours.find(t => t.id === selectedTour)?.venue_id
+    : null
+
+  // 会場データを取得
+  const { venue, isLoading: isLoadingVenue } = useVenueData(selectedVenueId || null)
 
   /**
    * Xにポストする文字列を生成する関数
@@ -222,7 +230,7 @@ export default function HomePage() {
     setTickets([])
     setTotalTicketCount(0)
     setShowTickets(false)
-    setShowActualConfig(false)
+    setShowActualConfig(true)
   }, [selectedArtist, selectedTour])
 
   return (
@@ -331,6 +339,14 @@ export default function HomePage() {
               )}
             </div>
 
+            {/* 会場情報（venue_idが設定されている場合のみ表示） */}
+            {venue && (
+              <div className="mt-8">
+                <h2 className="text-lg text-gray-600 font-bold mb-2">会場情報</h2>
+                <VenueInfo venue={venue} />
+              </div>
+            )}
+
             {/* 実際の構成（result_post_urlがある場合のみ表示） */}
             {selectedTourResultPostUrl && (
               <div className="mt-8 mb-2">
@@ -382,7 +398,7 @@ export default function HomePage() {
       </section>
 
       {/* サイト説明セクション */}
-      <section className="mt-8 md:col-span-3">
+      <section className="mt-8 md:col-span-2 md:col-start-2 md:mt-0">
         <AboutSite />
       </section>
 

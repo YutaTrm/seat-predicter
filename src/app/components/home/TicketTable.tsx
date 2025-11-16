@@ -104,7 +104,7 @@ export default function TicketTable({ tickets, showTickets }: TicketTableProps) 
 
   return (
     <div className="flex flex-col">
-      <div className="max-h-[75vh] overflow-auto mb-4 md:max-h-[50vh]">
+      <div className="max-h-[60vh] overflow-auto mb-4 md:max-h-[50vh]">
         <table className="min-w-full bg-white border relative">
           <thead className="sticky top-0 bg-gray-600">
             <tr className="text-gray-100 text-xs">

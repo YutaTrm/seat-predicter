@@ -59,6 +59,7 @@ export type Database = {
           name: string
           end_date: string
           result_post_url: string | null
+          venue_id: number | null
           created_at: string
           updated_at: string
         }
@@ -68,6 +69,7 @@ export type Database = {
           name: string
           end_date: string
           result_post_url?: string | null
+          venue_id?: number | null
           created_at?: string
           updated_at?: string
         }
@@ -77,6 +79,36 @@ export type Database = {
           name?: string
           end_date?: string
           result_post_url?: string | null
+          venue_id?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      venues: {
+        Row: {
+          id: number
+          name: string
+          scale: string | null
+          capacity: number | null
+          image_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          scale?: string | null
+          capacity?: number | null
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          scale?: string | null
+          capacity?: number | null
+          image_url?: string | null
           created_at?: string
           updated_at?: string
         }

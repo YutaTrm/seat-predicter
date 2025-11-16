@@ -19,6 +19,7 @@ export type Artist = {
 export type Tour = {
   id: number
   artist_id: number
+  venue_id: number
   name: string
   end_date: string
   print_start_date: string | null
