@@ -45,7 +45,7 @@ export default function VenueInfo({ venue }: VenueInfoProps) {
             rel="noopener noreferrer"
             className="text-xs text-rose-500 text-right"
           >
-            ©ライブ基地
+            画像元: ライブ基地
           </a>
         </div>
       )}
