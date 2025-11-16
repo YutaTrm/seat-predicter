@@ -67,7 +67,7 @@ export default function HomePage() {
     : null
 
   // 会場データを取得
-  const { venue, isLoading: isLoadingVenue } = useVenueData(selectedVenueId || null)
+  const { venue } = useVenueData(selectedVenueId || null)
 
   /**
    * Xにポストする文字列を生成する関数
