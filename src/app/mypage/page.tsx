@@ -102,12 +102,17 @@ export default function MyPage() {
 
   // 退会処理
   const handleDeleteAccount = async () => {
+    if (!session?.user?.id) {
+      alert('ユーザー情報が取得できません')
+      return
+    }
+
     const confirmed = confirm('退会すると登録したチケットは削除されます。本当に退会しますか？')
     if (!confirmed) return
 
     setIsDeleting(true)
     try {
-      const result = await deleteUserAccount()
+      const result = await deleteUserAccount(session.user.id)
 
       if (result.success) {
         alert('退会が完了しました')

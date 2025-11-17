@@ -8,13 +8,10 @@ import type { Database } from '@/types/database.types'
  * ユーザーアカウントを削除するServer Action
  * チケットは自動的に削除されます
  */
-export async function deleteUserAccount(): Promise<{ success: boolean; error?: string }> {
+export async function deleteUserAccount(userId: string): Promise<{ success: boolean; error?: string }> {
   try {
-    // 現在のセッションを取得
-    const session = await getSession()
-
-    if (!session || !session.user) {
-      return { success: false, error: 'ユーザーが見つかりません' }
+    if (!userId) {
+      return { success: false, error: 'ユーザーIDが指定されていません' }
     }
 
     // サービスロールクライアントでユーザーを削除
@@ -29,7 +26,7 @@ export async function deleteUserAccount(): Promise<{ success: boolean; error?: s
       }
     )
 
-    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(session.user.id)
+    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId)
 
     if (deleteError) {
       console.error('ユーザー削除エラー:', deleteError)
