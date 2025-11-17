@@ -92,16 +92,8 @@ export const submitTicket = async (
 ) => {
   const supabase = createSupabaseClient()
 
-  // 現在のユーザーを取得
+  // 現在のユーザーを取得（ログインしていない場合はnull）
   const { data: { user } } = await supabase.auth.getUser()
-
-  // ログインチェック
-  if (!user) {
-    return {
-      success: false,
-      error: 'ログインが必要です'
-    }
-  }
 
   const ticketData = {
     artist_id: selectedArtist,
@@ -112,7 +104,7 @@ export const submitTicket = async (
     column,
     number: seatNumber,
     day,
-    user_id: user.id
+    user_id: user?.id || null
   }
 
   const { error } = await supabase

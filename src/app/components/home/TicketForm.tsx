@@ -299,9 +299,9 @@ export default function TicketForm({
 
         <button
           type="submit"
-          disabled={!isPrintable || !isLoggedIn}
+          disabled={!isPrintable}
           className={`w-1/3 p-2 text-white rounded ${
-            isPrintable && isLoggedIn
+            isPrintable
               ? 'bg-rose-500 hover:bg-rose-600'
               : 'bg-gray-300 cursor-not-allowed'
           }`}
@@ -309,12 +309,6 @@ export default function TicketForm({
           {t('form.register')}
         </button>
       </div>
-
-      {(!isLoggedIn && selectedTour && isPrintable &&
-        <p className='text-xs text-rose-500 text-right'>
-          {t('form.loginToRegister')}
-        </p>
-      )}
 
       {(!isPrintable && selectedTour &&
         <p className='text-xs text-rose-500 text-right'>
