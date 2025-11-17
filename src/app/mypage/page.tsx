@@ -115,6 +115,8 @@ export default function MyPage() {
       const result = await deleteUserAccount(session.user.id)
 
       if (result.success) {
+        // セッションをクリア
+        await signOut()
         alert('退会が完了しました')
         router.push('/')
         router.refresh()
