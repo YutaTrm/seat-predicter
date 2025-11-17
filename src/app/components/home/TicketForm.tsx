@@ -42,7 +42,6 @@ type TicketFormProps = {
   onSubmit: (block: string, blockNumber: number, column: number, seatNumber: number, day: number, lotterySlotId: number) => Promise<SubmitResult>
   onReset: () => void
   onShowTickets: () => void
-  isLoggedIn: boolean
 }
 
 /**
@@ -60,8 +59,7 @@ export default function TicketForm({
   onLotterySlotChange,
   onSubmit,
   onReset,
-  onShowTickets,
-  isLoggedIn
+  onShowTickets
 }: TicketFormProps) {
   const { t } = useLanguage()
   const router = useRouter()

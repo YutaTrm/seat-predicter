@@ -41,7 +41,8 @@ export default function HomePage() {
   const [showTickets, setShowTickets] = useState<boolean>(false)
   const [showGridHelp, setShowGridHelp] = useState<boolean>(false)
   const [showActualConfig, setShowActualConfig] = useState<boolean>(false)
-  const [session, setSession] = useState<Session | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_session, setSession] = useState<Session | null>(null)
 
   const searchParams = useSearchParams()
 
@@ -285,7 +286,6 @@ export default function HomePage() {
           onSubmit={handleSubmitTicket}
           onReset={handleReset}
           onShowTickets={handleShowTickets}
-          isLoggedIn={!!session}
         />
       </section>
 
