@@ -1,4 +1,8 @@
+'use client'
+
+import { useState } from 'react'
 import { Database } from '@/types/database.types'
+import Icon from '@/app/components/common/Icon'
 
 type Venue = Database['public']['Tables']['venues']['Row']
 
@@ -10,6 +14,12 @@ interface VenueInfoProps {
  * 会場情報を表示するコンポーネント
  */
 export default function VenueInfo({ venue }: VenueInfoProps) {
+  const [rotation, setRotation] = useState(0)
+
+  const handleRotate = () => {
+    setRotation((prev) => (prev + 90) % 360)
+  }
+
   return (
     <div className="bg-white rounded-lg p-4 border border-gray-200">
       {/* 上：会場情報 */}
@@ -32,21 +42,31 @@ export default function VenueInfo({ venue }: VenueInfoProps) {
       {/* 下：画像 */}
       {venue.image_url && (
         <div className="flex flex-col mt-2">
-          <a href={venue.image_url} target="_blank" rel="noopener noreferrer">
+          <a href={venue.image_url} target="_blank" rel="noopener noreferrer" className="w-full aspect-square overflow-hidden flex items-center justify-center bg-white">
             <img
               src={venue.image_url}
               alt={`${venue.name}の図`}
-              className="w-full h-auto object-contain cursor-pointer"
+              className="max-w-full max-h-full object-contain cursor-pointer transition-transform duration-300"
+              style={{ transform: `rotate(${rotation}deg)` }}
             />
           </a>
-          <a
-            href="https://livekiti.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-rose-500 text-right"
-          >
-            画像元: ライブ基地
-          </a>
+          <div className="flex items-center justify-between mt-1">
+            <button
+              onClick={handleRotate}
+              className="bg-white hover:bg-rose-100 text-rose-500 p-1 rounded border border-rose-500 transition-colors"
+              title="画像を90度回転"
+            >
+              <Icon type="rotate" />
+            </button>
+            <a
+              href="https://livekiti.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-rose-500"
+            >
+              画像元: ライブ基地
+            </a>
+          </div>
         </div>
       )}
     </div>
