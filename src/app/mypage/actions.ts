@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
+import { getSession } from '@/lib/supabase/server'
 import type { Database } from '@/types/database.types'
 
 /**
@@ -10,30 +10,10 @@ import type { Database } from '@/types/database.types'
  */
 export async function deleteUserAccount(): Promise<{ success: boolean; error?: string }> {
   try {
-    // 現在のユーザーセッションを取得
-    const cookieStore = await cookies()
-    const cookieString = cookieStore.toString()
+    // 現在のセッションを取得
+    const session = await getSession()
 
-    const supabase = createClient<Database>(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_ANON_KEY!,
-      {
-        auth: {
-          autoRefreshToken: true,
-          persistSession: true
-        },
-        global: {
-          headers: {
-            Cookie: cookieString
-          }
-        }
-      }
-    )
-
-    // 現在のユーザーを取得
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
-
-    if (userError || !user) {
+    if (!session || !session.user) {
       return { success: false, error: 'ユーザーが見つかりません' }
     }
 
@@ -49,7 +29,7 @@ export async function deleteUserAccount(): Promise<{ success: boolean; error?: s
       }
     )
 
-    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(user.id)
+    const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(session.user.id)
 
     if (deleteError) {
       console.error('ユーザー削除エラー:', deleteError)
