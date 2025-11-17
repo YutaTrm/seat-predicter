@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getSession, signOut } from '@/lib/supabase/auth'
 import { fetchUserTickets, deleteUserTicket, UserTicket } from '@/utils/myPageUtils'
+import { deleteUserAccount } from './actions'
 import type { Session } from '@supabase/supabase-js'
 import SectionHeader from '../components/common/SectionHeader'
 import Footer from '../components/common/Footer'
+import Icon from '../components/common/Icon'
 import { useLanguage } from '@/contexts/LanguageContext'
 // import { GoogleAdsense } from '../components/common/GoogleAdsense'
 
@@ -23,6 +25,7 @@ export default function MyPage() {
   const [sortOption, setSortOption] = useState<SortOption>('created_at_desc')
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
   const router = useRouter()
 
   // セッションとチケット一覧を取得
@@ -94,6 +97,38 @@ export default function MyPage() {
       router.refresh()
     } catch (error) {
       console.error('ログアウトエラー:', error)
+    }
+  }
+
+  // 退会処理
+  const handleDeleteAccount = async () => {
+    if (!session?.user?.id) {
+      alert('ユーザー情報が取得できません')
+      return
+    }
+
+    const confirmed = confirm('退会すると登録したチケットは削除されます。本当に退会しますか？')
+    if (!confirmed) return
+
+    setIsDeleting(true)
+    try {
+      const result = await deleteUserAccount(session.user.id)
+
+      if (result.success) {
+        // セッションをクリア
+        await signOut()
+        alert('退会が完了しました')
+        router.push('/')
+        router.refresh()
+      } else {
+        alert(result.error || '退会処理に失敗しました')
+      }
+    } catch (error) {
+      console.error('退会エラー:', error)
+      alert('退会処理に失敗しました')
+    } finally {
+      setIsDeleting(false)
+      setShowMenu(false)
     }
   }
 
@@ -208,12 +243,39 @@ export default function MyPage() {
               </div>
             </div>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 mt-2 w-full rounded transition-colors"
-          >
-            {t('mypage.logout')}
-          </button>
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={handleSignOut}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 flex-1 rounded transition-colors"
+            >
+              {t('mypage.logout')}
+            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="h-full bg-white hover:bg-red-100 text-red-300 px-4 py-2 border-red-300 border rounded transition-colors"
+              >
+                <Icon type="menu" />
+              </button>
+              {showMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowMenu(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-1 bg-white border rounded shadow-lg z-20 min-w-[120px]">
+                    <button
+                      onClick={handleDeleteAccount}
+                      disabled={isDeleting}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isDeleting ? '処理中...' : '退会'}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
