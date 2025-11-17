@@ -16,9 +16,9 @@ import TicketGrid from './home/TicketGrid'
 import AboutSite from './home/AboutSite'
 import VenueInfo from './home/VenueInfo'
 import Footer from './common/Footer'
-// import AdmaxAds from './common/AdmaxAds' // AdSense審査中のためコメントアウト
+import AdmaxAds from './common/AdmaxAds' // AdSense審査中のためコメントアウト
 import Modal from '@/app/components/common/Modal'
-// import CarouselAds from './common/CarouselAds' // AdSense審査中のためコメントアウト
+import CarouselAds from './common/CarouselAds' // AdSense審査中のためコメントアウト
 import UserMenu from './common/UserMenu'
 import { GoogleAdsense } from './common/GoogleAdsense'
 import XEmbed from './common/XEmbed'
@@ -403,15 +403,15 @@ export default function HomePage() {
       </section>
 
       {/* アフィリエイト - AdSense審査中のためコメントアウト */}
-      {/* <section className="mt-4 md:col-span-3 md:w-[480px] md:mt-0 md:mx-auto">
+      <section className="mt-4 md:col-span-3 md:w-[480px] md:mt-0 md:mx-auto">
         <CarouselAds />
-      </section> */}
+      </section>
 
       {/* 忍者 - AdSense審査中のためコメントアウト */}
-      {/* <section className="mt-4 md:col-span-3 text-center md:mt-0">
+      <section className="mt-4 md:col-span-3 text-center md:mt-0">
         <AdmaxAds code="6320491eb1d6b1456841a6bf9a04cb19"/>
         <AdmaxAds code="651eb013de35c59b186cf3dd5fca1f8d"/>
-      </section> */}
+      </section>
 
       {/* フッター */}
       <section className="mt-4 md:col-span-3">
