@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { Artist, Tour, LotterySlot } from '../../../types/ticket'
 import { SubmitResult } from '../../../types/ticket'
 import { updateUrlParams } from '../../../utils/ticketUtils'
 import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { isInAppBrowser } from '@/utils/browserDetection'
 
 /**
  * 制限に使う定数
@@ -64,6 +65,12 @@ export default function TicketForm({
 }: TicketFormProps) {
   const { t } = useLanguage()
   const router = useRouter()
+  const [isInApp, setIsInApp] = useState(false)
+
+  // アプリ内ブラウザ検出
+  useEffect(() => {
+    setIsInApp(isInAppBrowser())
+  }, [])
   const [block, setBlock] = useState<string>('')
   const [blockNumber, setBlockNumber] = useState<number | null>(null)
   const [column, setColumn] = useState<number | null>(null)
@@ -312,6 +319,12 @@ export default function TicketForm({
       {(!isPrintable && selectedTour &&
         <p className='text-xs text-rose-500 text-right'>
           {t('form.availableAfterPrint')}
+        </p>
+      )}
+
+      {isInApp && (
+        <p className='text-xs text-amber-600 bg-amber-50 p-2 rounded mt-2 text-center'>
+          ⚠️ アプリ内ブラウザでは登録できません。SafariやChromeなどのブラウザからご利用ください
         </p>
       )}
 
