@@ -45,9 +45,31 @@ const generateToken = () => {
 }
 
 /**
- * 投稿制限チェック
+ * 投稿可能かチェック（カウントは増やさない）
  */
-export const checkPostLimit = (): { success: boolean } => {
+export const canPost = (): boolean => {
+  const data = getPostLimitData()
+
+  if (!data) {
+    return true
+  }
+
+  if (data.c < POST_LIMIT) {
+    return true
+  }
+
+  const elapsed = Date.now() - data.t
+  if (elapsed >= TIME_LIMIT) {
+    return true
+  }
+
+  return false
+}
+
+/**
+ * 投稿成功後にカウントを増やす
+ */
+export const incrementPostCount = (): void => {
   const data = getPostLimitData()
 
   if (!data) {
@@ -56,26 +78,30 @@ export const checkPostLimit = (): { success: boolean } => {
       t: Date.now(),
       k: generateToken()
     })
-    return { success: true }
-  }
-
-  if (data.c < POST_LIMIT) {
-    setPostLimitData({
-      ...data,
-      c: data.c + 1
-    })
-    return { success: true }
+    return
   }
 
   const elapsed = Date.now() - data.t
   if (elapsed >= TIME_LIMIT) {
+    // 時間制限を過ぎていたらリセット
     setPostLimitData({
       c: 1,
       t: Date.now(),
       k: generateToken()
     })
-    return { success: true }
+  } else {
+    // カウントを増やす
+    setPostLimitData({
+      ...data,
+      c: data.c + 1
+    })
   }
+}
 
-  return { success: false }
+/**
+ * 投稿制限チェック（後方互換性のため残す）
+ * @deprecated canPost() と incrementPostCount() を使用してください
+ */
+export const checkPostLimit = (): { success: boolean } => {
+  return { success: canPost() }
 }
