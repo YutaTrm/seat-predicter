@@ -7,6 +7,7 @@ import { updateUrlParams } from '../../../utils/ticketUtils'
 import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { isInAppBrowser } from '@/utils/browserDetection'
+import Modal from '@/app/components/common/Modal'
 
 /**
  * 制限に使う定数
@@ -75,6 +76,8 @@ export default function TicketForm({
   const [seatNumber, setSeatNumber] = useState<number | null>(null)
   const [day, setDay] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [confirmMessage, setConfirmMessage] = useState('')
 
   // 選択されたツアーの情報を取得（メモ化）
   const selectedTourInfo = useMemo(() => {
@@ -98,29 +101,37 @@ export default function TicketForm({
         return
       }
 
-      const confirmMessage = t('form.confirmRegister')
+      const message = t('form.confirmRegister')
         .replace('{day}', String(day))
         .replace('{block}', block)
         .replace('{blockNumber}', String(blockNumber))
         .replace('{column}', String(column))
         .replace('{seatNumber}', String(seatNumber))
 
-      const confirmed = confirm(confirmMessage)
-      if (confirmed) {
-        const result = await onSubmit(block, blockNumber, column, seatNumber, day, selectedLotterySlot)
-        if (result.success) {
-          // 連続いたずら登録防止
-          // setBlock('')
-          // setBlockNumber(null)
-          // setColumn(null)
-          setSeatNumber(null)
-          setDay(null)
-        } else if (result.error) {
-          setError(result.error)
-        }
+      setConfirmMessage(message)
+      setShowConfirmModal(true)
+    },
+    [block, blockNumber, column, seatNumber, day, selectedLotterySlot, t]
+  )
+
+  const handleConfirmSubmit = useCallback(
+    async () => {
+      setShowConfirmModal(false)
+      if (!block || !blockNumber || !column || !seatNumber || !day || !selectedLotterySlot) return
+
+      const result = await onSubmit(block, blockNumber, column, seatNumber, day, selectedLotterySlot)
+      if (result.success) {
+        // 連続いたずら登録防止
+        // setBlock('')
+        // setBlockNumber(null)
+        // setColumn(null)
+        setSeatNumber(null)
+        setDay(null)
+      } else if (result.error) {
+        setError(result.error)
       }
     },
-    [block, blockNumber, column, seatNumber, day, selectedLotterySlot, onSubmit, setError, setBlock, setBlockNumber, setColumn, setSeatNumber, setDay, t]
+    [block, blockNumber, column, seatNumber, day, selectedLotterySlot, onSubmit]
   )
 
   const handleReset = useCallback(
@@ -325,6 +336,22 @@ export default function TicketForm({
           {error}
         </p>
       )}
+
+      <Modal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        title={t('form.register')}
+        actions={
+          <button
+            onClick={handleConfirmSubmit}
+            className="flex-1 bg-rose-500 text-white py-2 rounded hover:bg-rose-600"
+          >
+            {t('form.register')}
+          </button>
+        }
+      >
+        <p className="whitespace-pre-wrap">{confirmMessage}</p>
+      </Modal>
     </form>
   )
 }

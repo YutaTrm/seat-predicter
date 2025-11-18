@@ -7,12 +7,13 @@ type ModalProps = {
   onClose: () => void
   title?: string
   children: React.ReactNode
+  actions?: React.ReactNode
 }
 
 /**
  * 汎用モーダルコンポーネント
  */
-export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, title, children, actions }: ModalProps) {
   const { t } = useLanguage()
 
   if (!isOpen) return null
@@ -26,12 +27,26 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
         <div className="text-sm text-gray-600">
           {children}
         </div>
-        <button
-          onClick={onClose}
-          className="mt-6 w-full bg-rose-500 text-white py-2 rounded hover:bg-rose-700"
-        >
-          {t('common.close')}
-        </button>
+        <div className="mt-6 flex gap-2">
+          {actions ? (
+            <>
+              <button
+                onClick={onClose}
+                className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
+              >
+                {t('common.cancel')}
+              </button>
+              {actions}
+            </>
+          ) : (
+            <button
+              onClick={onClose}
+              className="w-full bg-rose-500 text-white py-2 rounded hover:bg-rose-700"
+            >
+              {t('common.close')}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

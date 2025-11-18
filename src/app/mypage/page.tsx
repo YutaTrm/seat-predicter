@@ -10,6 +10,7 @@ import SectionHeader from '../components/common/SectionHeader'
 import Footer from '../components/common/Footer'
 import Icon from '../components/common/Icon'
 import { useLanguage } from '@/contexts/LanguageContext'
+import Modal from '../components/common/Modal'
 // import { GoogleAdsense } from '../components/common/GoogleAdsense'
 
 /**
@@ -26,6 +27,9 @@ export default function MyPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleting, setIsDeleting] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false)
+  const [showDeleteTicketModal, setShowDeleteTicketModal] = useState(false)
+  const [ticketToDelete, setTicketToDelete] = useState<UserTicket | null>(null)
   const router = useRouter()
 
   // セッションとチケット一覧を取得
@@ -107,9 +111,13 @@ export default function MyPage() {
       return
     }
 
-    const confirmed = confirm('退会すると登録したチケットは削除されます。本当に退会しますか？')
-    if (!confirmed) return
+    setShowDeleteAccountModal(true)
+  }
 
+  const confirmDeleteAccount = async () => {
+    if (!session?.user?.id) return
+
+    setShowDeleteAccountModal(false)
     setIsDeleting(true)
     try {
       const result = await deleteUserAccount(session.user.id)
@@ -136,21 +144,17 @@ export default function MyPage() {
   const handleDeleteClick = async (ticket: UserTicket) => {
     if (!session) return
 
-    // 確認ダイアログ（ツアー名と座席情報を表示）
-    const message = t('mypage.deleteConfirm')
-      .replace('{artist}', ticket.artist_name)
-      .replace('{tour}', ticket.tour_name)
-      .replace('{block}', ticket.block)
-      .replace('{blockNumber}', String(ticket.block_number))
-      .replace('{column}', String(ticket.column))
-      .replace('{number}', String(ticket.number))
+    setTicketToDelete(ticket)
+    setShowDeleteTicketModal(true)
+  }
 
-    const confirmed = confirm(message)
-    if (!confirmed) return
+  const confirmDeleteTicket = async () => {
+    if (!session || !ticketToDelete) return
 
+    setShowDeleteTicketModal(false)
     setIsDeleting(true)
     try {
-      const result = await deleteUserTicket(ticket.id, session.user.id)
+      const result = await deleteUserTicket(ticketToDelete.id, session.user.id)
 
       if (result.success) {
         // 削除成功したらチケット一覧を更新
@@ -412,6 +416,50 @@ export default function MyPage() {
       <div className="mt-12 mb-8">
         <Footer />
       </div>
+
+      {/* 退会確認モーダル */}
+      <Modal
+        isOpen={showDeleteAccountModal}
+        onClose={() => setShowDeleteAccountModal(false)}
+        title="退会確認"
+        actions={
+          <button
+            onClick={confirmDeleteAccount}
+            className="flex-1 bg-rose-500 text-white py-2 rounded hover:bg-rose-600"
+          >
+            退会する
+          </button>
+        }
+      >
+        <p>退会すると登録したチケットは削除されます。本当に退会しますか？</p>
+      </Modal>
+
+      {/* チケット削除確認モーダル */}
+      <Modal
+        isOpen={showDeleteTicketModal}
+        onClose={() => setShowDeleteTicketModal(false)}
+        title="削除確認"
+        actions={
+          <button
+            onClick={confirmDeleteTicket}
+            className="flex-1 bg-rose-500 text-white py-2 rounded hover:bg-rose-600"
+          >
+            削除する
+          </button>
+        }
+      >
+        {ticketToDelete && (
+          <p className="whitespace-pre-wrap">
+            {t('mypage.deleteConfirm')
+              .replace('{artist}', ticketToDelete.artist_name)
+              .replace('{tour}', ticketToDelete.tour_name)
+              .replace('{block}', ticketToDelete.block)
+              .replace('{blockNumber}', String(ticketToDelete.block_number))
+              .replace('{column}', String(ticketToDelete.column))
+              .replace('{number}', String(ticketToDelete.number))}
+          </p>
+        )}
+      </Modal>
     </main>
   )
 }
