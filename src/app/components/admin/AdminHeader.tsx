@@ -57,6 +57,16 @@ export default function AdminHeader() {
               >
                 チケット管理
               </Link>
+              <Link
+                href="/admin/venue"
+                className={`text-sm transition-colors ${
+                  isActive('/admin/venue')
+                    ? 'text-rose-700 font-bold'
+                    : 'text-rose-500 hover:text-rose-700'
+                }`}
+              >
+                会場管理
+              </Link>
             </nav>
           </div>
 
