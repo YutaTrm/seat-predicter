@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 type ModalProps = {
@@ -15,11 +17,30 @@ type ModalProps = {
  */
 export default function Modal({ isOpen, onClose, title, children, actions }: ModalProps) {
   const { t } = useLanguage()
+  const [mounted, setMounted] = useState(false)
 
-  if (!isOpen) return null
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  // モーダルが開いている時にbodyのスクロールを無効化
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+  if (!isOpen || !mounted) return null
+
+  return createPortal(
+    <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style={{ margin: 0 }}>
       <div className="bg-rose-50 p-6 rounded max-w-lg w-full mx-4">
         {title && (
           <h3 className="text-lg font-bold text-rose-500 mb-4">{title}</h3>
@@ -48,6 +69,7 @@ export default function Modal({ isOpen, onClose, title, children, actions }: Mod
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

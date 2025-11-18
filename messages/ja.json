@@ -89,7 +89,8 @@
     "loginToRegister": "ログインするとチケットを登録できます",
     "availableAfterPrint": "チケット発券日から押せるようになります",
     "fillAllFields": "すべての情報を入力してください",
-    "confirmRegister": "【day{day} {block}{blockNumber}ブロック {column}列 {seatNumber}番】を登録します。お間違いありませんか？"
+    "confirmRegister": "【day{day} {block}{blockNumber}ブロック {column}列 {seatNumber}番】を登録します。お間違いありませんか？",
+    "inAppBrowserWarning": "⚠️アプリ内ブラウザでは登録できない場合があります。その際はSafariやChromeなどのブラウザからご利用ください"
   },
   "table": {
     "showListMessage": "「一覧」を押すかチケット登録をすると一覧が表示されます",

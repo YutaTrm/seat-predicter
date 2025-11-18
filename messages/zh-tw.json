@@ -89,7 +89,8 @@
     "loginToRegister": "登入後可以登記門票",
     "availableAfterPrint": "門票列印日起可以使用",
     "fillAllFields": "請輸入所有資訊",
-    "confirmRegister": "【day{day} {block}{blockNumber}區塊 {column}排 {seatNumber}號】將被登記。確認無誤嗎？"
+    "confirmRegister": "【day{day} {block}{blockNumber}區塊 {column}排 {seatNumber}號】將被登記。確認無誤嗎？",
+    "inAppBrowserWarning": "⚠️應用程式內建瀏覽器可能無法登記。如遇此情況請使用Safari或Chrome等瀏覽器"
   },
   "table": {
     "showListMessage": "點擊（列表）或登記門票後會顯示列表",

@@ -327,7 +327,7 @@ export default function TicketForm({
 
       {isInApp && (
         <p className='text-xs text-amber-600 bg-amber-50 p-2 rounded mt-2 text-center'>
-          ⚠️ アプリ内ブラウザでは登録できません。SafariやChromeなどのブラウザからご利用ください
+          {t('form.inAppBrowserWarning')}
         </p>
       )}
 

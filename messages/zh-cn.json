@@ -89,7 +89,8 @@
     "loginToRegister": "登录后可以登记门票",
     "availableAfterPrint": "门票打印日起可以使用",
     "fillAllFields": "请输入所有信息",
-    "confirmRegister": "【day{day} {block}{blockNumber}区块 {column}排 {seatNumber}号】将被登记。确认无误吗？"
+    "confirmRegister": "【day{day} {block}{blockNumber}区块 {column}排 {seatNumber}号】将被登记。确认无误吗？",
+    "inAppBrowserWarning": "⚠️应用内浏览器可能无法登记。如遇此情况请使用Safari或Chrome等浏览器"
   },
   "table": {
     "showListMessage": "点击（列表）或登记门票后会显示列表",
