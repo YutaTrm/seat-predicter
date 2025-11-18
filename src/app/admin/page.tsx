@@ -5,7 +5,6 @@ import { Suspense } from 'react'
 import {
   fetchArtists,
   fetchToursByArtist,
-  fetchTickets,
   fetchLotterySlots,
   addArtist,
   updateArtist,
@@ -18,7 +17,7 @@ import {
   deleteLotterySlot
 } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { Tour, Ticket, LotterySlot } from '@/types/admin'
+import { Tour, LotterySlot } from '@/types/admin'
 
 // アーティスト追加のServer Action
 async function handleAddArtist(formData: FormData) {
@@ -134,21 +133,10 @@ async function handleFetchLotterySlots(formData: FormData) {
   return { lotterySlots }
 }
 
-// チケット一覧を取得するServer Action
-async function handleFetchTickets(formData: FormData) {
-  'use server'
-
-  const artistId = Number(formData.get('artist_id'))
-  const tourId = Number(formData.get('tour_id'))
-  const tickets = await fetchTickets(artistId, tourId)
-  return { tickets }
-}
-
 export default async function Page() {
   // 初期データの取得
   const artists = await fetchArtists()
   const tours: Tour[] = []
-  const tickets: Ticket[] = []
   const lotterySlots: LotterySlot[] = []
 
   return (
@@ -162,7 +150,6 @@ export default async function Page() {
       <AdminPage
         initialArtists={artists}
         initialTours={tours}
-        initialTickets={tickets}
         initialLotterySlots={lotterySlots}
         handleAddArtist={handleAddArtist}
         handleEditArtist={handleEditArtist}
@@ -175,7 +162,6 @@ export default async function Page() {
         handleEditLotterySlot={handleEditLotterySlot}
         handleDeleteLotterySlot={handleDeleteLotterySlot}
         handleFetchLotterySlots={handleFetchLotterySlots}
-        handleFetchTickets={handleFetchTickets}
       />
     </Suspense>
   )

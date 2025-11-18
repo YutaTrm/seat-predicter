@@ -1,12 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Artist, Tour, Ticket, LotterySlot, AdminPageProps } from '../../types/admin'
+import { Artist, Tour, LotterySlot, AdminPageProps } from '../../types/admin'
 import { fetchArtistTours } from '../../utils/tourUtils'
 import { ARTIST_XSHARE_WORDS } from '@/constants/artist'
 import ArtistSection from './admin/ArtistSection'
 import TourSection from './admin/TourSection'
-import TicketSection from './admin/TicketSection'
 import LotterySlotSection from './admin/LotterySlotSection'
 import AdminHeader from './admin/AdminHeader'
 
@@ -16,7 +15,6 @@ import AdminHeader from './admin/AdminHeader'
 export default function AdminPage({
   initialArtists,
   initialTours,
-  initialTickets,
   initialLotterySlots,
   handleAddArtist,
   handleEditArtist,
@@ -28,12 +26,10 @@ export default function AdminPage({
   handleAddLotterySlot,
   handleEditLotterySlot,
   handleDeleteLotterySlot,
-  handleFetchLotterySlots,
-  handleFetchTickets
+  handleFetchLotterySlots
 }: AdminPageProps) {
   const [artists, setArtists] = useState<Artist[]>(initialArtists)
   const [tours, setTours] = useState<Tour[]>(initialTours)
-  const [tickets, setTickets] = useState<Ticket[]>(initialTickets)
   const [lotterySlots, setLotterySlots] = useState<LotterySlot[]>(initialLotterySlots)
   const [selectedArtistId, setSelectedArtistId] = useState('')
   const [selectedTourId, setSelectedTourId] = useState('')
@@ -207,32 +203,6 @@ export default function AdminPage({
             handleAddLotterySlot={handleAddLotterySlot}
             handleEditLotterySlot={handleEditLotterySlot}
             handleDeleteLotterySlot={handleDeleteLotterySlot}
-          />
-
-          <TicketSection
-            artists={artists}
-            tours={tours}
-            tickets={tickets}
-            selectedArtistId={selectedArtistId}
-            selectedTourId={selectedTourId}
-            onTourSelect={async (tourId: string) => {
-              setSelectedTourId(tourId)
-              if (tourId && selectedArtistId) {
-                try {
-                  const formData = new FormData()
-                  formData.append('artist_id', selectedArtistId)
-                  formData.append('tour_id', tourId)
-                  const { tickets: newTickets } = await handleFetchTickets(formData)
-                  setTickets(newTickets)
-                } catch (err) {
-                  console.error('チケット取得エラー:', err)
-                  alert('チケットの取得に失敗しました')
-                  setTickets([])
-                }
-              } else {
-                setTickets([])
-              }
-            }}
           />
         </div>
       </div>

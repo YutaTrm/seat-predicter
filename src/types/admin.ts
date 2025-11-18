@@ -8,7 +8,6 @@ export type LotterySlot = Database['public']['Tables']['lottery_slots']['Row']
 export type AdminPageProps = {
   initialArtists: Artist[]
   initialTours: Tour[]
-  initialTickets: Ticket[]
   initialLotterySlots: LotterySlot[]
   handleAddArtist: (formData: FormData) => Promise<{ artist: Artist }>
   handleEditArtist: (formData: FormData) => Promise<{ success: boolean }>
@@ -21,7 +20,6 @@ export type AdminPageProps = {
   handleFetchLotterySlots: (formData: FormData) => Promise<{ lotterySlots: LotterySlot[] }>
   handleEditLotterySlot: (formData: FormData) => Promise<{ success: boolean }>
   handleDeleteLotterySlot: (formData: FormData) => Promise<{ success: boolean }>
-  handleFetchTickets: (formData: FormData) => Promise<{ tickets: Ticket[] }>
 }
 
 export type ArtistSectionProps = {
@@ -58,13 +56,4 @@ export type LotterySlotSectionProps = {
   handleAddLotterySlot: AdminPageProps['handleAddLotterySlot']
   handleEditLotterySlot: AdminPageProps['handleEditLotterySlot']
   handleDeleteLotterySlot: AdminPageProps['handleDeleteLotterySlot']
-}
-
-export type TicketSectionProps = {
-  artists: Artist[]
-  tours: Tour[]
-  tickets: Ticket[]
-  selectedArtistId: string
-  selectedTourId: string
-  onTourSelect: (tourId: string) => void
 }
