@@ -32,7 +32,7 @@ async function createServerSupabaseClient() {
 }
 
 // 管理者用のサーバーサイドのSupabaseクライアントを作成
-function createAdminSupabaseClient() {
+export function createAdminSupabaseClient() {
   return createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,

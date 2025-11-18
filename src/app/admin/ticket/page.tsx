@@ -3,7 +3,8 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
-import { fetchAllTicketsWithUsers, fetchAllArtistsAndTours, deleteTicket, AdminTicket } from '@/utils/adminTicketUtils'
+import { fetchAllTicketsWithUsers, fetchAllArtistsAndTours, AdminTicket } from '@/utils/adminTicketUtils'
+import { deleteTicketAction } from './actions'
 import AdminHeader from '@/app/components/admin/AdminHeader'
 
 type SortKey = 'artist_name' | 'tour_name' | 'user_email' | 'block' | 'ticket_created_at'
@@ -202,7 +203,7 @@ function AdminTicketPageContent() {
 
     setIsDeleting(true)
     try {
-      const result = await deleteTicket(selectedTicket.ticket_id)
+      const result = await deleteTicketAction(selectedTicket.ticket_id)
 
       if (result.success) {
         // 削除成功したらチケット一覧を更新
