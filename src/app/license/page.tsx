@@ -22,7 +22,7 @@ export default function LicensePage() {
             <strong>Next.js</strong> – Licensed under the{' '}
             <a
               href="https://github.com/vercel/next.js/blob/canary/license"
-              className="text-blue-600 underline"
+              className="text-rose-600 underline"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -33,7 +33,7 @@ export default function LicensePage() {
             <strong>Tailwind CSS</strong> – Licensed under the{' '}
             <a
               href="https://github.com/tailwindlabs/tailwindcss/blob/master/LICENSE"
-              className="text-blue-600 underline"
+              className="text-rose-600 underline"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -44,7 +44,7 @@ export default function LicensePage() {
             <strong>Supabase</strong> – Licensed under the{' '}
             <a
               href="https://github.com/supabase/supabase/blob/master/LICENSE"
-              className="text-blue-600 underline"
+              className="text-rose-600 underline"
               target="_blank"
               rel="noopener noreferrer"
             >

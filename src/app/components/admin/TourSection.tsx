@@ -113,7 +113,7 @@ export default function TourSection({
             />
             <button
               type="submit"
-              className="bg-blue-500 text-white p-2 rounded"
+              className="bg-rose-500 text-white p-2 rounded"
             >
               追加
             </button>
@@ -207,7 +207,7 @@ export default function TourSection({
                               setEditingName(tour.name)
                               setEditingEndDate(tour.end_date.split('T')[0])
                             }}
-                            className="text-blue-500 hover:text-blue-700"
+                            className="text-rose-500 hover:text-rose-700"
                           >
                             <Icon type='edit'/>
                           </button>

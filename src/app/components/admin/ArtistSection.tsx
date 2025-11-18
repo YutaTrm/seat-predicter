@@ -70,7 +70,7 @@ export default function ArtistSection({
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white p-2 rounded-r"
+            className="bg-rose-500 text-white p-2 rounded-r"
           >
             追加
           </button>
@@ -123,7 +123,7 @@ export default function ArtistSection({
                     <>
                       <button
                         onClick={() => setEditingArtist(artist)}
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-rose-500 hover:text-rose-700"
                       >
                         <Icon type='edit'/>
                       </button>

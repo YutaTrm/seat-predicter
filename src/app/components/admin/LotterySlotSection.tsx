@@ -87,7 +87,7 @@ export default function LotterySlotSection({
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white p-2 rounded-r"
+            className="bg-rose-500 text-white p-2 rounded-r"
             disabled={!selectedArtistId}
           >
             追加
@@ -143,7 +143,7 @@ export default function LotterySlotSection({
                     <>
                       <button
                         onClick={() => setEditingLotterySlot(slot)}
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-rose-500 hover:text-rose-700"
                       >
                         <Icon type='edit'/>
                       </button>
