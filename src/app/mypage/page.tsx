@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { getSession, signOut } from '@/lib/supabase/auth'
 import { fetchUserTickets, deleteUserTicket, UserTicket } from '@/utils/myPageUtils'
 import { deleteUserAccount } from './actions'
@@ -16,10 +16,14 @@ import Modal from '../components/common/Modal'
 /**
  * マイページコンポーネント
  */
+export const dynamic = 'force-dynamic'
+
 type SortOption = 'created_at_desc' | 'created_at_asc' | 'artist_name_asc' | 'artist_name_desc'
 
-export default function MyPage() {
+function MyPageContent() {
   const { t } = useLanguage()
+  const searchParams = useSearchParams()
+  const returnUrl = searchParams.get('returnUrl') || '/'
   const [session, setSession] = useState<Session | null>(null)
   const [tickets, setTickets] = useState<UserTicket[]>([])
   const [sortedTickets, setSortedTickets] = useState<UserTicket[]>([])
@@ -213,7 +217,7 @@ export default function MyPage() {
       {/* <GoogleAdsense /> */}
 
       {/* ヘッダー */}
-      <SectionHeader title={t('mypage.title')} />
+      <SectionHeader title={t('mypage.title')} backUrl={returnUrl} />
       <div className="mb-8">
         {/* ユーザー情報カード */}
         <div className="bg-white border rounded-lg p-4 max-w-2xl mx-auto">
@@ -461,5 +465,13 @@ export default function MyPage() {
         )}
       </Modal>
     </main>
+  )
+}
+
+export default function MyPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MyPageContent />
+    </Suspense>
   )
 }

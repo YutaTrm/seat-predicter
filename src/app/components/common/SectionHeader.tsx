@@ -3,19 +3,21 @@ import Link from 'next/link';
 
 interface SectionHeaderProps {
   title: string;
+  backUrl?: string;
 }
 
 /**
  * セクションのヘッダーコンポーネント
  * 戻るボタンとタイトルを表示する
  * @param {string} title - セクションのタイトル
+ * @param {string} backUrl - 戻るボタンのリンク先（デフォルトは'/'）
  * @returns {JSX.Element} セクションヘッダーを表示するコンポーネント
  */
-export default function SectionHeader({ title }: SectionHeaderProps) {
+export default function SectionHeader({ title, backUrl = '/' }: SectionHeaderProps) {
   return (
     <div className="flex justify-between items-center mb-8 text-xl">
       <Link
-        href="/"
+        href={backUrl}
         className="text-gray-600 hover:text-gray-800 transition-colors"
         aria-label="トップページに戻る"
       >

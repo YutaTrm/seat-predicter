@@ -84,7 +84,10 @@ export default function UserMenu() {
   }, [router])
 
   const handleMyPageClick = () => {
-    router.push('/mypage')
+    // 現在のURLパラメータを保存
+    const currentUrl = typeof window !== 'undefined' ? window.location.pathname + window.location.search : '/'
+    const encodedReturnUrl = encodeURIComponent(currentUrl)
+    router.push(`/mypage?returnUrl=${encodedReturnUrl}`)
   }
 
   const handleTwitterSignIn = async () => {
