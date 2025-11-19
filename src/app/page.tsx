@@ -1,8 +1,15 @@
 import HomePage from './components/HomePage'
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
 
 // ダイナミックレンダリングを強制
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+}
 
 export default async function Page() {
   // JSON-LDの定義
