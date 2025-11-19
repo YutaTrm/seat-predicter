@@ -22,9 +22,6 @@ export const metadata: Metadata = {
   keywords: ["座席予想", "チケット", "コンサート", "ライブ", "座席", "ブロック", "可視化"],
   appleWebApp: true,
   metadataBase: new URL('https://zasekiyosou.com'),
-  alternates: {
-    canonical: '/',
-  },
   viewport: {
     width: 'device-width',
     initialScale: 1,
