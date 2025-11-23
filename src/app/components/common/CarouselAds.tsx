@@ -12,6 +12,12 @@ const CarouselAds = () => {
   // 広告データの配列
   const ads = [
     {
+      href: "https://px.a8.net/svt/ejp?a8mat=45I9PE+CFQ0GQ+2QOI+66WOX",
+      imgSrc: "https://www21.a8.net/svt/bgt?aid=251115170752&wid=002&eno=01&mid=s00000012789001040000&mc=1",
+      trackingImg: "https://www13.a8.net/0.gif?a8mat=45I9PE+CFQ0GQ+2QOI+66WOX",
+      alt: "K-POPグッズの宅配買取【推しトク】"
+    },
+    {
       href: "https://px.a8.net/svt/ejp?a8mat=453CBS+IGHAY+51XQ+614CX",
       imgSrc: "https://www26.a8.net/svt/bgt?aid=250418728031&wid=002&eno=01&mid=s00000023579001013000&mc=1",
       trackingImg: "https://www10.a8.net/0.gif?a8mat=453CBS+IGHAY+51XQ+614CX",
@@ -23,12 +29,12 @@ const CarouselAds = () => {
       trackingImg: "https://www12.a8.net/0.gif?a8mat=453BJZ+9711WA+4X1W+5ZEMP",
       alt: "アゴダでお得に旅しよう"
     },
-    {
-      href: "https://px.a8.net/svt/ejp?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP",
-      imgSrc: "https://www28.a8.net/svt/bgt?aid=250417727655&wid=002&eno=01&mid=s00000022192001005000&mc=1",
-      trackingImg: "https://www18.a8.net/0.gif?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP",
-      alt: "ナビタイムトラベル 国内線12社対応！当日便もOK"
-    },
+    // {
+    //   href: "https://px.a8.net/svt/ejp?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP",
+    //   imgSrc: "https://www28.a8.net/svt/bgt?aid=250417727655&wid=002&eno=01&mid=s00000022192001005000&mc=1",
+    //   trackingImg: "https://www18.a8.net/0.gif?a8mat=453BJZ+ATYYSA+4R8G+5ZEMP",
+    //   alt: "ナビタイムトラベル 国内線12社対応！当日便もOK"
+    // },
     {
       href: "https://px.a8.net/svt/ejp?a8mat=453D3W+BWPNE+AD2+3H2BC1",
       imgSrc: "https://www27.a8.net/svt/bgt?aid=250419740020&wid=002&eno=01&mid=s00000001343021006000&mc=1",
