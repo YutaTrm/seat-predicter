@@ -398,9 +398,9 @@ export default function HomePage() {
       </section>
 
       {/* サイト説明セクション */}
-      <section className="mt-8 md:col-span-2 md:col-start-2 md:mt-0">
+      {/* <section className="mt-8 md:col-span-2 md:col-start-2 md:mt-0">
         <AboutSite />
-      </section>
+      </section> */}
 
       {/* アフィリエイト - AdSense審査中のためコメントアウト */}
       <section className="mt-4 md:col-span-3 md:w-[480px] md:mt-0 md:mx-auto">
