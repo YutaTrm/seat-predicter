@@ -13,7 +13,7 @@ import type { Session } from '@supabase/supabase-js'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import TicketGrid from './home/TicketGrid'
-import AboutSite from './home/AboutSite'
+// import AboutSite from './home/AboutSite'
 import VenueInfo from './home/VenueInfo'
 import Footer from './common/Footer'
 import AdmaxAds from './common/AdmaxAds' // AdSense審査中のためコメントアウト
