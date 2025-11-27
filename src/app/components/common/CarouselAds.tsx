@@ -11,11 +11,12 @@ const CarouselAds = () => {
 
   // 広告データの配列
   const ads = [
+
     {
-      href: "https://px.a8.net/svt/ejp?a8mat=45I9PE+CFQ0GQ+2QOI+66WOX",
-      imgSrc: "https://www21.a8.net/svt/bgt?aid=251115170752&wid=002&eno=01&mid=s00000012789001040000&mc=1",
-      trackingImg: "https://www13.a8.net/0.gif?a8mat=45I9PE+CFQ0GQ+2QOI+66WOX",
-      alt: "K-POPグッズの宅配買取【推しトク】"
+      href: "https://www.amazon.co.jp/NEXEAR-%E3%82%BB%E3%83%96%E3%83%B3%E3%83%86%E3%82%A3%E3%83%BC%E3%83%B3-%E5%A4%A7%E5%AE%B9%E9%87%8F%E4%BF%9D%E5%86%B7%E3%83%9D%E3%83%BC%E3%82%BF%E3%83%96%E3%83%AB%E3%83%90%E3%83%83%E3%82%B0-%E8%82%A9%E6%8E%9B%E3%81%91%E3%82%A8%E3%82%B3%E3%83%90%E3%83%83%E3%82%AF%E3%82%AF%E3%83%BC%E3%83%A9%E3%83%BC%E3%83%90%E3%83%83%E3%82%B0-%E3%83%8F%E3%83%B3%E3%83%89%E3%83%90%E3%83%83%E3%82%B0%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AA%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B7%E3%83%A7%E3%83%83%E3%83%94%E3%83%B3%E3%82%B0%E3%83%90%E3%83%83%E3%82%B0/dp/B0F4F3HHFX?crid=LQD63IQDV7CM&dib=eyJ2IjoiMSJ9.8MtbOWds5KD8clSjZ_tJ8mD1n7iFQsgUjbCLnnHw7pMvO4fGteiyQOqoNThPO1zeFd_cXghnQ9ak8GTVaadgHdHespMf25h5Tcb_dhGpmR7FfD2iynKrEjWar6kT-fua4g1FrH2R7aMZX6WHWexZSPci4uHcp8D7hCU3DRjhJoVaHM2aJNkrlifHBT1UrFwYGb-R26t072Ho3hdCdGHksT_lasmTXvZkMDqozErTCHgYiGR6nQLEdHOBewD44CfHTMgExjXKbxdmKImkxCJBkXgSvTJGZW_A0RDP-hXwgAU.kNdarmYVS85eLVpGGjOjImk6HDIqdc3nq-Rw_Po_Isg&dib_tag=se&keywords=seventeen&qid=1764245251&sprefix=seven%2Caps%2C190&sr=8-1-spons&ufe=app_do%3Aamzn1.fos.67b9569a-e8a5-4d3a-875e-caa17356a710&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1&linkCode=ll1&tag=murakumo0079-22&linkId=7b1242d60f067058149c97843f574d03&language=ja_JP&ref_=as_li_ss_tl",
+      imgSrc: "https://zasekiyosou.com/images/amazon_banner.jpg",
+      trackingImg: "",
+      alt: "アマゾンブラックフライデー"
     },
     {
       href: "https://px.a8.net/svt/ejp?a8mat=453CBS+IGHAY+51XQ+614CX",
