@@ -12,12 +12,6 @@ const CarouselAds = () => {
   // 広告データの配列
   const ads = [
     {
-      href: "https://www.amazon.co.jp/blackfriday?_encoding=UTF8&pd_rd_w=ZtM1I&content-id=amzn1.sym.6206ea79-0335-4e2c-9cab-258fd3e8bd02&pf_rd_p=6206ea79-0335-4e2c-9cab-258fd3e8bd02&pf_rd_r=Z4TJN4NDBN3ZES6Z5K09&pd_rd_wg=c6k7H&pd_rd_r=e368b93f-0f43-4594-a395-b872bbffa205&linkCode=ll2&tag=murakumo0079-22&linkId=8f084f0154c572ffda9df5a9aa69ce4f&language=ja_JP&ref_=as_li_ss_tl",
-      imgSrc: "https://zasekiyosou.com/images/amazon_banner.jpg",
-      trackingImg: "",
-      alt: "アマゾンブラックフライデー"
-    },
-    {
       href: "https://px.a8.net/svt/ejp?a8mat=45I9PE+CFQ0GQ+2QOI+66WOX",
       imgSrc: "https://www21.a8.net/svt/bgt?aid=251115170752&wid=002&eno=01&mid=s00000012789001040000&mc=1",
       trackingImg: "https://www13.a8.net/0.gif?a8mat=45I9PE+CFQ0GQ+2QOI+66WOX",
