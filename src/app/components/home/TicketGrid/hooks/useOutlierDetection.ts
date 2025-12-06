@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Ticket } from '@/types/ticket'
-import { MAX_BLOCK_NUMBER, MAX_COLUMN, MAX_NUMBER } from '@/constants/ticketGrid'
+import { MAX_BLOCK_NUMBER, MAX_COLUMN_NUMBER, MAX_SEAT_NUMBER } from '@/constants/ticketGrid'
 import { filterOutliers } from '@/utils/outlierDetection'
 import { ProcessedData, OutlierStats } from '../types'
 
@@ -30,8 +30,8 @@ export const useOutlierDetection = (tickets: Ticket[]) => {
       const numbers = blockTickets.map(t => t.number)
 
       // 異常値を除外した有効な値の範囲を取得
-      const validColumns = new Set(filterOutliers(columns, MAX_COLUMN))
-      const validNumbers = new Set(filterOutliers(numbers, MAX_NUMBER))
+      const validColumns = new Set(filterOutliers(columns, MAX_COLUMN_NUMBER))
+      const validNumbers = new Set(filterOutliers(numbers, MAX_SEAT_NUMBER))
 
       // 有効な値の範囲を保存
       acc.validRanges[block] = {

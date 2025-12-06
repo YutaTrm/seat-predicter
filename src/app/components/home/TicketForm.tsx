@@ -8,14 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { isInAppBrowser } from '@/utils/browserDetection'
 import Modal from '@/app/components/common/Modal'
-
-/**
- * 制限に使う定数
- */
-const MAX_BLOCK_NUMBER = 20
-const MAX_COLUMN_NUMBER = 30
-const MAX_SEAT_NUMBER = 20
-const MAX_DAY = 4
+import { MAX_BLOCK_NUMBER, MAX_COLUMN_NUMBER, MAX_SEAT_NUMBER, MAX_DAY } from '@/constants/ticketGrid'
 
 /**
  * チケット発券可能かどうかを判定する関数
@@ -216,7 +209,7 @@ export default function TicketForm({
           className="p-1 px-2 border rounded bg-white text-right w-2/6"
           step="1"
           min="0"
-          max="20"
+          max={MAX_BLOCK_NUMBER}
         />
 
         <input
@@ -230,7 +223,7 @@ export default function TicketForm({
           className="p-1 px-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
-          max="30"
+          max={MAX_COLUMN_NUMBER}
         />
 
         <input
@@ -244,7 +237,7 @@ export default function TicketForm({
           className="p-1 px-2 border rounded bg-white text-right w-1/6"
           step="1"
           min="0"
-          max="20"
+          max={MAX_SEAT_NUMBER}
         />
       </div>
 
