@@ -1,6 +1,7 @@
 'use client'
 
 import { Tour } from '../types/admin'
+import { deleteWithConfirm } from './adminHelpers'
 
 /**
  * ツアーを追加する
@@ -50,24 +51,10 @@ export const editTour = async (
 /**
  * ツアーを削除する
  */
-export const deleteTour = async (
+export const deleteTour = (
   id: number,
   handleDeleteTour: (formData: FormData) => Promise<{ success: boolean }>
-): Promise<void> => {
-  if (!confirm('このツアーを削除してもよろしいですか？')) {
-    throw new Error('キャンセルされました')
-  }
-
-  const formData = new FormData()
-  formData.append('id', id.toString())
-
-  try {
-    await handleDeleteTour(formData)
-  } catch (err) {
-    console.error('ツアー削除エラー:', err)
-    throw new Error('ツアーの削除に失敗しました')
-  }
-}
+): Promise<void> => deleteWithConfirm(id, 'ツアー', handleDeleteTour)
 
 /**
  * アーティストのツアー一覧を取得する

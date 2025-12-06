@@ -1,6 +1,7 @@
 'use client'
 
 import { LotterySlot } from '../types/admin'
+import { deleteWithConfirm } from './adminHelpers'
 
 /**
  * 抽選枠を追加する関数
@@ -44,17 +45,7 @@ export const editLotterySlot = async (
 /**
  * 抽選枠を削除する関数
  */
-export const deleteLotterySlot = async (
+export const deleteLotterySlot = (
   id: number,
   handleDeleteLotterySlot: (formData: FormData) => Promise<{ success: boolean }>
-) => {
-  const confirmed = confirm('この抽選枠を削除してもよろしいですか？')
-  if (!confirmed) {
-    throw new Error('キャンセルされました')
-  }
-
-  const formData = new FormData()
-  formData.append('id', id.toString())
-
-  await handleDeleteLotterySlot(formData)
-}
+): Promise<void> => deleteWithConfirm(id, '抽選枠', handleDeleteLotterySlot)

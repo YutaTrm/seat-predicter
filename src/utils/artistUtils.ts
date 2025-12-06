@@ -1,6 +1,7 @@
 'use client'
 
 import { Artist } from '../types/admin'
+import { deleteWithConfirm } from './adminHelpers'
 
 /**
  * アーティストを追加する
@@ -44,21 +45,7 @@ export const editArtist = async (
 /**
  * アーティストを削除する
  */
-export const deleteArtist = async (
+export const deleteArtist = (
   id: number,
   handleDeleteArtist: (formData: FormData) => Promise<{ success: boolean }>
-): Promise<void> => {
-  if (!confirm('このアーティストを削除してもよろしいですか？')) {
-    throw new Error('キャンセルされました')
-  }
-
-  const formData = new FormData()
-  formData.append('id', id.toString())
-
-  try {
-    await handleDeleteArtist(formData)
-  } catch (err) {
-    console.error('アーティスト削除エラー:', err)
-    throw new Error('アーティストの削除に失敗しました')
-  }
-}
+): Promise<void> => deleteWithConfirm(id, 'アーティスト', handleDeleteArtist)
