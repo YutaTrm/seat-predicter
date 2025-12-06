@@ -1,7 +1,7 @@
 'use client'
 
 import { LotterySlot } from '../types/admin'
-import { deleteWithConfirm } from './adminHelpers'
+import { deleteWithConfirm, createFormData } from './adminHelpers'
 
 /**
  * 抽選枠を追加する関数
@@ -15,11 +15,7 @@ export const addLotterySlot = async (
     throw new Error('抽選枠名を入力してください')
   }
 
-  const formData = new FormData()
-  formData.append('artist_id', artistId)
-  formData.append('name', name)
-
-  const { lotterySlot } = await handleAddLotterySlot(formData)
+  const { lotterySlot } = await handleAddLotterySlot(createFormData({ artist_id: artistId, name }))
   return lotterySlot
 }
 
@@ -35,11 +31,7 @@ export const editLotterySlot = async (
     throw new Error('抽選枠名を入力してください')
   }
 
-  const formData = new FormData()
-  formData.append('id', id.toString())
-  formData.append('name', name)
-
-  await handleEditLotterySlot(formData)
+  await handleEditLotterySlot(createFormData({ id, name }))
 }
 
 /**

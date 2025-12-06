@@ -1,7 +1,7 @@
 'use client'
 
 import { Tour } from '../types/admin'
-import { deleteWithConfirm } from './adminHelpers'
+import { deleteWithConfirm, createFormData } from './adminHelpers'
 
 /**
  * ツアーを追加する
@@ -12,13 +12,8 @@ export const addTour = async (
   endDate: string,
   handleAddTour: (formData: FormData) => Promise<{ tour: Tour }>
 ): Promise<Tour> => {
-  const formData = new FormData()
-  formData.append('artistId', artistId)
-  formData.append('name', name)
-  formData.append('endDate', endDate)
-
   try {
-    const { tour } = await handleAddTour(formData)
+    const { tour } = await handleAddTour(createFormData({ artistId, name, endDate }))
     return tour
   } catch (err) {
     console.error('ツアー追加エラー:', err)
@@ -35,13 +30,8 @@ export const editTour = async (
   newEndDate: string,
   handleEditTour: (formData: FormData) => Promise<{ success: boolean }>
 ): Promise<void> => {
-  const formData = new FormData()
-  formData.append('id', id.toString())
-  formData.append('name', newName)
-  formData.append('endDate', newEndDate)
-
   try {
-    await handleEditTour(formData)
+    await handleEditTour(createFormData({ id, name: newName, endDate: newEndDate }))
   } catch (err) {
     console.error('ツアー編集エラー:', err)
     throw new Error('ツアーの編集に失敗しました')
@@ -63,11 +53,8 @@ export const fetchArtistTours = async (
   artistId: string,
   handleFetchTours: (formData: FormData) => Promise<{ tours: Tour[] }>
 ): Promise<Tour[]> => {
-  const formData = new FormData()
-  formData.append('artistId', artistId)
-
   try {
-    const { tours } = await handleFetchTours(formData)
+    const { tours } = await handleFetchTours(createFormData({ artistId }))
     return tours
   } catch (err) {
     console.error('ツアー取得エラー:', err)

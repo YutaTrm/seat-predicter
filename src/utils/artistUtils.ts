@@ -1,7 +1,7 @@
 'use client'
 
 import { Artist } from '../types/admin'
-import { deleteWithConfirm } from './adminHelpers'
+import { deleteWithConfirm, createFormData } from './adminHelpers'
 
 /**
  * アーティストを追加する
@@ -10,11 +10,8 @@ export const addArtist = async (
   name: string,
   handleAddArtist: (formData: FormData) => Promise<{ artist: Artist }>
 ): Promise<Artist> => {
-  const formData = new FormData()
-  formData.append('name', name)
-
   try {
-    const { artist } = await handleAddArtist(formData)
+    const { artist } = await handleAddArtist(createFormData({ name }))
     return artist
   } catch (err) {
     console.error('アーティスト追加エラー:', err)
@@ -30,12 +27,8 @@ export const editArtist = async (
   newName: string,
   handleEditArtist: (formData: FormData) => Promise<{ success: boolean }>
 ): Promise<void> => {
-  const formData = new FormData()
-  formData.append('id', id.toString())
-  formData.append('name', newName)
-
   try {
-    await handleEditArtist(formData)
+    await handleEditArtist(createFormData({ id, name: newName }))
   } catch (err) {
     console.error('アーティスト編集エラー:', err)
     throw new Error('アーティストの編集に失敗しました')
