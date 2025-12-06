@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { Artist } from '@/types/ticket'
+import { SWR_CACHE_OPTIONS } from '@/constants/swrConfig'
 
 /**
  * アーティストデータを取得・キャッシュするカスタムフック
@@ -30,13 +31,10 @@ export const useArtistData = () => {
     'artists',
     fetchArtists,
     {
-      // 15分間キャッシュを保持
-      dedupingInterval: 15 * 60 * 1000,
+      ...SWR_CACHE_OPTIONS,
       onSuccess: () => {
         console.log('✅ アーティストデータを取得')
       },
-      // キャッシュデータを15分間保持
-      focusThrottleInterval: 15 * 60 * 1000,
     }
   )
 

@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { Database } from '@/types/database.types'
+import { SWR_CACHE_OPTIONS } from '@/constants/swrConfig'
 
 type Venue = Database['public']['Tables']['venues']['Row']
 
@@ -36,10 +37,7 @@ export const useVenueData = (venueId: number | null) => {
     venueId ? `venue-${venueId}` : null,
     fetchVenue,
     {
-      // 15分間キャッシュを保持
-      dedupingInterval: 15 * 60 * 1000,
-      // キャッシュデータを15分間保持
-      focusThrottleInterval: 15 * 60 * 1000,
+      ...SWR_CACHE_OPTIONS,
       onSuccess: () => {
         console.log(`✅ 会場データを取得(vID: ${venueId})`)
       },

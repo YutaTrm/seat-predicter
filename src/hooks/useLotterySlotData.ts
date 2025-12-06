@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { LotterySlot } from '@/types/ticket'
+import { SWR_CACHE_OPTIONS } from '@/constants/swrConfig'
 
 /**
  * 抽選枠データを取得・キャッシュするカスタムフック
@@ -34,10 +35,7 @@ export const useLotterySlotData = (artistId: number | null) => {
     artistId ? `lottery-slots-${artistId}` : null,
     fetchLotterySlots,
     {
-      // 15分間キャッシュを保持
-      dedupingInterval: 15 * 60 * 1000,
-      // キャッシュデータを15分間保持
-      focusThrottleInterval: 15 * 60 * 1000,
+      ...SWR_CACHE_OPTIONS,
       onSuccess: () => {
         console.log(`✅ 抽選枠を取得(aID: ${artistId})`)
       },

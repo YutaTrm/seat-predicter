@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { Tour } from '@/types/ticket'
+import { SWR_CACHE_OPTIONS } from '@/constants/swrConfig'
 
 /**
  * ツアーデータを取得・キャッシュするカスタムフック
@@ -34,10 +35,7 @@ export const useTourData = (artistId: number | null) => {
     artistId ? `tours-${artistId}` : null,
     fetchTours,
     {
-      // 15分間キャッシュを保持
-      dedupingInterval: 15 * 60 * 1000,
-      // キャッシュデータを15分間保持
-      focusThrottleInterval: 15 * 60 * 1000,
+      ...SWR_CACHE_OPTIONS,
       onSuccess: () => {
         console.log(`✅ ツアーデータを取得(aID: ${artistId})`)
       },
