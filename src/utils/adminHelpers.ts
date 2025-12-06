@@ -1,6 +1,17 @@
 'use client'
 
 /**
+ * キャンセルエラーのメッセージ
+ */
+export const CANCEL_ERROR_MESSAGE = 'キャンセルされました'
+
+/**
+ * キャンセルエラーかどうかを判定する関数
+ */
+export const isCancelError = (err: unknown): boolean =>
+  err instanceof Error && err.message === CANCEL_ERROR_MESSAGE
+
+/**
  * オブジェクトから FormData を作成する共通関数
  */
 export const createFormData = (data: Record<string, string | number>): FormData => {
@@ -20,7 +31,7 @@ export const deleteWithConfirm = async (
   handleDelete: (formData: FormData) => Promise<{ success: boolean }>
 ): Promise<void> => {
   if (!confirm(`この${entityName}を削除してもよろしいですか？`)) {
-    throw new Error('キャンセルされました')
+    throw new Error(CANCEL_ERROR_MESSAGE)
   }
 
   const formData = createFormData({ id })

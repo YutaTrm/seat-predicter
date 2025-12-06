@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { LotterySlot, LotterySlotSectionProps } from '../../../types/admin'
 import { addLotterySlot, editLotterySlot, deleteLotterySlot } from '../../../utils/lotterySlotUtils'
+import { isCancelError } from '../../../utils/adminHelpers'
 import Icon from '../common/Icon'
 
 /**
@@ -54,7 +55,7 @@ export default function LotterySlotSection({
       onLotterySlotDelete(id)
       alert('抽選枠を削除しました')
     } catch (err) {
-      if (err instanceof Error && err.message === 'キャンセルされました') return
+      if (isCancelError(err)) return
       alert(err instanceof Error ? err.message : '抽選枠の削除に失敗しました')
     }
   }

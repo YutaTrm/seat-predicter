@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import { Tour, TourSectionProps } from '../../../types/admin'
 import { addTour, editTour, deleteTour } from '../../../utils/tourUtils'
+import { isCancelError } from '../../../utils/adminHelpers'
 import Icon from '../common/Icon'
 
 /**
@@ -69,7 +70,7 @@ export default function TourSection({
       onTourDelete(id)
       alert('ツアーを削除しました')
     } catch (err) {
-      if (err instanceof Error && err.message === 'キャンセルされました') return
+      if (isCancelError(err)) return
       alert(err instanceof Error ? err.message : 'ツアーの削除に失敗しました')
     }
   }

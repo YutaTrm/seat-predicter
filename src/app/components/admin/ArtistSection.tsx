@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Artist, ArtistSectionProps } from '../../../types/admin'
 import { addArtist, editArtist, deleteArtist } from '../../../utils/artistUtils'
+import { isCancelError } from '../../../utils/adminHelpers'
 import Icon from '../common/Icon'
 
 /**
@@ -51,7 +52,7 @@ export default function ArtistSection({
       onArtistDelete(id)
       alert('アーティストを削除しました')
     } catch (err) {
-      if (err instanceof Error && err.message === 'キャンセルされました') return
+      if (isCancelError(err)) return
       alert(err instanceof Error ? err.message : 'アーティストの削除に失敗しました')
     }
   }
