@@ -189,7 +189,7 @@ export default function TicketForm({
           className="p-1 border rounded bg-white text-right w-2/6"
         >
           <option value="">{t('form.block')}</option>
-          {Array.from({ length: 12 }, (_, i) => { //全アルファベットじゃなくて Lまで
+          {Array.from({ length: 13 }, (_, i) => { //全アルファベットじゃなくて Lまで
             const char = String.fromCharCode(65 + i);
             return <option key={char} value={char}>{char}</option>;
           }).flat()}
