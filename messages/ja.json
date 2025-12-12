@@ -64,7 +64,10 @@
       "off": "OFF",
       "on": "ON",
       "excludedTickets": "除外されたチケット",
-      "ticketsCount": "件"
+      "ticketsCount": "件",
+      "emptyBlocks": "チケット無しブロック",
+      "show": "表示",
+      "hide": "非表示"
     }
   },
   "common": {

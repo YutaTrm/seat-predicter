@@ -1,4 +1,4 @@
-import { useEffect, RefObject } from 'react'
+import { useEffect, RefObject, useState } from 'react'
 import { Ticket } from '@/types/ticket'
 import { CELL_SIZE, BLOCK_SPACING_X, BLOCK_SPACING_Y, PADDING } from '@/constants/ticketGrid'
 import {
@@ -60,8 +60,11 @@ export const useCanvasDrawing = (
   tickets: Ticket[],
   artistName: string,
   tourName: string,
-  processedData: ProcessedData
-) => {
+  processedData: ProcessedData,
+  showEmptyBlocks: boolean
+): number => {
+  const [renderKey, setRenderKey] = useState(0)
+
   useEffect(() => {
     if (!canvasRef.current) return
     const canvas = canvasRef.current
@@ -156,11 +159,20 @@ export const useCanvasDrawing = (
         const blockSize = blockSizes[blockKey]
         const ticketSet = new Set(blockTickets.map(t => `${t.column}-${t.number}`))
 
-        drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, filteredTickets, colorMap)
+        // showEmptyBlocks=true(表示する): 全ブロックを描画
+        // showEmptyBlocks=false(表示しない): チケットがあるブロックのみ描画（スペースは確保）
+        if (showEmptyBlocks || blockTickets.length > 0) {
+          drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, filteredTickets, colorMap)
+        }
+
         xOffset += blockSize.width * CELL_SIZE + BLOCK_SPACING_X
       }
 
       yOffset += rowHeight
     }
-  }, [canvasRef, tickets, artistName, tourName, processedData])
+
+    setRenderKey(prev => prev + 1)
+  }, [canvasRef, tickets, artistName, tourName, processedData, showEmptyBlocks])
+
+  return renderKey
 }

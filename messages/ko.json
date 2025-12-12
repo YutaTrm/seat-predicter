@@ -64,7 +64,10 @@
       "off": "OFF",
       "on": "ON",
       "excludedTickets": "제외된 티켓",
-      "ticketsCount": "건"
+      "ticketsCount": "건",
+      "emptyBlocks": "티켓 없는 블록",
+      "show": "표시",
+      "hide": "숨기기"
     }
   },
   "common": {

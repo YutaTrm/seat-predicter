@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { TicketGridCanvasProps } from './TicketGrid/types'
@@ -41,6 +41,7 @@ import { useCanvasDrawing } from './TicketGrid/hooks/useCanvasDrawing'
 const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { t } = useLanguage()
+  const [showEmptyBlocks, setShowEmptyBlocks] = useState(false)
   const {
     enableOutlierDetection,
     setEnableOutlierDetection,
@@ -48,7 +49,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
     processedData
   } = useOutlierDetection(tickets)
 
-  useCanvasDrawing(canvasRef, tickets, artistName, tourName, processedData)
+  const renderKey = useCanvasDrawing(canvasRef, tickets, artistName, tourName, processedData, showEmptyBlocks)
 
   return (
     <div className="space-y-4">
@@ -56,6 +57,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
         <canvas ref={canvasRef} className="hidden" />
         {canvasRef.current && (
           <Image
+            key={renderKey}
             src={canvasRef.current.toDataURL('image/png')}
             alt={artistName + " " + tourName + " の座席分布"}
             width={canvasRef.current.width}
@@ -87,6 +89,30 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
             className="text-rose-500 focus:ring-rose-500 hidden"
           />
           <span className={enableOutlierDetection ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.on')}</span>
+        </label>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <h3 className='text-sm'>{t('home.ticketGrid.emptyBlocks')} :</h3>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            name="show-empty-blocks"
+            checked={showEmptyBlocks}
+            onChange={() => setShowEmptyBlocks(true)}
+            className="text-rose-500 focus:ring-rose-500 hidden"
+          />
+          <span className={showEmptyBlocks ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.show')}</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            name="show-empty-blocks"
+            checked={!showEmptyBlocks}
+            onChange={() => setShowEmptyBlocks(false)}
+            className="text-rose-500 focus:ring-rose-500 hidden"
+          />
+          <span className={!showEmptyBlocks ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.hide')}</span>
         </label>
       </div>
 
