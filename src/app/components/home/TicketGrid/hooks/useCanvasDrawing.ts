@@ -61,7 +61,8 @@ export const useCanvasDrawing = (
   artistName: string,
   tourName: string,
   processedData: ProcessedData,
-  showEmptyBlocks: boolean
+  showEmptyBlocks: boolean,
+  showEmptyRange: boolean
 ): number => {
   const [renderKey, setRenderKey] = useState(0)
 
@@ -162,7 +163,7 @@ export const useCanvasDrawing = (
         // showEmptyBlocks=true(表示する): 全ブロックを描画
         // showEmptyBlocks=false(表示しない): チケットがあるブロックのみ描画（スペースは確保）
         if (showEmptyBlocks || blockTickets.length > 0) {
-          drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, filteredTickets, colorMap)
+          drawBlock(ctx, blockKey, blockSize, ticketSet, xOffset, yOffset, filteredTickets, colorMap, showEmptyRange)
         }
 
         xOffset += blockSize.width * CELL_SIZE + BLOCK_SPACING_X
@@ -172,7 +173,7 @@ export const useCanvasDrawing = (
     }
 
     setRenderKey(prev => prev + 1)
-  }, [canvasRef, tickets, artistName, tourName, processedData, showEmptyBlocks])
+  }, [canvasRef, tickets, artistName, tourName, processedData, showEmptyBlocks, showEmptyRange])
 
   return renderKey
 }

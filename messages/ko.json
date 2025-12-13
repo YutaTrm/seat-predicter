@@ -66,6 +66,7 @@
       "excludedTickets": "제외된 티켓",
       "ticketsCount": "건",
       "emptyBlocks": "티켓 없는 블록",
+      "emptyRange": "티켓 없는 범위",
       "show": "표시",
       "hide": "숨기기"
     }

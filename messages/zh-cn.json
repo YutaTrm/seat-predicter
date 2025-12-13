@@ -66,6 +66,7 @@
       "excludedTickets": "已排除的票券",
       "ticketsCount": "张",
       "emptyBlocks": "无票区块",
+      "emptyRange": "无票范围",
       "show": "显示",
       "hide": "隐藏"
     }

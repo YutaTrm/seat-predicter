@@ -42,6 +42,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { t } = useLanguage()
   const [showEmptyBlocks, setShowEmptyBlocks] = useState(false)
+  const [showEmptyRange, setShowEmptyRange] = useState(true)
   const {
     enableOutlierDetection,
     setEnableOutlierDetection,
@@ -49,7 +50,7 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
     processedData
   } = useOutlierDetection(tickets)
 
-  const renderKey = useCanvasDrawing(canvasRef, tickets, artistName, tourName, processedData, showEmptyBlocks)
+  const renderKey = useCanvasDrawing(canvasRef, tickets, artistName, tourName, processedData, showEmptyBlocks, showEmptyRange)
 
   return (
     <div className="space-y-4">
@@ -113,6 +114,30 @@ const TicketGridCanvas = ({ tickets, artistName, tourName }: TicketGridCanvasPro
             className="text-rose-500 focus:ring-rose-500 hidden"
           />
           <span className={!showEmptyBlocks ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.hide')}</span>
+        </label>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <h3 className='text-sm'>{t('home.ticketGrid.emptyRange')} :</h3>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            name="show-empty-range"
+            checked={showEmptyRange}
+            onChange={() => setShowEmptyRange(true)}
+            className="text-rose-500 focus:ring-rose-500 hidden"
+          />
+          <span className={showEmptyRange ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.show')}</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            name="show-empty-range"
+            checked={!showEmptyRange}
+            onChange={() => setShowEmptyRange(false)}
+            className="text-rose-500 focus:ring-rose-500 hidden"
+          />
+          <span className={!showEmptyRange ? 'text-rose-500' : 'text-gray-600'}>{t('home.ticketGrid.hide')}</span>
         </label>
       </div>
 

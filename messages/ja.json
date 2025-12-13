@@ -66,6 +66,7 @@
       "excludedTickets": "除外されたチケット",
       "ticketsCount": "件",
       "emptyBlocks": "チケット無しブロック",
+      "emptyRange": "チケット無し範囲",
       "show": "表示",
       "hide": "非表示"
     }

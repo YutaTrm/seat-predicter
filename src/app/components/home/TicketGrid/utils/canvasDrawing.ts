@@ -191,9 +191,26 @@ export const drawBlock = (
   xOffset: number,
   yOffset: number,
   tickets: Ticket[],
-  colorMap: Map<number, string>
+  colorMap: Map<number, string>,
+  showEmptyRange: boolean
 ) => {
   const { width, height, count } = blockSize
+
+  // チケットがある範囲を計算
+  let minRow = 1, maxRow = height, minCol = 1, maxCol = width
+  if (!showEmptyRange && ticketSet.size > 0) {
+    const rows: number[] = []
+    const cols: number[] = []
+    ticketSet.forEach(key => {
+      const [row, col] = key.split('-').map(Number)
+      rows.push(row)
+      cols.push(col)
+    })
+    minRow = Math.min(...rows)
+    maxRow = Math.max(...rows)
+    minCol = Math.min(...cols)
+    maxCol = Math.max(...cols)
+  }
 
   // ブロック全体を囲む枠線
   ctx.strokeStyle = '#9CA3AF'
@@ -215,6 +232,13 @@ export const drawBlock = (
   // セル
   for (let row = 1; row <= height; row++) {
     for (let col = 1; col <= width; col++) {
+      // 範囲外のセルはスキップ
+      if (!showEmptyRange && ticketSet.size > 0) {
+        if (row < minRow || row > maxRow || col < minCol || col > maxCol) {
+          continue
+        }
+      }
+
       const x = xOffset + (col - 1) * CELL_SIZE
       const y = yOffset + LABEL_HEIGHT + (row - 1) * CELL_SIZE
 
@@ -256,6 +280,10 @@ export const drawBlock = (
   ctx.fillStyle = '#6B7280'
   ctx.textAlign = 'left'
   for (let row = 1; row <= height; row++) {
+    // 範囲外の行番号はスキップ
+    if (!showEmptyRange && ticketSet.size > 0 && (row < minRow || row > maxRow)) {
+      continue
+    }
     const y = yOffset + LABEL_HEIGHT + (row - 1) * CELL_SIZE + CELL_SIZE / 2
     ctx.fillText(`${row}`, xOffset + width * CELL_SIZE + 4, y)
   }
@@ -263,6 +291,10 @@ export const drawBlock = (
   // 列番号（下端）
   ctx.textAlign = 'center'
   for (let col = 1; col <= width; col++) {
+    // 範囲外の列番号はスキップ
+    if (!showEmptyRange && ticketSet.size > 0 && (col < minCol || col > maxCol)) {
+      continue
+    }
     const x = xOffset + (col - 1) * CELL_SIZE + CELL_SIZE / 2
     ctx.fillText(`${col}`, x, yOffset + LABEL_HEIGHT + height * CELL_SIZE + 12)
   }
