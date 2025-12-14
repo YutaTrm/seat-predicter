@@ -1,6 +1,8 @@
 {
   "home": {
     "title": "座席予想掲示板",
+    "hotTours": "🔥登録急増中",
+    "hotToursCount": "(+{count}件)",
     "subtitle": "みんなのチケット情報を集計して\n座席構成を予想しよう",
     "aboutSite": {
       "title": "座席予想掲示板とは",

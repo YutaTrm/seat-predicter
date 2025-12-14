@@ -1,6 +1,8 @@
 {
   "home": {
     "title": "좌석 예상 게시판",
+    "hotTours": "🔥등록 급증 중",
+    "hotToursCount": "(+{count}건)",
     "subtitle": "모두의 티켓 정보를 집계하여\n좌석 구성을 예상해보세요",
     "aboutSite": {
       "title": "좌석 예상 게시판이란",
