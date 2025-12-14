@@ -6,6 +6,7 @@ import { useArtistData } from '@/hooks/useArtistData'
 import { useTourData } from '@/hooks/useTourData'
 import { useLotterySlotData } from '@/hooks/useLotterySlotData'
 import { useVenueData } from '@/hooks/useVenueData'
+import { useHotTours } from '@/hooks/useHotTours'
 import { Ticket, SubmitResult } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import { getSession } from '@/lib/supabase/auth'
@@ -13,6 +14,7 @@ import type { Session } from '@supabase/supabase-js'
 import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import TicketGrid from './home/TicketGrid'
+import HotTours from './home/HotTours'
 // import AboutSite from './home/AboutSite'
 import VenueInfo from './home/VenueInfo'
 import Footer from './common/Footer'
@@ -69,6 +71,21 @@ export default function HomePage() {
 
   // 会場データを取得
   const { venue } = useVenueData(selectedVenueId || null)
+
+  // ホットなツアーを取得
+  const { hotTours } = useHotTours()
+
+  /**
+   * ホットなツアーをクリックしたときの処理
+   */
+  const handleHotTourClick = (artistId: number, tourId: number) => {
+    setSelectedArtist(artistId)
+    setSelectedTour(tourId)
+    setSelectedLotterySlot(null)
+    if (typeof window !== 'undefined') {
+      window.history.replaceState({}, '', `/?artist=${artistId}&tour=${tourId}`)
+    }
+  }
 
   /**
    * Xにポストする文字列を生成する関数
@@ -255,6 +272,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 登録急増 */}
+      {hotTours.length > 0 && (
+        <section className="mt-4 -mb-4">
+          <HotTours hotTours={hotTours} onTourClick={handleHotTourClick} />
+        </section>
+      )}
 
       {/* フォーム */}
       <section className="mt-8 md:col-span-1 md:mt-0">
