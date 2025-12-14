@@ -275,7 +275,7 @@ export default function HomePage() {
 
       {/* 登録急増 */}
       {hotTours.length > 0 && (
-        <section className="mt-4 -mb-4">
+        <section className="md:col-span-3 mt-4 -mb-4 md:mb-0">
           <HotTours hotTours={hotTours} onTourClick={handleHotTourClick} />
         </section>
       )}

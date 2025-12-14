@@ -19,19 +19,21 @@ export default function HotTours({ hotTours, onTourClick }: HotToursProps) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2 text-sm">
-      <span className="text-rose-500 font-bold mb-[-8]">{t('home.hotTours')}</span>
-      {hotTours.map((item) => (
-        <span key={item.tour.id}>
-          <button
-            onClick={() => onTourClick(item.tour.artist_id, item.tour.id)}
-            className="text-rose-500 hover:text-rose-700 underline text-xs"
-          >
-            {item.tour.name}
-          </button>
-          <span className="text-gray-500 text-xs">{t('home.hotToursCount').replace('{count}', String(item.count))}</span>
-        </span>
-      ))}
+    <div className="text-sm">
+      <div className="text-rose-500 font-bold">{t('home.hotTours')}</div>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-0 -mt-1">
+        {hotTours.map((item) => (
+          <span key={item.tour.id}>
+            <button
+              onClick={() => onTourClick(item.tour.artist_id, item.tour.id)}
+              className="text-rose-500 hover:text-rose-700 underline text-xs"
+            >
+              {item.tour.name}
+            </button>
+            <span className="text-gray-500 text-xs">{t('home.hotToursCount').replace('{count}', String(item.count))}</span>
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
