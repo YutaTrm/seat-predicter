@@ -312,6 +312,17 @@ export default function TicketForm({
         </button>
       </div>
 
+      <div className="text-right">
+        <a
+          href="https://ofuse.me/zasekiyosou"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-gray-400 hover:text-rose-500"
+        >
+          ☕ 運営にカンパする
+        </a>
+      </div>
+
       {(!isPrintable && selectedTour &&
         <p className='text-xs text-rose-500 text-right'>
           {t('form.availableAfterPrint')}
