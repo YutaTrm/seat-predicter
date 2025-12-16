@@ -7,6 +7,7 @@ import { useTourData } from '@/hooks/useTourData'
 import { useLotterySlotData } from '@/hooks/useLotterySlotData'
 import { useVenueData } from '@/hooks/useVenueData'
 import { useHotTours } from '@/hooks/useHotTours'
+import { useRakutenProducts } from '@/hooks/useRakutenProducts'
 import { Ticket, SubmitResult } from '../../types/ticket'
 import { fetchTickets, submitTicket } from '../../utils/ticketUtils'
 import { getSession } from '@/lib/supabase/auth'
@@ -15,6 +16,7 @@ import TicketForm from './home/TicketForm'
 import TicketTable from './home/TicketTable'
 import TicketGrid from './home/TicketGrid'
 import HotTours from './home/HotTours'
+import RakutenProducts from './home/RakutenProducts'
 // import AboutSite from './home/AboutSite'
 import VenueInfo from './home/VenueInfo'
 import Footer from './common/Footer'
@@ -74,6 +76,11 @@ export default function HomePage() {
 
   // ホットなツアーを取得
   const { hotTours } = useHotTours()
+
+  // 楽天商品を取得（アーティスト名で検索）
+  const { products: rakutenProducts, isLoading: isLoadingRakuten } = useRakutenProducts(
+    showTickets ? selectedArtistName || null : null
+  )
 
   /**
    * ホットなツアーをクリックしたときの処理
@@ -315,6 +322,15 @@ export default function HomePage() {
 
       {/* テーブル */}
       <section className="mt-8 md:col-span-2 md:mt-0">
+        {/* 楽天商品 */}
+        {showTickets && selectedArtistName && (
+          <RakutenProducts
+            products={rakutenProducts}
+            artistName={selectedArtistName}
+            isLoading={isLoadingRakuten}
+          />
+        )}
+
         <div className="flex justify-between items-center mb-1">
           <h2 className="text-lg text-gray-600 font-bold">
             {t('home.registeredSeats')}<span className='text-sm'><span className='text-rose-500'>{tickets.length}</span>{t('home.count')}</span>
