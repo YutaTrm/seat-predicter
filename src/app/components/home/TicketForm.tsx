@@ -319,7 +319,7 @@ export default function TicketForm({
           rel="noopener noreferrer"
           className="text-xs text-gray-400 hover:text-rose-500"
         >
-          ☕ 運営にカンパする
+          ☕ 運営を支援する
         </a>
       </div>
 
