@@ -35,7 +35,7 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'SUPABASE_URL=${_SUPABASE_URL},SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY},SUPABASE_SERVICE_ROLE_KEY=${_SUPABASE_SERVICE_ROLE_KEY}'
+      - 'SUPABASE_URL=${_SUPABASE_URL},SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY}'
 
 # イメージをContainer Registryにプッシュ
 images:
