@@ -21,6 +21,12 @@ steps:
       - 'gcr.io/$PROJECT_ID/seat-predicter:latest'
       - '.'
 
+  # イメージをプッシュ
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/seat-predicter:$COMMIT_SHA'
+
   # Cloud Runにデプロイ
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
