@@ -51,7 +51,7 @@ export const useRakutenProducts = ({ artistName, affiliateSearchWords }: UseRaku
       applicationId: appId,
       affiliateId: affiliateId,
       keyword: searchKeyword,
-      hits: '12',
+      hits: '24',
       sort: 'standard',
     })
 
