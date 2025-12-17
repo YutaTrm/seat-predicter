@@ -12,8 +12,8 @@ export function getSupabaseCredentials() {
 
 // 通常のサーバーサイドのSupabaseクライアントを作成
 async function createServerSupabaseClient() {
-  const cookieStore = cookies()
-  const cookieString = await Promise.resolve(cookieStore.toString())
+  const cookieStore = await cookies()
+  const cookieString = cookieStore.toString()
   return createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
