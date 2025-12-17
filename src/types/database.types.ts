@@ -13,18 +13,21 @@ export type Database = {
         Row: {
           id: number
           name: string
+          affiliate_search_words: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: number
           name: string
+          affiliate_search_words?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: number
           name?: string
+          affiliate_search_words?: string | null
           created_at?: string
           updated_at?: string
         }

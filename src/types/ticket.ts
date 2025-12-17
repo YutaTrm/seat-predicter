@@ -14,6 +14,7 @@ export type Ticket = {
 export type Artist = {
   id: number
   name: string
+  affiliate_search_words: string | null
 }
 
 export type Tour = {

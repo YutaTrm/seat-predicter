@@ -55,10 +55,12 @@ export default function HomePage() {
   const { tours, isLoading: isLoadingTours, error: toursError } = useTourData(selectedArtist)
   const { lotterySlots, isLoading: isLoadingLotterySlots, error: lotterySlotsError } = useLotterySlotData(selectedArtist)
 
-  // 選択中のアーティストとツアーの名前を取得
-  const selectedArtistName = selectedArtist
-    ? artists.find(a => a.id === selectedArtist)?.name
-    : ''
+  // 選択中のアーティスト情報を取得
+  const selectedArtistData = selectedArtist
+    ? artists.find(a => a.id === selectedArtist)
+    : null
+  const selectedArtistName = selectedArtistData?.name || ''
+  const selectedArtistAffiliateSearchWords = selectedArtistData?.affiliate_search_words || null
   const selectedTourName = selectedTour
     ? tours.find(t => t.id === selectedTour)?.name
     : ''
@@ -77,10 +79,11 @@ export default function HomePage() {
   // ホットなツアーを取得
   const { hotTours } = useHotTours()
 
-  // 楽天商品を取得（アーティスト名で検索）
-  const { products: rakutenProducts, isLoading: isLoadingRakuten } = useRakutenProducts(
-    showTickets ? selectedArtistName || null : null
-  )
+  // 楽天商品を取得（affiliate_search_wordsがあればそれを使用、なければアーティスト名）
+  const { products: rakutenProducts, isLoading: isLoadingRakuten } = useRakutenProducts({
+    artistName: showTickets ? selectedArtistName || null : null,
+    affiliateSearchWords: showTickets ? selectedArtistAffiliateSearchWords : null,
+  })
 
   /**
    * ホットなツアーをクリックしたときの処理
@@ -327,6 +330,7 @@ export default function HomePage() {
           <RakutenProducts
             products={rakutenProducts}
             artistName={selectedArtistName}
+            searchKeyword={selectedArtistAffiliateSearchWords || selectedArtistName}
             isLoading={isLoadingRakuten}
           />
         )}

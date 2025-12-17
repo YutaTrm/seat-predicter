@@ -6,13 +6,14 @@ import Image from 'next/image'
 interface RakutenProductsProps {
   products: RakutenProduct[]
   artistName: string
+  searchKeyword: string
   isLoading: boolean
 }
 
 /**
  * 楽天商品を表示するコンポーネント
  */
-export default function RakutenProducts({ products, artistName, isLoading }: RakutenProductsProps) {
+export default function RakutenProducts({ products, artistName, searchKeyword, isLoading }: RakutenProductsProps) {
   if (isLoading) {
     return (
       <div className="text-center text-gray-400 text-sm py-2">
@@ -25,9 +26,23 @@ export default function RakutenProducts({ products, artistName, isLoading }: Rak
     return null
   }
 
+  const affiliateId = process.env.NEXT_PUBLIC_RAKUTEN_AFFILIATE_ID
+  const searchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(searchKeyword)}/`
+  const rakutenSearchUrl = `https://hb.afl.rakuten.co.jp/hgc/${affiliateId}/?pc=${encodeURIComponent(searchUrl)}`
+
   return (
     <div className="mb-4">
-      <p className="text-xs text-gray-500 mb-2">{artistName}の関連商品</p>
+      <div className="flex justify-between items-center mb-2">
+        <p className="text-xs text-gray-500">{artistName}の関連商品</p>
+        <a
+          href={rakutenSearchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-gray-400 hover:text-rose-500"
+        >
+          もっと見る →
+        </a>
+      </div>
       <div className="flex gap-2 overflow-x-auto pb-2">
         {products.map((product, index) => (
           <a

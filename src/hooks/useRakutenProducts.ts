@@ -24,36 +24,50 @@ interface RakutenApiResponse {
 
 const RAKUTEN_API_URL = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601'
 
+interface UseRakutenProductsParams {
+  artistName: string | null
+  affiliateSearchWords: string | null
+}
+
 /**
  * 楽天商品を検索するカスタムフック
- * @param keyword 検索キーワード（アーティスト名）
+ * @param params.artistName アーティスト名（affiliate_search_wordsがない場合に使用）
+ * @param params.affiliateSearchWords 検索キーワード（設定されている場合はこちらを優先）
  * @returns 商品データと読み込み状態
  */
-export const useRakutenProducts = (keyword: string | null) => {
+export const useRakutenProducts = ({ artistName, affiliateSearchWords }: UseRakutenProductsParams) => {
   const appId = process.env.NEXT_PUBLIC_RAKUTEN_APP_ID
   const affiliateId = process.env.NEXT_PUBLIC_RAKUTEN_AFFILIATE_ID
 
+  // 検索キーワードを決定（affiliate_search_wordsがあればそれを使用、なければアーティスト名）
+  const searchKeyword = affiliateSearchWords || artistName
+
   const fetchProducts = async (): Promise<RakutenProduct[]> => {
-    if (!keyword || !appId || !affiliateId) {
+    if (!searchKeyword || !appId || !affiliateId) {
       return []
     }
 
     const params = new URLSearchParams({
       applicationId: appId,
       affiliateId: affiliateId,
-      keyword: `${keyword} CD`,
+      keyword: searchKeyword,
       hits: '6',
-      sort: '-reviewCount',
-      genreId: '0',
+      sort: 'standard',
     })
 
     const response = await fetch(`${RAKUTEN_API_URL}?${params}`)
 
     if (!response.ok) {
-      throw new Error('楽天API呼び出しに失敗しました')
+      // エラー時は空配列を返す（400エラー等）
+      return []
     }
 
     const data: RakutenApiResponse = await response.json()
+
+    // 検索結果がない場合
+    if (!data.Items || data.Items.length === 0) {
+      return []
+    }
 
     return data.Items.map(({ Item }) => ({
       itemName: Item.itemName,
@@ -65,7 +79,7 @@ export const useRakutenProducts = (keyword: string | null) => {
   }
 
   const { data: products, error, isLoading } = useSWR(
-    keyword ? ['rakutenProducts', keyword] : null,
+    searchKeyword ? ['rakutenProducts', searchKeyword] : null,
     fetchProducts,
     {
       revalidateOnFocus: false,
