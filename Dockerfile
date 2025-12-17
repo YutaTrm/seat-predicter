@@ -25,6 +25,8 @@ RUN npm ci
 
 # ソースコードをコピー
 COPY . .
+# 環境変数確認（デバッグ用）
+RUN echo "RAKUTEN_APP_ID: $NEXT_PUBLIC_RAKUTEN_APP_ID" && echo "RAKUTEN_AFFILIATE_ID: $NEXT_PUBLIC_RAKUTEN_AFFILIATE_ID"
 # 本番用ビルドを実行
 RUN npm run build
 
