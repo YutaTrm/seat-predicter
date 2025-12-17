@@ -15,6 +15,8 @@ steps:
       - 'RAKUTEN_APP_ID=${_RAKUTEN_APP_ID}'
       - '--build-arg'
       - 'RAKUTEN_AFFILIATE_ID=${_RAKUTEN_AFFILIATE_ID}'
+      - '--build-arg'
+      - 'GOOGLE_ANALYTICS_ID=${_GOOGLE_ANALYTICS_ID}'
       - '-t'
       - 'gcr.io/$PROJECT_ID/seat-predicter:$COMMIT_SHA'
       - '-t'
@@ -40,8 +42,6 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
-      - '--update-env-vars'
-      - 'SUPABASE_URL=${_SUPABASE_URL},SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY}'
 
 # イメージをContainer Registryにプッシュ
 images:
@@ -60,3 +60,4 @@ substitutions:
   _SITE_URL: 'https://zasekiyosou.com'
   _RAKUTEN_APP_ID: '1027896602256166203'
   _RAKUTEN_AFFILIATE_ID: '1319f307.b4250e44.1319f308.adbeb975'
+  _GOOGLE_ANALYTICS_ID: 'G-W05HSST44P'
