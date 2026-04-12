@@ -193,7 +193,10 @@ export default function TicketForm({
             const char = String.fromCharCode(65 + i);
             return <option key={char} value={char}>{char}</option>;
           }).flat()}
+          <option key="N" value="N">N</option>
           <option key="P" value="P">P</option>
+          <option key="S" value="S">S</option>
+          <option key="W" value="W">W</option>
           <option key="AL" value="AL">AL</option>
           <option key="AR" value="AR">AR</option>
         </select>
